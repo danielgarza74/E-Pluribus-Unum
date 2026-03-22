@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter 14.1 - The Big Crash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #3A1E1C; 
+            --color-cream: #F6EBD9;    
+            --color-navy: #5A6742;     
+            --color-steel-nib: #7B7670; 
+            --color-gold: #D49A1F;     
+            --color-gold-light: #E8B854;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(43, 33, 24, 0.45); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+
+        @media (max-width: 1024px) { 
+            .side-nav { display: none; } 
+            .main-content { margin-left: 0; } 
+            .content-wrapper { padding: 30px 20px; } 
+            .content-block { padding: 2rem; } 
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Spotlights */
+        .spotlight-wrapper { width: 35%; max-width: 300px; float: right; margin: 10px 0 20px 30px; transition: transform 0.3s ease; position: relative; z-index: 10; background: rgba(0,0,0,0.5); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); transform-origin: center right; }
+        .spotlight-wrapper.left { float: left; margin: 10px 30px 20px 0; transform-origin: center left; }
+        .spotlight-wrapper:hover { transform: scale(1.5); z-index: 50; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border-color: var(--color-gold); }
+        .spotlight-wrapper img { width: 100%; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-caption { font-size: 0.9rem; text-align: center; margin-top: 10px; font-style: italic; color: #ddd; line-height: 1.4; }
+
+        /* Full Sized Visuals */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) { 
+            .spotlight-wrapper, .spotlight-wrapper.left { float: none; width: 100%; max-width: 100%; margin: 20px 0; } 
+            .spotlight-wrapper:hover { transform: none; margin: 0; padding: 0; } 
+            .id-panel { grid-template-columns: 1fr; }
+        }
+
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <!-- Left Navigation Panel -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Illusion of Prosperity</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. The Descent into the Great Depression</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. Ecological Disaster: The Dust Bowl</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. The Limits of Rugged Individualism and the Bonus Army</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Quantitative & Spatial Analysis: Mapping History</button>
+            <button id="nav-sec-7" class="nav-btn" onclick="switchTab('sec-7')">VI. Vocabulary Cloze Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Section 1: Start Page -->
+        <section id="sec-1" class="chapter-section active-section">
+            <img class="hero-banner-flush" src="assets/Header%20Banner%20Chapter%2014.1.png" alt="Chapter 14.1 - The Big Crash">
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="First and Last Name" oninput="saveProgress()">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period" onchange="saveProgress()">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="5">Period 5</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on Finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3 class="first-p">Core Objectives</h3>
+                    <ul>
+                        <li>Analyze the multiple causes of the Great Crash of 1929, distinguishing between stock market speculation (buying on margin) and deeper structural flaws like wealth inequality.</li>
+                        <li>Trace the geographic and economic impact of the Dust Bowl on midwestern farmers and the resulting migration of "Okies" to California.</li>
+                        <li>Evaluate the social impact of the economic collapse, specifically the rise of "Hoovervilles" and the government's response to the Bonus Army march.</li>
+                    </ul>
+
+                    <h3>Key Terms</h3>
+                    <p class="first-p">Black Tuesday | Buying on Margin | Speculation | Hawley-Smoot Tariff | Dust Bowl | Okies | Hoovervilles | The Bonus Army | Reconstruction Finance Corporation (RFC) | Breadlines | Great Depression | Dow Jones Industrial Average | Rugged Individualism</p>
+                </div>
+
+                <div class="bottom-nav">
+                    <div></div>
+                    <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Illusion of Prosperity (Combined with Speculation Subsection) -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Illusion of Prosperity</h2>
+                    
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_1.png" alt="Visual 1">
+                        <p class="caption-text first-p">The rapid expansion of material wealth in the 1920s masked deep structural vulnerabilities within the American economy. While industrial productivity surged, the failure to proportionally increase worker wages created a severe gap in purchasing power, leading directly to the crisis of industrial overproduction and an overreliance on fragile installment credit.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: How did the combination of stagnant wages and increased production efficiency create an unstable economic foundation despite outward appearances of prosperity?</label>
+                            <textarea id="va_1" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_1.png" alt="Spotlight 1">
+                        <p class="spotlight-caption">A 1922 advertisement shows an American family gathered around a crystal radio, each listener leaning in to share the new technology of broadcast entertainment.</p>
+                    </div>
+
+                    <p class="first-p">The 1920s are frequently remembered through the lens of the "Roaring Twenties," a decade characterized by jazz, flappers, and an seemingly endless rise in prosperity. To the average American living in 1928, the economy appeared to be an unstoppable engine of progress. Wages were rising for many, unemployment was consistently low, and a new era of consumerism was transforming daily life. Refrigerators, radios, and automobiles—once luxuries reserved for the extremely wealthy—were becoming commonplace in middle-class homes. This explosion of material wealth was supported by a booming stock market that reached new, record-breaking heights almost every day. However, beneath this glittering surface lay profound structural vulnerabilities. The prosperity of the 1920s was built on a foundation that was hollowing out, plagued by uneven wealth distribution, industrial overproduction, and a dangerous reliance on credit.</p>
+
+                    <p>At the heart of these vulnerabilities was a staggering degree of wealth inequality. While the productivity of American industry grew by nearly 32 percent during the decade, the benefits of that growth were not shared among the workers who produced the goods. The income of the wealthiest one percent of the population skyrocketed by 75 percent, while the vast majority of Americans saw only modest gains. This meant that the top 0.1 percent of families had a combined income equal to that of the bottom 42 percent. This imbalance created a terminal problem for the economy: underconsumption. As factories became more efficient and churned out more products than ever before, the average American worker did not have enough purchasing power to buy them. By the late 1920s, warehouses were beginning to overflow with unsold cars, appliances, and textiles. When businesses can no longer sell their inventory, they stop expanding, they stop hiring, and eventually, they begin to lay off workers.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_2.png" alt="Spotlight 2">
+                        <p class="spotlight-caption">A 1924 advertisement for installment buying presents credit as an ordinary, practical way for Americans to purchase modern goods without paying the full cost up front.</p>
+                    </div>
+
+                    <p class="first-p">This gap between production and consumption was temporarily bridged by the emergence of a new and dangerous financial tool: the installment plan. For the first time, Americans were encouraged to "buy now, pay later." Consumers could take home a new Ford or a vacuum cleaner by paying a small down payment and agreeing to monthly installments. While this fueled the industrial boom of the mid-twenties, it also meant that a massive portion of American households were deeply in debt. By 1929, roughly 75 percent of the population earned less than the $2,500 a year that was considered the minimum necessary for a decent standard of living. These families were living on the edge; any interruption in their income would lead to immediate financial ruin. This fragility was hidden by the easy availability of credit, but the day of reckoning was approaching.</p>
+
+                    <!-- Subsection: The Mania of Speculation and Buying on Margin -->
+                    <h3>The Mania of Speculation and Buying on Margin</h3>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_2.png" alt="Visual 2">
+                        <p class="caption-text first-p">Speculative fever drove the stock market to unprecedented heights, fueled by the dangerous practice of buying on margin. By purchasing shares with heavily borrowed funds and relying on rising prices to repay debt, investors created a volatile bubble that left the entire financial system exposed to catastrophic failure the moment stock values began to decline.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: In what ways did the psychological belief in a "permanent plateau" of prosperity encourage financial behaviors that ultimately destroyed the stock market?</label>
+                            <textarea id="va_2" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_3.png" alt="Spotlight 3">
+                        <p class="spotlight-caption">A dense crowd of curb brokers fills Wall Street in 1920, conducting fast-paced outdoor trading in a restless, competitive financial marketplace.</p>
+                    </div>
+
+                    <p class="first-p">The most visible sign of the era's economic confidence was the stock market. Throughout the 1920s, the market had become a national obsession. It was no longer a place where professional investors carefully analyzed the long-term value of companies; it had become a laboratory for high-stakes gambling. Millions of ordinary Americans, from teachers to janitors, began pouring their savings into stocks, convinced that the market would continue to climb forever. This phenomenon, known as <strong>speculation</strong>, turned the market into a speculative bubble. Investors ignored the actual earnings of companies and focused solely on the hope that someone else would pay even more for their shares tomorrow. The <strong>Dow Jones Industrial Average</strong>, the primary measure of the stock market’s health, tripled in value between 1924 and September 1929.</p>
+
+                    <p>This speculative fever was made possible by the practice of <strong>buying on margin</strong>. Under this system, an investor could purchase a stock by paying only a small percentage—sometimes as little as 10 percent—of its price in cash. The investor would then borrow the remaining 90 percent from a stockbroker, using the stock itself as collateral. This allowed individuals to control large amounts of stock with very little of their own money. As long as prices rose, the investor could sell the stock, pay back the loan, and keep a significant profit. However, the system was a house of cards. If stock prices fell, the broker would issue a "margin call," demanding that the investor pay back the loan immediately. Because most margin buyers had no cash reserves, they would be forced to sell their stocks to raise money, which would drive prices down even further, triggering even more margin calls.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_4.png" alt="Spotlight 4">
+                        <p class="spotlight-caption">A crowd gathers anxiously outside the New Stock Exchange after the market collapse, with faces turned toward the building and the street in confusion.</p>
+                    </div>
+
+                    <p class="first-p">By September 1929, the market reached its peak and began to waver. Professional investors, sensing that the bubble was about to burst, began to quietly exit the market. On October 24, 1929—Black Thursday—the market took a sudden, terrifying dive. Panic began to spread as investors realized the "permanent plateau" of prosperity was a myth. A group of powerful bankers attempted to save the market by buying up large blocks of stock to stabilize prices, but their efforts provided only a temporary reprieve. On October 29, 1929—<strong>Black Tuesday</strong>—the bottom fell out completely. Shareholders frantically tried to sell 16.4 million shares, but there were no buyers. Billions of dollars in paper wealth simply evaporated in a single day. By the end of 1929, stock market losses exceeded $30 billion, more than the total amount the United States had spent on its involvement in World War I.</p>
+
+                    <!-- Combined Checkpoint Block -->
+                    <div id="cp-block-2" class="checkpoint-block" data-current="0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-gold);">Section Checkpoint</h4>
+                            <span class="cp-indicator text-sm" style="color: var(--color-steel-nib);">1 of 4</span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the unequal distribution of wealth in the 1920s contribute directly to economic instability?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-2')"> A) It caused the government to heavily tax the middle class to support the wealthy elite.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-2')"> B) It left the average worker with insufficient purchasing power to buy mass-produced goods.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-2')"> C) It encouraged laborers to organize nationwide strikes that halted industrial productivity.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-2')"> D) It prevented factories from physically producing enough goods to meet consumer demand.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was a major consequence of the widespread use of installment plans during the 1920s?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-2')"> A) It significantly reduced long-term debt across the American middle class.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-2')"> B) It forced the federal government to strictly regulate credit and commercial banking.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-2')"> C) It caused a sudden decrease in the manufacturing of household appliances and automobiles.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-2')"> D) It created extreme financial vulnerability for households if their income was interrupted.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">1. How did the practice of "buying on margin" increase the dangers of stock market speculation?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) It required investors to pay for stocks entirely with cash, draining national bank reserves.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) It allowed individuals to buy stock with borrowed money, amplifying losses if stock prices fell.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) It forced companies to lower the price of their stocks to attract ordinary, working-class buyers.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) It restricted stock purchases to professional investors, angering the general public.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What direct effect did margin calls have on the stock market during the crash of 1929?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) They allowed brokers to freeze stock prices to prevent a total economic collapse.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) They prompted the federal government to intervene and close the stock market permanently.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) They forced investors to sell their shares quickly to raise cash, driving prices down even further.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) They provided investors with emergency government loans to help them keep their stocks.</label>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-2', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto; background: rgba(0,0,0,0.5); opacity: 0.5; cursor: not-allowed;" disabled onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1')">&larr; Previous</button>
+                    <button id="btn-next-sec-2" class="action-btn" disabled onclick="switchTab('sec-3')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Descent into the Great Depression (Combined with Human Toll Subsection) -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Descent into the Great Depression</h2>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_3.png" alt="Visual 3">
+                        <p class="caption-text first-p">The crash of 1929 triggered a systemic collapse of the banking industry due to the fractional reserve system and the reckless investment of depositor funds in the stock market. As banks failed and life savings vanished, consumer spending evaporated, cutting off credit to businesses and initiating a vicious cycle of mass layoffs and factory closures.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: Why did the failure of individual banks have such a profound and immediate cascading effect on industrial production and national employment?</label>
+                            <textarea id="va_3" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_5.png" alt="Spotlight 5">
+                        <p class="spotlight-caption">Depositors stand in a long line outside a failed bank, hoping to recover savings that may already be gone.</p>
+                    </div>
+
+                    <p class="first-p">While the crash of 1929 was a catastrophic event, it did not cause the <strong>Great Depression</strong> on its own. Instead, it acted as the spark that ignited the dry tinder of a fundamentally flawed economy. The crash shattered the public’s confidence and triggered a total collapse of the banking system. Banks had not only lent money to stock speculators, but they had also invested their depositors' savings directly into the market. When the market crashed, these investments became worthless. Fearing for their money, millions of Americans rushed to their local banks to withdraw their savings in what were known as "bank runs."</p>
+
+                    <p>Because banks operate on a fractional reserve system—keeping only a small portion of their deposits in cash and lending out the rest—they could not meet the sudden demand for withdrawals. When a bank ran out of cash, it was forced to close its doors. Between 1929 and 1933, approximately 11,000 of the nation’s 25,000 banks failed. For the average family, this was the ultimate betrayal. The money they had saved for decades was simply gone, as there was no federal insurance for bank deposits at the time. This loss of savings further reduced consumer spending, deepening the economic gloom.</p>
+
+                    <p>The banking collapse paralyzed industry. Without access to credit, businesses could not fund their daily operations or pay their employees. As demand for goods plummeted, factories were forced to cut production and lay off workers. This created a vicious cycle: unemployed workers could not afford to buy products, leading to more production cuts and more layoffs. By 1933, the national unemployment rate hit a staggering 25 percent, meaning one out of every four workers was without a job. In some industrial cities like Toledo, Ohio, the unemployment rate reached as high as 80 percent. For those who still had jobs, hours were often cut and wages were slashed by 30 or 40 percent. The <strong>Great Depression</strong> was not just an economic downturn; it was a complete breakdown of the exchange system that held American society together.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_6.png" alt="Spotlight 6">
+                        <p class="spotlight-caption">A political cartoon shows a bent-over “Workingman” staggering beneath an oversized dinner pail labeled “Tariff for Graft Only.”</p>
+                    </div>
+
+                    <p class="first-p">The federal government’s initial attempts to handle the crisis only made matters worse. In 1930, Congress passed the <strong>Hawley-Smoot Tariff</strong>, which was intended to protect American farmers and manufacturers from foreign competition by raising import duties to the highest levels in U.S. history. The goal was to force Americans to buy American goods, thereby protecting jobs. However, the plan backfired spectacularly. European nations, already struggling with their own economic problems and debts from World War I, responded by raising their own tariffs on American exports. International trade plummeted by more than 40 percent in just a few years. Instead of protecting the American economy, the tariff choked off world trade and turned a severe national recession into a worldwide depression.</p>
+
+                    <!-- Subsection: The Human Toll: Urban Suffering and Survival -->
+                    <h3>The Human Toll: Urban Suffering and Survival</h3>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_4.png" alt="Visual 4">
+                        <p class="caption-text first-p">The sudden loss of employment and savings forced millions of Americans into homelessness and reliance on charitable relief. The emergence of makeshift shantytowns in major cities highlighted the human cost of the economic breakdown and the profound psychological devastation experienced by a workforce previously accustomed to self-reliance.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: How did the physical environment of the Hoovervilles reflect the broader failure of the national economic exchange system?</label>
+                            <textarea id="va_4" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_7.png" alt="Spotlight 7">
+                        <p class="spotlight-caption">Unemployed men wait in a breadline beneath the Brooklyn Bridge, bundled in coats and standing shoulder to shoulder for food.</p>
+                    </div>
+
+                    <p class="first-p">As the economic machinery of the nation ground to a halt, the human cost became visible on every street corner. In cities like New York, Chicago, and Detroit, the struggle for survival took a physical form. Men who had once worn suits to office jobs were now seen standing in miles-long <strong>breadlines</strong> or waiting outside soup kitchens for a single bowl of watery broth. The loss of a job almost always meant the loss of a home. Families who could no longer pay rent or mortgages were evicted, their belongings tossed onto the sidewalk by moving crews. Homelessness became a national epidemic, and for many, the only option was to build a shelter in a shantytown.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_8.png" alt="Spotlight 8">
+                        <p class="spotlight-caption">A sprawling Hooverville in Portland, Oregon, stretches across the landscape in a patchwork of rough wooden shacks and salvaged materials.</p>
+                    </div>
+
+                    <p class="first-p">These settlements, consisting of shacks made from scrap lumber, rusted tin, and cardboard boxes, sprang up in public parks and on the outskirts of cities across the country. In a bitter jab at the president whom many blamed for the crisis, these shantytowns were called <strong>Hoovervilles</strong>. Inside these camps, life was a daily battle against hunger, cold, and disease. People wrapped themselves in old newspapers—cynically called "Hoover blankets"—to stay warm, and many walked with their pockets turned out to show they had no money, a gesture known as "Hoover flags." The psychological impact was as devastating as the physical suffering. Men, in particular, felt a profound sense of shame at their inability to provide for their families, leading to a rise in desertion and suicide rates. The "rugged individual" of the 1920s was now a man begging for a nickel to buy a cup of coffee.</p>
+
+                    <p>The burden of the Depression was not shared equally across the population. African Americans and other racial minorities faced even harsher conditions due to systemic discrimination. In many industries, the rule was "last hired, first fired," meaning that Black workers were the first to lose their jobs when the economy soured. By 1932, the unemployment rate for African Americans in some cities exceeded 50 percent, double the national average. Despite this, many private charities and local governments provided less aid to minority communities than to white ones. Racial tensions flared as white workers, desperate for any income, began to compete for the low-paying domestic and service jobs that had traditionally been held by Black and Latino workers. In the Southwest, this desperation led to "repatriation" campaigns, where hundreds of thousands of people of Mexican descent—including many who were U.S. citizens—were pressured or forcibly deported to Mexico to reduce the number of people competing for relief and jobs.</p>
+
+                    <!-- Combined Checkpoint Block -->
+                    <div id="cp-block-3" class="checkpoint-block" data-current="0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-gold);">Section Checkpoint</h4>
+                            <span class="cp-indicator text-sm" style="color: var(--color-steel-nib);">1 of 5</span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Why did widespread "bank runs" occur immediately following the stock market crash?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) The government announced it was replacing the national currency to combat inflation.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) People feared losing their deposits because banks had invested heavily in the failing market.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) Banks offered high-interest rewards for customers who withdrew their money in cash.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) Investors needed to withdraw large sums of cash to pay off European wartime debts.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the collapse of the banking system directly affect the industrial sector?</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) Without access to credit, businesses could not fund operations and were forced to lay off workers.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) Businesses rapidly expanded their operations to fill the economic gap left by failing banks.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) Factories shifted entirely from domestic production to exporting goods to Europe.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) Corporations began printing their own forms of private currency to pay their employees.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">3. What was the unintended consequence of the Hawley-Smoot Tariff?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-3')"> A) It drastically increased domestic consumer spending by lowering the cost of goods.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-3')"> B) It eliminated the national debt by placing heavy taxes on all foreign imports.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-3')"> C) It caused a severe shortage of essential agricultural products in the United States.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-3')"> D) It provoked retaliatory tariffs from other nations, severely damaging global trade.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">1. What was the primary function of the shantytowns known as "Hoovervilles"?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-3')"> A) They served as federal housing projects initiated directly by the Hoover administration.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-3')"> B) They were organized protests constructed by labor unions demanding higher wages.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-3')"> C) They provided makeshift shelter for families who had been evicted from their homes.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-3')"> D) They were military encampments set up to prevent urban riots and looting.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the economic crisis specifically impact African American workers?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-3')"> A) They faced disproportionately high unemployment rates due to discriminatory "last hired, first fired" practices.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-3')"> B) They were largely relocated to federal farming jobs in the Midwest to escape urban poverty.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-3')"> C) They benefited from special government relief programs designed to integrate the workforce.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-3')"> D) They largely avoided job losses because they worked primarily in insulated, recession-proof industries.</label>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-3', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto; background: rgba(0,0,0,0.5); opacity: 0.5; cursor: not-allowed;" disabled onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2')">&larr; Previous</button>
+                    <button id="btn-next-sec-3" class="action-btn" disabled onclick="switchTab('sec-4')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Ecological Disaster: The Dust Bowl -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Ecological Disaster: The Dust Bowl</h2>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_5.png" alt="Visual 5">
+                        <p class="caption-text first-p">Intensive farming practices that stripped the native deep-rooted prairie grasses, combined with severe, prolonged drought, transformed the Southern Plains into an ecological wasteland. The resulting topsoil erosion not only destroyed the agricultural foundation of the region but also triggered a massive demographic shift as displaced families fled westward in search of survival.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: How did human economic decisions intersect with natural climate cycles to produce an environmental catastrophe that reshaped the demographics of the American West?</label>
+                            <textarea id="va_5" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">While urban Americans struggled with unemployment and homelessness, the residents of the Great Plains were facing a catastrophe of a different kind—one that combined economic failure with environmental collapse. For decades, farmers in the Southern Plains had been encouraged to plow up the native shortgrass prairie to plant wheat. During the wet years of the 1920s and the high demand of World War I, this seemed like a path to prosperity. However, the intensive farming practices removed the deep-rooted grasses that had held the soil in place for millennia. When a prolonged drought began in 1931, the exposed topsoil turned to powder.</p>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_9.png" alt="Spotlight 9">
+                        <p class="spotlight-caption">A farmer and his children move through a wall of blowing dust as the sky darkens and the land disappears around them.</p>
+                    </div>
+
+                    <p class="first-p">The result was the <strong>Dust Bowl</strong>, a massive environmental disaster that transformed parts of Kansas, Oklahoma, Texas, New Mexico, and Colorado into a wasteland. When the high winds characteristic of the Plains picked up, they carried away millions of tons of topsoil in terrifying clouds known as "black blizzards." These dust storms were so powerful they could black out the sun in the middle of the day, and the fine silt seeped into every crack of a farmhouse. People developed "dust pneumonia" from breathing the gritty air, and livestock choked to death as their lungs filled with sand. In 1934 alone, it was estimated that 350 million tons of soil were blown as far east as the Atlantic Ocean, even coating the desks of congressmen in Washington D.C. with the dust of the Plains.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_10.png" alt="Spotlight 10">
+                        <p class="spotlight-caption">Dust Bowl refugees pause beside an overloaded vehicle on the roadside near Bakersfield, California, surrounded by bundles and uncertainty.</p>
+                    </div>
+
+                    <p class="first-p">The ecological collapse made farming impossible. Thousands of families watched as their crops withered and their land literally blew away. Compounding the disaster, the same banks that were failing in the East were foreclosing on farms in the West. Faced with starvation and homelessness, a massive migration began. Hundreds of thousands of people abandoned their homes and headed west toward California, following the ribbon of Route 66. These refugees were collectively known as <strong>Okies</strong>, a term that originally referred to Oklahomans but came to be a derogatory label for any "poor white" migrant from the Dust Bowl region.</p>
+
+                    <p>The journey to California was an arduous trek in overloaded "jalopies"—old cars piled high with mattresses, pots, pans, and children. When they arrived in the "Golden State," however, they did not find the paradise they had imagined. California's agriculture was dominated by large-scale corporate farms that saw the migrants as a source of cheap, disposable labor. The <strong>Okies</strong> were forced to live in squalid "ditchbank" camps with no running water or sanitation. They faced intense hostility from local residents who feared they would drive down wages or strain local relief systems. This migration created a permanent shift in the demographics of the West, bringing the music, religion, and cultural attitudes of the rural South and Midwest to the Pacific coast, but it was a move born of utter desperation and loss.</p>
+
+                    <!-- Checkpoint Block -->
+                    <div id="cp-block-4" class="checkpoint-block" data-current="0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-gold);">Section Checkpoint</h4>
+                            <span class="cp-indicator text-sm" style="color: var(--color-steel-nib);">1 of 3</span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Which combination of factors directly caused the Dust Bowl?</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-4')"> A) Industrial pollution and urban expansion encroaching into rural farming areas</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-4')"> B) Severe drought combined with the removal of deep-rooted native prairie grasses</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-4')"> C) Government mandates to stop planting crops alongside periods of excessive rainfall</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-4')"> D) The introduction of invasive insect species and the widespread use of chemical fertilizers</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Why did hundreds of thousands of migrants, often called "Okies," head to California during the 1930s?</p>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-4')"> A) They were fleeing the ecological destruction of their farms and widespread bank foreclosures.</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-4')"> B) They were formally recruited by the federal government to build the national highway system.</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-4')"> C) They sought lucrative employment in the booming film and aviation industries on the coast.</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-4')"> D) They were granted large tracts of free land by the California state government.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">3. What reality did Dust Bowl migrants typically face upon arriving in California?</p>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-4')"> A) They were welcomed with high-paying factory jobs in rapidly growing coastal cities.</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-4')"> B) They successfully established small, independent family farms in the Central Valley.</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-4')"> C) They encountered intense hostility and were forced into squalid camps as cheap agricultural labor.</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-4')"> D) They were immediately provided with modern housing built by private charitable organizations.</label>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-4', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto; background: rgba(0,0,0,0.5); opacity: 0.5; cursor: not-allowed;" disabled onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3')">&larr; Previous</button>
+                    <button id="btn-next-sec-4" class="action-btn" disabled onclick="switchTab('sec-5')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Limits of Rugged Individualism and the Bonus Army -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Limits of Rugged Individualism and the Bonus Army</h2>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_6.png" alt="Visual 6">
+                        <p class="caption-text first-p">The federal government's adherence to "rugged individualism" and reliance on failed volunteerism proved inadequate in the face of widespread suffering. The violent dispersal of veterans seeking early payment of their military bonuses shattered public trust and epitomized the profound disconnect between the administration's policies and the desperate reality of the citizenry.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: What does the government's response to the Bonus Army reveal about the limitations of ideological policy when faced with a severe humanitarian crisis?</label>
+                            <textarea id="va_6" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">Throughout the early years of the crisis, President Herbert Hoover remained committed to a philosophy he called <strong>rugged individualism</strong>. Hoover, who had risen from poverty to become a world-renowned engineer and humanitarian, believed that the American character was defined by self-reliance. He feared that if the federal government provided direct "doles" or relief payments to individuals, it would destroy their initiative and create a permanent dependence on the state. Instead, he advocated for a policy of "volunteerism," urging business leaders to maintain wages and charitable organizations to increase their efforts to help the poor. He believed the role of the government was to foster cooperation, not to dictate terms to the economy.</p>
+
+                    <p>By 1932, it was clear that volunteerism was a failure. Private charities were bankrupt, and businesses could not maintain wages in the face of vanishing profits. Under intense pressure, Hoover finally moved toward more direct federal action, though he still avoided helping individuals directly. He supported the creation of the <strong>Reconstruction Finance Corporation (RFC)</strong>, which provided up to $2 billion in emergency loans to banks, railroads, and insurance companies. Hoover’s theory was that by stabilizing the "top" of the economy, the benefits would eventually "trickle down" to the average worker as banks resumed lending and businesses resumed hiring. However, to the millions of people who were currently starving or living in <strong>Hoovervilles</strong>, the RFC looked like a government bailout for the wealthy while the poor were left to fend for themselves.</p>
+
+                    <div class="spotlight-wrapper right">
+                        <img src="assets/Spotlight_11.png" alt="Spotlight 11">
+                        <p class="spotlight-caption">A wide view of the Bonus Army camp at Anacostia shows rows of tents and makeshift shelters built by World War I veterans and their families in Washington, D.C., during 1932.</p>
+                    </div>
+
+                    <p class="first-p">The public’s growing resentment toward Hoover reached a violent climax with the arrival of the <strong>Bonus Army</strong>. In 1924, Congress had approved a "bonus" payment for World War I veterans, intended to compensate them for the wages they had lost while serving in the military. However, the money was not scheduled to be paid until 1945. As the Depression worsened, a group of veterans led by Walter Waters began to demand that the bonus be paid immediately. In the summer of 1932, roughly 15,000 to 20,000 veterans and their families marched on Washington D.C., setting up a massive camp on the Anacostia Flats across from the Capitol. They were determined to stay until the Patman Bill, which authorized the payment, was passed.</p>
+
+                    <div class="spotlight-wrapper left">
+                        <img src="assets/Spotlight_12.png" alt="Spotlight 12">
+                        <p class="spotlight-caption">U.S. Army troops move against Bonus Army veterans during the July 1932 crackdown in Washington, turning a protest camp into a scene of forced removal.</p>
+                    </div>
+
+                    <p class="first-p">Hoover initially allowed the veterans to stay and even provided them with some supplies, but he grew increasingly nervous as the group refused to leave after the Senate rejected the bill. Fearing the influence of radicals and communists within the camp, Hoover ordered the U.S. Army to clear the veterans out. Under the command of General Douglas MacArthur, troops used tanks, bayonets, and tear gas to drive the "Bonus Marchers" from their shacks. The camp was burned to the ground, and in the chaos, several people were injured and a baby died from tear gas inhalation. The image of the U.S. military attacking its own veterans—men who had fought for the country only a decade earlier—was a final, crushing blow to Hoover’s reputation. It symbolized a government that had turned its back on its people, paving the way for a revolutionary change in the election of 1932.</p>
+
+                    <!-- Checkpoint Block -->
+                    <div id="cp-block-5" class="checkpoint-block" data-current="0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-gold);">Section Checkpoint</h4>
+                            <span class="cp-indicator text-sm" style="color: var(--color-steel-nib);">1 of 3</span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Why was President Hoover initially reluctant to provide direct federal relief to unemployed individuals?</p>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-5')"> A) He believed that direct handouts would destroy American self-reliance and initiative.</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-5')"> B) The Constitution strictly prohibited any form of federal spending on social welfare programs.</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-5')"> C) He wanted to save government funds exclusively for a massive military expansion.</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-5')"> D) He felt that European charities were already providing enough assistance to the poor.</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was the fundamental economic strategy behind the Reconstruction Finance Corporation (RFC)?</p>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-5')"> A) Providing cash directly to the unemployed to instantly stimulate consumer spending</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-5')"> B) Loaning money to top-level businesses and banks so the economic benefits would trickle down to workers</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-5')"> C) Buying failing farms and redistributing the land to displaced sharecroppers</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-5')"> D) Forcing wealthy individuals to pay higher taxes to directly fund public works projects</label>
+                        </div>
+
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">3. What was the ultimate outcome of the Bonus Army's occupation in Washington D.C.?</p>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-5')"> A) Congress immediately passed the Patman Bill, paying the veterans their requested bonuses.</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-5')"> B) The veterans were officially hired by the government to build public monuments.</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-5')"> C) The U.S. military forcibly evicted the veterans, severely damaging Hoover's political reputation.</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-5')"> D) The veterans successfully occupied the Capitol building until a new president was elected.</label>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-5', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto; background: rgba(0,0,0,0.5); opacity: 0.5; cursor: not-allowed;" disabled onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4')">&larr; Previous</button>
+                    <button id="btn-next-sec-5" class="action-btn" disabled onclick="switchTab('sec-6')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Quantitative & Spatial Analysis: Mapping History -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Quantitative & Spatial Analysis: Mapping History</h2>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_7.png" alt="Visual 7">
+                        <p class="caption-text first-p">The spatial dynamics of the 1930s ecological crisis dictated a massive, forced migration pattern. The intersection of geographic vulnerability on the Great Plains and the perceived agricultural promise of California established a migratory corridor that fundamentally altered the economic and cultural landscape of the Pacific Coast.</p>
+                        <div class="question-box">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">Analysis Question: How does analyzing the geographic movement of displaced populations help explain the sudden rise of social and economic tensions in California during the 1930s?</label>
+                            <textarea id="va_7" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <h3>Location and Landscape</h3>
+                    <p class="first-p">The Dust Bowl was a man-made and natural disaster centered in the Southern Great Plains. The "hardest hit" area covered roughly 100 million acres, centered on the panhandles of Texas and Oklahoma and adjacent parts of New Mexico, Colorado, and Kansas. This region is characterized by flat, treeless landscapes and a semi-arid climate, historically covered by deep-rooted shortgrass prairie that could survive periods of low rainfall.</p>
+
+                    <h3>Geography and Events</h3>
+                    <p class="first-p">The disaster was triggered by a "perfect storm" of geography and human activity. Farmers, encouraged by high wheat prices and unusually wet years in the 1920s, plowed under millions of acres of this native grass. When the cyclical drought returned in 1931, there were no roots to hold the soil. The geography of the Plains—its vast, unobstructed stretches—allowed high winds to pick up the loose topsoil, creating "black blizzards" that reached as far east as New York City and Washington D.C. The lack of natural barriers like mountains or forests meant the wind could gain tremendous speed across the open terrain.</p>
+
+                    <h3>Regional Impact</h3>
+                    <p class="first-p">The economic impact was total. By the mid-1930s, the region was losing an estimated $25 million in topsoil per day. This forced a mass exodus of nearly 2.5 million people. Migrants looked toward the "promised land" of California, following the geographic corridor of Route 66. This highway, stretching from Chicago to Los Angeles, became the "Mother Road" for the displaced. However, the geography of California’s Central Valley, while fertile, was already dominated by large-scale corporate farms, leaving the migrants to live in squalid "ditchbank" camps along the irrigation canals.</p>
+
+                    <h3>Broader Implications</h3>
+                    <p class="first-p">The Dust Bowl taught the nation a harsh lesson about environmental stewardship. It led to the creation of the Soil Conservation Service and the planting of "shelterbelts"—massive rows of trees intended to act as windbreaks across the Plains to prevent future erosion. Long-term, the migration of the "Okies" permanently altered the demographics and culture of California and the West, bringing midwestern music, religion, and political attitudes to the Pacific coast.</p>
+
+                    <div style="margin-top: 3rem;">
+                        <h3 style="border-bottom: 1px solid rgba(212,160,23,0.3); padding-bottom: 10px;">Perspective Questions</h3>
+                        
+                        <div class="question-box mt-6">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">1. Analyze the Imagery: Why did the public refer to makeshift shantytowns as "Hoovervilles" and newspapers as "Hoover blankets"? How did this specific choice of imagery affect the political standing of the Hoover administration during the early 1930s?</label>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+
+                        <div class="question-box mt-6">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">2. Compare Viewpoints: Contrast the reaction of a Dust Bowl farmer forced to leave his land with the likely reaction of a California landowner seeing thousands of migrants arrive. How do these differing perspectives explain the social tensions found in the Central Valley during the Depression?</label>
+                            <textarea id="pq_2" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+
+                        <div class="question-box mt-6">
+                            <label class="first-p font-bold block mb-2" style="color: var(--color-gold);">3. Evaluate Strategy: Why was the migration westward to California seen as a viable survival strategy for "Okies," despite the harsh reality of the migratory labor camps? Consider the role of hope and regional reputation in shaping demographic shifts.</label>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Enter your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5')">&larr; Previous</button>
+                    <button id="btn-next-sec-6" class="action-btn" onclick="switchTab('sec-7')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Vocabulary Cloze Activity -->
+        <section id="sec-7" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Cloze Activity</h2>
+                    <p class="first-p">Use the <strong>Word Bank</strong> to fill in the blanks in the narrative below. Each term will be used <strong>once</strong>.</p>
+                    
+                    <div class="word-bank">
+                        <span class="word-pill">Black Tuesday</span>
+                        <span class="word-pill">Buying on Margin</span>
+                        <span class="word-pill">Speculation</span>
+                        <span class="word-pill">Hawley-Smoot Tariff</span>
+                        <span class="word-pill">Dust Bowl</span>
+                        <span class="word-pill">Okies</span>
+                        <span class="word-pill">Hoovervilles</span>
+                        <span class="word-pill">The Bonus Army</span>
+                        <span class="word-pill">Reconstruction Finance Corporation (RFC)</span>
+                        <span class="word-pill">Breadlines</span>
+                        <span class="word-pill">Great Depression</span>
+                        <span class="word-pill">Dow Jones Industrial Average</span>
+                        <span class="word-pill">Rugged Individualism</span>
+                    </div>
+
+                    <div style="line-height: 2.4;">
+                        <p class="first-p">During the 1920s, many Americans believed the economy would keep growing forever. The stock market became a national obsession, and people eagerly followed the rise of the <input type="text" class="cloze-input" oninput="saveProgress()">, which seemed to confirm that prosperity had no ceiling. As confidence grew, many investors engaged in <input type="text" class="cloze-input" oninput="saveProgress()">, buying stocks not because companies were stable, but because they hoped prices would continue rising.</p>
+                        <p class="first-p">This risky behavior became even more dangerous through <input type="text" class="cloze-input" oninput="saveProgress()">, a practice in which investors purchased stocks with borrowed money. As long as prices climbed, profits seemed easy. But when panic struck the market in October 1929, the illusion collapsed. On <input type="text" class="cloze-input" oninput="saveProgress()">, millions of shares were dumped onto the market, prices crashed, and billions of dollars in paper wealth vanished.</p>
+                        <p class="first-p">The crash did not create economic weakness by itself, but it helped trigger the <input type="text" class="cloze-input" oninput="saveProgress()">, a devastating period of mass unemployment, bank failures, and social hardship. In response, President Herbert Hoover relied heavily on his belief in <input type="text" class="cloze-input" oninput="saveProgress()">, the idea that Americans should solve problems through self-reliance rather than depending on direct federal aid.</p>
+                        <p class="first-p">As suffering worsened, many unemployed families lost their homes and were forced to live in makeshift settlements called <input type="text" class="cloze-input" oninput="saveProgress()">. Others waited in long <input type="text" class="cloze-input" oninput="saveProgress()"> for food, revealing the human toll of the collapsing economy. Hoover eventually supported the creation of the <input type="text" class="cloze-input" oninput="saveProgress()">, which gave emergency loans to banks and large businesses, though many Americans criticized it for helping institutions more than ordinary people.</p>
+                        <p class="first-p">At the same time, conditions in rural America became even worse. A combination of poor farming practices and drought created the <input type="text" class="cloze-input" oninput="saveProgress()">, an ecological disaster that destroyed farmland across the Great Plains. Thousands of displaced farmers and their families migrated west to California, where they became known as <input type="text" class="cloze-input" oninput="saveProgress()">.</p>
+                        <p class="first-p">Federal policy also deepened the crisis in some ways. The <input type="text" class="cloze-input" oninput="saveProgress()"> raised import taxes in an attempt to protect American businesses, but other countries retaliated, causing world trade to collapse. Public anger at Hoover reached a dramatic peak when <input type="text" class="cloze-input" oninput="saveProgress()">, a group of World War I veterans demanding early bonus payments, marched on Washington and were violently removed by the U.S. Army.</p>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-6')">&larr; Previous</button>
+                    <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished (Export JSON)</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    /* Background Management */
+    const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+    let bgIndex = 0;
+
+    function rotateBackground() {
+        if (bgImages.length === 0) return;
+        const bgEl = document.getElementById('bg-slideshow');
+        if (!bgEl) return;
+        bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+        bgIndex = (bgIndex + 1) % bgImages.length;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        rotateBackground();
+        setInterval(rotateBackground, 10000); 
+        initCheckpoints();
+    });
+
+    /* Navigation */
+    function switchTab(id) {
+        document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+        document.getElementById('nav-' + id).classList.add('active-nav');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        saveProgress();
+    }
+
+    /* Data Collection & Export */
+    function collectAssignmentData(isFinal) {
+        const studentName = document.getElementById('student-name').value || "Unknown_Student";
+        const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+        const now = new Date().toLocaleDateString();
+
+        const assignmentData = {
+            assignmentTitle: "Interactive Chapter 14.1 - The Big Crash",
+            studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+            responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+        };
+
+        // Gather Visual Analysis Answers
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('va_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+            }
+        }
+
+        // Gather Checkpoint Answers
+        for(let i=1; i<=30; i++) {
+            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+            if(inputs.length > 0) {
+                let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+            }
+        }
+
+        // Gather Perspective Questions
+        for(let i=1; i<=10; i++) {
+            let el = document.getElementById('pq_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+            }
+        }
+
+        // Gather Cloze Activity Answers
+        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+            assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+        });
+
+        return assignmentData;
+    }
+
+    function triggerDownload(data, filename) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function downloadProgress() {
+        const data = collectAssignmentData(false);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+    }
+
+    function finishChapter() {
+        const dateField = document.getElementById('completion-date');
+        const now = new Date().toLocaleDateString();
+        if(dateField) dateField.value = now;
+
+        const data = collectAssignmentData(true);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        triggerDownload(data, `Chapter_Export_${safeName}.json`);
+
+        alert('Upload JSON file to Canvas');
+        switchTab('sec-1');
+    }
+
+    function loadProgress(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const loadedData = JSON.parse(e.target.result);
+                
+                // Restore ID Panel
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                
+                if (loadedData.studentInfo) {
+                    if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                        nameInput.value = loadedData.studentInfo.name;
+                        nameInput.setAttribute('readonly', 'true');
+                        nameInput.style.opacity = '0.7'; // "Burned in"
+                    }
+                    if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                        periodInput.value = loadedData.studentInfo.period;
+                        periodInput.setAttribute('disabled', 'true');
+                        periodInput.style.opacity = '0.7'; // "Burned in"
+                    }
+                }
+
+                if (loadedData.responses) {
+                    // Restore Visual Analysis
+                    if (loadedData.responses.visualAnalysis) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('va_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                            }
+                        }
+                    }
+                    
+                    // Restore Checkpoints
+                    if (loadedData.responses.checkpoints) {
+                        for(let i=1; i<=30; i++) {
+                            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                            if(inputs.length > 0) {
+                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                let savedVal = loadedData.responses.checkpoints[qText];
+                                if (savedVal && savedVal !== "No Answer") {
+                                    let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                    if(radio) radio.checked = true;
+                                }
+                            }
+                        }
+                    }
+
+                    // Restore Perspective Questions
+                    if (loadedData.responses.perspectiveQuestions) {
+                        for(let i=1; i<=10; i++) {
+                            let el = document.getElementById('pq_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                            }
+                        }
+                    }
+
+                    // Restore Cloze Activity
+                    if (loadedData.responses.clozeActivity) {
+                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                            if (savedVal) input.value = savedVal;
+                        });
+                    }
+                }
+                
+                // Update UI state
+                initCheckpoints();
+                alert('Progress loaded successfully!');
+                
+            } catch (err) {
+                console.error(err);
+                alert('Error loading progress file. Please make sure it is a valid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+        
+        // Reset file input so same file can be uploaded again if needed
+        event.target.value = '';
+    }
+
+    /* Save & Reset Logic */
+    function saveProgress() { console.log('Progress saved locally.'); }
+
+    function resetProgress() {
+        if(confirm('Are you sure you want to reset all progress?')) {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+            
+            // Un-burn ID panel fields
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            nameInput.removeAttribute('readonly');
+            nameInput.style.opacity = '1';
+            periodInput.removeAttribute('disabled');
+            periodInput.style.opacity = '1';
+
+            document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+            initCheckpoints();
+            switchTab('sec-1');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    /* Checkpoint Management */
+    const TOTAL_SECTIONS = 7; 
+
+    function initCheckpoints() {
+        for(let i=1; i<=TOTAL_SECTIONS; i++) { updateCpUI(`cp-block-${i}`); }
+        checkSectionUnlock();
+    }
+
+    function updateCpUI(blockId) {
+        const block = document.getElementById(blockId);
+        if(!block) return;
+        const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        const indicator = block.querySelector('.cp-indicator');
+        const prevBtn = block.querySelector('.cp-prev-btn');
+        const nextBtn = block.querySelector('.cp-next-btn');
+
+        questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+        if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+        if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+
+        if(nextBtn) {
+            const currentQ = questions[currentIndex];
+            const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+            if (currentIndex === questions.length - 1) {
+                if (isAnswered) {
+                    nextBtn.innerText = "Checkpoint Completed ✓";
+                    nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
+                    nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+                } else {
+                    nextBtn.innerText = "Finish Checkpoint";
+                    nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                }
+            } else {
+                nextBtn.innerText = "Next Question \u2192";
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; } 
+                else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+            }
+        }
+        checkSectionUnlock();
+    }
+
+    function navigateCp(blockId, dir) {
+        const block = document.getElementById(blockId);
+        let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        currentIndex += dir;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+        block.setAttribute('data-current', currentIndex);
+        updateCpUI(blockId);
+    }
+
+    function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
+    function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+
+    function setNavButtonState(btnId, enabled) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        if (enabled) {
+            btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+            btn.innerHTML = 'Next Section &rarr;'; btn.style.borderColor = 'var(--color-gold)';
+        } else {
+            btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
+            btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+        }
+    }
+
+    function checkSectionUnlock() {
+        setNavButtonState('btn-next-sec-1', true); 
+        setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
+        setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8') && isAnswered('cp9'));
+        setNavButtonState('btn-next-sec-4', isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+        setNavButtonState('btn-next-sec-5', isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15'));
+        // Section 6 has textareas (no strict CP locks), automatically unlocked if user reaches it
+        setNavButtonState('btn-next-sec-6', true);
+    }
+</script>
+</body>
+</html>
