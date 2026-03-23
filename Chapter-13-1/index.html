@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 13.1 - The Post-War Shock (1919)</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+/* --- GOLD STANDARD CSS --- */
+
+:root {
+  --color-navy-deep: #2B2118;      /* Background */
+  --color-cream: #F3EBDD;          /* Primary Text */
+  --color-navy: #3F6B4B;           /* Accent 1 */
+  --color-steel-nib: #7A7E80;      /* Accent 2 */
+  --color-gold: #D4A017;           /* Highlight */
+  --color-gold-light: #E6C870;     /* Derived from Highlight */
+  --font-heading: 'Times New Roman', serif;
+  --font-body: 'Arial', sans-serif;
+  --font-ui: 'Verdana', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-navy-deep);
+  color: var(--color-cream);
+  line-height: 1.8;
+  font-size: 16px;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Background System */
+#bg-slideshow {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+  background-color: var(--color-navy-deep);
+}
+
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  animation: slow-zoom 20s infinite alternate;
+}
+
+.slide.active { opacity: 1; }
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(43, 33, 24, 0.85) 0%,
+    rgba(43, 33, 24, 0.65) 50%,
+    rgba(43, 33, 24, 0.85) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes slow-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Typography */
+h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-gold); }
+h1 { font-size: 3.5rem !important; line-height: 1.1; text-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-bottom: 1rem; }
+h2 { font-size: 2.4rem !important; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+h3 { font-size: 1.75rem !important; color: var(--color-gold-light); margin-top: 2rem; margin-bottom: 0.5rem; }
+h4 { font-size: 1.2rem !important; color: var(--color-gold) !important; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 0.25rem; }
+
+/* First Paragraph Flush Rule */
+p { margin-bottom: 0; text-indent: 2em; color: var(--color-cream); margin-top: 0; }
+h1 + p, h2 + p, h3 + p, h4 + p, .visual-wrapper + p, .content-block > p:first-of-type, .spotlight-wrapper + p { text-indent: 0; }
+
+/* Layout & Glassmorphism */
+.app-container { display: block; width: 100%; min-height: 100vh; position: relative; z-index: 2; }
+
+@media (min-width: 1401px) {
+  .app-container {
+    padding-left: 280px; 
+  }
+}
+
+/* UPDATED WIDTH: +15ch */
+.content-wrapper { max-width: calc(900px + 15ch); margin: 0 auto; padding: 60px 40px; }
+
+/* Glass base must use Background RGB with alpha 0.12 */
+.content-block {
+  background: rgba(43, 33, 24, 0.12); /* Based on #2B2118 */
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: none;
+}
+
+/* ID Panel */
+.id-panel {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--color-gold);
+  border-radius: 6px;
+}
+
+.id-panel input, .id-panel select {
+  width: 100%;
+  padding: 10px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--color-cream);
+  border-radius: 4px;
+  font-family: var(--font-ui);
+}
+
+.id-panel label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--color-gold);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+/* Navigation & Buttons */
+.bottom-bar, .action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(212,175,55,0.3);
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-bar { margin-top: 2rem; justify-content: center; }
+
+.bottom-bar .center-actions { display: flex; gap: 10px; flex: 2; justify-content: center; }
+.bottom-bar .side-action { flex: 1; display: flex; }
+.bottom-bar .side-action.left { justify-content: flex-start; }
+.bottom-bar .side-action.right { justify-content: flex-end; }
+
+.action-btn {
+  padding: 15px 20px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+  font-size: 0.9rem;
+  background: rgba(0,0,0,0.35);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+}
+
+.action-btn:hover {
+  background: var(--color-gold);
+  color: var(--color-navy-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+}
+
+/* Logic Helpers */
+.chapter-section { display: none; animation: fadeIn 0.6s ease-out; }
+.chapter-section.active-section { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--color-steel-nib);
+  color: var(--color-cream);
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  resize: vertical;
+  min-height: 100px;
+  margin-top: 0.5rem;
+}
+
+/* Visuals (Visual_[#]) */
+.visual-wrapper {
+  position: relative;
+  margin: 2.5rem 0;
+  padding: 5px;
+  border: 1px solid rgba(212,175,55,0.3);
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+}
+
+.visual-wrapper:hover { transform: scale(1.01); border-color: var(--color-gold); }
+.visual-image-glass img { width: 100%; height: auto; display: block; }
+.visual-caption-glass { padding: 1rem; background: rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+.caption-content { margin: 0; font-size: 0.9rem; font-family: var(--font-body); color: rgba(245,230,195,0.9); line-height: 1.5; font-style: italic; text-indent: 0 !important; }
+
+.visual-question-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border-left: 3px solid var(--color-gold);
+}
+
+/* Hero Banner */
+.hero-banner-full {
+  width: calc(100vw - 280px); /* Fill the remaining width after the 280px nav panel */
+  margin-left: calc(50% - 50vw + 140px); /* Snap perfectly to the left edge of the content area */
+  margin-top: -60px; /* Counteract the container padding to make it flush to the top */
+  margin-bottom: 3rem;
+  border-radius: 0;
+  overflow: hidden;
+  border: none;
+  border-bottom: 2px solid var(--color-gold);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.3);
+  position: relative;
+}
+
+@media (max-width: 1400px) {
+  .hero-banner-full {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+}
+
+.hero-banner-full img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+
+/* Spotlight (Smaller than Visuals) */
+.spotlight-wrapper {
+  width: 25%;
+  max-width: 220px;
+  padding: 10px;
+  border: 1px solid rgba(212,175,55,0.25);
+  background: rgba(0,0,0,0.25);
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.spotlight-wrapper:hover {
+  transform: scale(1.75);
+  z-index: 50;
+  background: var(--color-navy-deep); /* Obscures text beneath it during expansion */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+
+.spotlight-right {
+  float: right;
+  margin: 0.5rem 0 1.5rem 2rem;
+  clear: right;
+  transform-origin: center right;
+}
+
+.spotlight-left {
+  float: left;
+  margin: 0.5rem 2rem 1.5rem 0;
+  clear: left;
+  transform-origin: center left;
+}
+
+@media (max-width: 768px) {
+  .spotlight-wrapper {
+    float: none !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem 0 !important;
+    transform-origin: center center;
+  }
+  .spotlight-wrapper:hover {
+    transform: scale(1.03); /* Restrict massive expansion on mobile to prevent clipping */
+  }
+}
+
+.spotlight-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+.spotlight-caption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(245,230,195,0.9);
+  font-style: italic;
+  text-indent: 0 !important;
+  line-height: 1.4;
+}
+
+/* Checkpoints */
+.checkpoint-container {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--color-gold);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 3rem 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  clear: both;
+}
+
+.cp-question-block { display: block; margin-bottom: 2rem; }
+.cp-question-block:last-child { margin-bottom: 0; }
+.cp-question-block p { text-indent: 0; margin-bottom: 1rem; font-weight: bold; color: var(--color-gold-light); }
+.cp-options { display: flex; flex-direction: column; gap: 10px; }
+.cp-option { display: flex; align-items: baseline; gap: 10px; }
+.cp-option input { margin-top: 5px; accent-color: var(--color-gold); }
+.cp-option label { cursor: pointer; }
+
+/* Cloze Narrative & Word Bank */
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  border: 1px dashed var(--color-gold-light);
+}
+
+.wb-title {
+  color: var(--color-gold);
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.wb-word {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  color: var(--color-cream);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.cloze-narrative p {
+  text-indent: 0;
+  margin-bottom: 1.5rem;
+  line-height: 2.4;
+}
+
+.cloze-input {
+  width: 200px;
+  padding: 2px 8px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--color-steel-nib);
+  border-bottom: 2px solid var(--color-gold);
+  color: var(--color-gold-light);
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  text-align: center;
+  display: inline-block;
+  margin: 0 4px;
+}
+
+/* Bulleted Lists */
+ul { list-style-type: square; margin-left: 2rem; margin-bottom: 1rem; color: var(--color-cream); }
+li { margin-bottom: 0.5rem; }
+
+/* Navigation Panel */
+.nav-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: rgba(43, 33, 24, 0.8);
+  backdrop-filter: blur(15px);
+  border: none;
+  border-right: 1px solid var(--color-gold);
+  border-radius: 0;
+  padding: 2rem 1.5rem;
+  z-index: 100;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+.nav-top {
+  flex: 1;
+  overflow-y: auto;
+}
+.nav-bottom {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(212,175,55,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-bottom .action-btn {
+  min-width: 0;
+  width: 100%;
+  padding: 10px;
+}
+.nav-panel h4 {
+  font-size: 1.1rem !important;
+  margin-top: 0;
+  border-bottom: 1px solid rgba(212,175,55,0.3);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.nav-panel h5 {
+  font-size: 0.9rem;
+  color: var(--color-cream);
+  margin: 0 0 1rem 0;
+  font-weight: normal;
+  font-family: var(--font-body);
+  opacity: 0.9;
+}
+.nav-panel button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--color-gold-light);
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.nav-panel button:hover, .nav-panel button.active-nav {
+  background: rgba(212,175,55,0.2);
+  color: var(--color-cream);
+}
+
+/* Hide Nav panel on smaller screens to prevent overlap */
+@media (max-width: 1400px) {
+  .nav-panel {
+    display: none;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="bg-slideshow">
+  <img class="slide active" src="assets/bg_1.png" alt="Background 1">
+  <img class="slide" src="assets/bg_2.png" alt="Background 2">
+  <img class="slide" src="assets/bg_3.png" alt="Background 3">
+</div>
+
+<!-- Navigation Panel -->
+<div class="nav-panel">
+  <div class="nav-top">
+    <h4>Chapter 13 | A CULTURE ON EDGE</h4>
+    <h5>13.1 | The Post-War Shock</h5>
+    <button onclick="switchTab('start-page')" id="nav-start-page" class="active-nav">Introduction</button>
+    <button onclick="switchTab('section-1')" id="nav-section-1">1. The Invisible Killer</button>
+    <button onclick="switchTab('section-2')" id="nav-section-2">2. The First Red Scare</button>
+    <button onclick="switchTab('section-3')" id="nav-section-3">3. Labor Unrest</button>
+    <button onclick="switchTab('section-4')" id="nav-section-4">4. The Red Summer</button>
+    <button onclick="switchTab('section-5')" id="nav-section-5">5. The Search for Stability</button>
+    <button onclick="switchTab('section-6')" id="nav-section-6">6. Data and Debate</button>
+    <button onclick="switchTab('cloze')" id="nav-cloze">Vocabulary Check</button>
+  </div>
+  <div class="nav-bottom">
+    <button class="action-btn" onclick="saveProgress()">Save Progress</button>
+    <button class="action-btn" onclick="if(confirm('Reset?')){localStorage.clear();location.reload();}">Reset</button>
+  </div>
+</div>
+
+<div class="app-container">
+  <main class="main-content">
+    <div class="content-wrapper">
+
+      <!-- START PAGE -->
+      <section id="start-page" class="chapter-section active-section">
+
+        <div class="hero-banner-full">
+          <img src="assets/Hero%20Banner%2013.1.png" alt="Hero Banner Chapter 13.1">
+        </div>
+
+        <div class="content-block id-panel">
+          <div><label>Full Name</label><input type="text" id="student-name" placeholder="Enter Name"></div>
+          <div><label>Period</label>
+            <select id="student-period">
+              <option value="">Select</option>
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+            </select>
+          </div>
+          <div><label>Date</label><input type="text" id="display-date" readonly placeholder="Auto-filled on Download" style="opacity: 0.7; cursor: default;"></div>
+        </div>
+
+        <div class="content-block">
+          <h3>Core Objectives</h3>
+          <ul>
+            <li>Analyze the demographic impact of the Spanish Flu pandemic on the U.S. population and the war effort.</li>
+            <li>Trace the origins of the First Red Scare, connecting the Bolshevik Revolution to the Palmer Raids and immigration restrictions.</li>
+            <li>Evaluate the causes of the "Red Summer" and the shift in African American resistance following the war.</li>
+          </ul>
+
+          <h3>Key Terms</h3>
+          <p style="text-indent: 0; font-size: 0.9em; opacity: 0.9;">Spanish Flu (1918 Pandemic) | First Red Scare | Bolshevik Revolution | A. Mitchell Palmer | Palmer Raids | J. Edgar Hoover | Emma Goldman | Sacco and Vanzetti | Boston Police Strike | Seattle General Strike | Red Summer (1919) | Chicago Race Riot | Tulsa Race Massacre (1921) | Warren G. Harding | "Return to Normalcy"</p>
+
+          <div class="action-bar">
+            <button class="action-btn" onclick="validateStartPage()">ENTER CHAPTER -></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="section-1" class="chapter-section">
+        <div class="content-block">
+          <h2>The Invisible Killer: The Spanish Flu Pandemic</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_1.png" alt="Hospital ward inside municipal auditorium">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">The sudden and massive influx of influenza patients in the fall of 1918 rapidly overwhelmed local healthcare systems, forcing municipalities to convert public spaces into temporary emergency wards to manage the unprecedented mortality rates among healthy young adults.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_01" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">How does the conversion of public spaces into medical wards reflect the structural limitations of early 20th-century urban healthcare systems during a biological crisis?</label>
+                <textarea id="visual_q_01" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <p>As the guns fell silent on the battlefields of Europe in November 1918, Americans looked forward to a period of peace and healing. However, even before the war officially ended, a new and terrifying threat had begun to sweep across the globe. This was not an invading army, but a biological one. The <strong>Spanish Flu (1918 Pandemic)</strong> became one of the deadliest disasters in human history, killing significantly more people than the Great War itself. Unlike common seasonal flus that typically target the very old and very young, this particular strain of the virus was uniquely lethal to healthy young adults—the same demographic that made up the nation’s workforce and military.</p>
+          <br>
+          <p>The pandemic struck in three distinct waves. The first wave appeared in early 1918 and seemed relatively mild. However, the second wave, which arrived in the fall of 1918, was catastrophic. Because the United States was still fully mobilized for war, the conditions were perfect for a virus to spread. Thousands of soldiers lived in cramped barracks at training camps like Fort Devens in Massachusetts and Camp Funston in Kansas. When these men were shipped overseas on crowded transport ships, they carried the virus with them. The movement of troops acted as a global delivery system for the disease, accelerating its spread to every corner of the earth.</p>
+          <br>
+          <p>In the United States, the impact was devastating. Public life came to a grinding halt in many cities. Local governments issued orders to close schools, churches, and theaters to prevent the spread of the virus. In some places, it was illegal to cough or sneeze in public without covering your mouth, and citizens were required to wear gauze masks. The sheer number of deaths overwhelmed the healthcare system. Hospitals ran out of beds, and in many cities, morgues were filled to capacity. In Philadelphia, for example, the death rate was so high that horse-drawn carts patrolled the streets, with drivers calling for people to bring out their dead, much like the plagues of the Middle Ages.</p>
+
+          <div class="spotlight-wrapper spotlight-right">
+            <img src="assets/Spotlight_1.png" alt="Masked Seattle police officers">
+            <p class="spotlight-caption">Masked Seattle police officers enforce public health regulations during the Spanish Flu pandemic, 1918. The widespread use of gauze masks reflected both the fear and limited medical tools available to combat the invisible virus. (Credit: National Archives and Records Administration)</p>
+          </div>
+
+          <p>The demographic impact of the pandemic was staggering. Estimates suggest that approximately 675,000 Americans died from the flu—more than ten times the number of Americans killed in combat during World War I. Globally, the death toll is estimated to be between 50 million and 100 million people. The pandemic also had a direct effect on the war effort. At one point, nearly a quarter of the U.S. Army was sick, and thousands of soldiers died of the flu before they even reached the front lines. The trauma of the pandemic, occurring simultaneously with the horrors of industrial warfare, left the American public exhausted and deeply unsettled as they entered the year 1919.</p>
+          <br>
+          <p>Medical science at the time was not yet advanced enough to fully understand or combat a virus. While doctors knew about bacteria, viruses were still largely mysterious. There were no antibiotics to treat secondary infections like pneumonia, and there was certainly no vaccine. Healthcare workers could do little more than provide "supportive care," which meant keeping patients hydrated and comfortable while their bodies fought the infection. The lack of a clear medical solution contributed to the sense of panic and helplessness that gripped the nation.</p>
+          <br>
+          <p>The pandemic also highlighted social and economic inequalities. While the virus hit every community, crowded urban tenements and poor rural areas suffered disproportionately. In these areas, social distancing was impossible, and access to quality medical care was non-existent. The collective memory of 1919 is often dominated by political strikes and riots, but for the average American family, the year was defined by the empty chairs at the dinner table left by the invisible enemy. Families were forced to grieve in isolation, as traditional funeral rites were often prohibited to prevent further contagion. This private suffering, occurring on a mass scale, created a profound psychological rift in the American experience, making the transition back to civilian life incredibly difficult for returning veterans and their families alike.</p>
+
+          <div class="checkpoint-container">
+            <h3 style="margin-top: 0;">Checkpoint 1</h3>
+            
+            <div class="cp-question-block">
+              <p>1. Why did the Spanish Flu pandemic have such a significant impact on the U.S. military effort during World War I?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_1" value="0"> A) It primarily affected the elderly, who were the main financial supporters of the war.</label>
+                <label class="cp-option"><input type="radio" name="cp_1" value="1"> B) The movement of troops in crowded barracks and ships accelerated the spread of the virus among young soldiers.</label>
+                <label class="cp-option"><input type="radio" name="cp_1" value="2"> C) It caused a shortage of rubber and steel needed for military equipment.</label>
+                <label class="cp-option"><input type="radio" name="cp_1" value="3"> D) The virus was developed as a biological weapon by the Central Powers.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>2. Why was the 1918 flu strain considered uniquely terrifying compared to typical seasonal flus?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_2" value="0"> A) It only affected neutral countries not involved in World War I.</label>
+                <label class="cp-option"><input type="radio" name="cp_2" value="1"> B) It was uniquely lethal to healthy young adults rather than the very old or very young.</label>
+                <label class="cp-option"><input type="radio" name="cp_2" value="2"> C) It was spread primarily through the consumption of contaminated water.</label>
+                <label class="cp-option"><input type="radio" name="cp_2" value="3"> D) It caused permanent blindness in most survivors.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>3. What role did the U.S. military play in the global spread of the Spanish Flu?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_3" value="0"> A) The military intentionally used the virus as a biological weapon.</label>
+                <label class="cp-option"><input type="radio" name="cp_3" value="1"> B) Soldiers refused to wear masks, leading to a civilian uprising.</label>
+                <label class="cp-option"><input type="radio" name="cp_3" value="2"> C) The movement of troops in crowded barracks and transport ships acted as a global delivery system for the disease.</label>
+                <label class="cp-option"><input type="radio" name="cp_3" value="3"> D) Military hospitals were the only places with a functioning vaccine.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>4. How did the limitations of medical science in 1919 affect the response to the pandemic?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_4" value="0"> A) Doctors focused on surgery because they believed the flu was a physical injury.</label>
+                <label class="cp-option"><input type="radio" name="cp_4" value="1"> B) Scientists had not yet discovered how to treat viruses, and there were no antibiotics for secondary infections.</label>
+                <label class="cp-option"><input type="radio" name="cp_4" value="2"> C) The government banned the use of masks because they were seen as ineffective.</label>
+                <label class="cp-option"><input type="radio" name="cp_4" value="3"> D) Most healthcare workers went on strike to protest the lack of medical equipment.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('start-page')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('section-2')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="section-2" class="chapter-section">
+        <div class="content-block">
+          <h2>The First Red Scare: Hysteria and the Palmer Raids</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_2.png" alt="Political cartoon of federal law enforcement rounding up immigrants">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">Following the Bolshevik Revolution and a series of domestic bombings, federal agencies systematically targeted immigrant communities and suspected political radicals without due process, culminating in mass deportations based primarily on political affiliation rather than criminal action.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_02" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">In what ways did the association between radical politics and recent immigrants serve to justify the suspension of civil liberties during periods of national anxiety?</label>
+                <textarea id="visual_q_02" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <p>While the pandemic ravaged the population, a different kind of fear began to take root in the American psyche: the fear of political subversion. This period, known as the <strong>First Red Scare</strong>, was a wave of intense anti-communist paranoia that swept the country in 1919 and 1920. The roots of this hysteria lay in the <strong>Bolshevik Revolution</strong> of 1917 in Russia. Led by Vladimir Lenin, the Bolsheviks had overthrown the Russian monarchy and established a communist state. They called for a worldwide revolution of the working class to topple capitalist governments everywhere.</p>
+          <br>
+          <p>To many Americans, this was a direct threat to the "American Way of Life"—a system based on private property, individual liberty, and democratic government. The fear was intensified by a series of events in 1919 that seemed to suggest a communist plot was underway in the United States. A series of mail bombs were sent to prominent government and business leaders, including John D. Rockefeller and Supreme Court Justice Oliver Wendell Holmes. One bomb even exploded at the home of the U.S. Attorney General, <strong>A. Mitchell Palmer</strong>.</p>
+
+          <div class="spotlight-wrapper spotlight-left">
+            <img src="assets/Spotlight_2.png" alt="A. Mitchell Palmer">
+            <p class="spotlight-caption">Attorney General A. Mitchell Palmer, whose anti-radical campaign led to the controversial Palmer Raids targeting suspected communists and anarchists. (Credit: Library of Congress)</p>
+          </div>
+
+          <p>Palmer, who had presidential ambitions, used these attacks to justify a massive government crackdown on suspected radicals. He appointed <strong>J. Edgar Hoover</strong> to head a new anti-radical division within the Justice Department (which would later become the FBI). Together, they organized a series of coordinated attacks known as the <strong>Palmer Raids</strong>. Throughout late 1919 and early 1920, federal agents burst into the meeting halls and homes of suspected communists, socialists, and anarchists. Thousands of people were arrested, often without warrants and held for long periods without being charged with a crime.</p>
+          <br>
+          <p>The Red Scare was deeply intertwined with nativism—the suspicion of immigrants and foreign influences. Many of the people targeted in the Palmer Raids were immigrants who had not yet become citizens. The government used the Alien Act of 1918 to deport hundreds of people based on their political beliefs rather than any specific illegal actions. The most famous example of this was the deportation of <strong>Emma Goldman</strong>, a well-known anarchist and feminist who had lived in the U.S. for decades. She, along with 248 others, was put on a ship nicknamed the "Soviet Ark" and sent back to Russia.</p>
+
+          <div class="spotlight-wrapper spotlight-right">
+            <img src="assets/Spotlight_3.png" alt="Emma Goldman">
+            <p class="spotlight-caption">Emma Goldman, anarchist activist deported during the Palmer Raids, symbolizing the era’s fear of political radicalism and immigration. (Credit: Library of Congress)</p>
+          </div>
+
+          <p>The atmosphere of suspicion extended into the legal system. One of the most controversial cases of the era involved <strong>Sacco and Vanzetti</strong>, two Italian immigrants and self-proclaimed anarchists.</p>
+          
+          <div class="spotlight-wrapper spotlight-left">
+            <img src="assets/Spotlight_4.png" alt="Sacco and Vanzetti">
+            <p class="spotlight-caption">Nicola Sacco and Bartolomeo Vanzetti, whose controversial murder trial became an international symbol of injustice fueled by anti-immigrant fear. (Credit: Library of Congress)</p>
+          </div>
+
+          <p>They were arrested in 1920 for the robbery and murder of a factory paymaster and a guard in South Braintree, Massachusetts. Despite weak evidence and multiple witnesses providing alibis for the men, they were convicted and sentenced to death. Many observers believed they were convicted more for their radical political views and their immigrant status than for any actual evidence of the crime. Their case became a global cause célèbre, symbolizing the perceived injustice of the Red Scare era.</p>
+          <br>
+          <p>The First Red Scare eventually burned itself out. Palmer’s credibility suffered a major blow when he predicted a massive, violent uprising on May Day (International Workers' Day) in 1920 that never happened. As the predicted violence failed to materialize, the public began to grow weary of the constant alarms. Furthermore, prominent lawyers and civil liberties advocates began to speak out against the government’s disregard for due process and the Bill of Rights. While the intense hysteria faded, the period left a lasting legacy of government surveillance and a deep-seated suspicion of labor unions and radical politics. The Scare effectively marginalized political dissent for a decade, ensuring that the pro-business policies of the 1920s would meet little organized resistance from the political left.</p>
+
+          <div class="checkpoint-container">
+            <h3 style="margin-top: 0;">Checkpoint 2</h3>
+            
+            <div class="cp-question-block">
+              <p>1. What was the primary justification used by A. Mitchell Palmer for the "Palmer Raids"?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_5" value="0"> A) To ensure that labor unions received fair wages and safe working conditions.</label>
+                <label class="cp-option"><input type="radio" name="cp_5" value="1"> B) To combat a perceived communist and anarchist plot to overthrow the U.S. government.</label>
+                <label class="cp-option"><input type="radio" name="cp_5" value="2"> C) To protect the civil liberties of Italian immigrants like Sacco and Vanzetti.</label>
+                <label class="cp-option"><input type="radio" name="cp_5" value="3"> D) To encourage more immigrants to join the Bolshevik movement in Russia.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>2. What event in Russia served as the primary catalyst for the First Red Scare in the United States?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_6" value="0"> A) The assassination of the Archduke Franz Ferdinand.</label>
+                <label class="cp-option"><input type="radio" name="cp_6" value="1"> B) The signing of the Treaty of Versailles.</label>
+                <label class="cp-option"><input type="radio" name="cp_6" value="2"> C) The Bolshevik Revolution and the call for a worldwide worker's uprising.</label>
+                <label class="cp-option"><input type="radio" name="cp_6" value="3"> D) The Russian decision to join the League of Nations.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>3. What was a significant outcome of the Palmer Raids led by A. Mitchell Palmer and J. Edgar Hoover?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_7" value="0"> A) The immediate arrest and conviction of the mail bombers.</label>
+                <label class="cp-option"><input type="radio" name="cp_7" value="1"> B) The creation of a federal minimum wage for immigrant workers.</label>
+                <label class="cp-option"><input type="radio" name="cp_7" value="2"> C) The deportation of hundreds of immigrants, such as Emma Goldman, based on their political beliefs.</label>
+                <label class="cp-option"><input type="radio" name="cp_7" value="3"> D) A public apology from the Justice Department for violating civil liberties.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>4. The case of Sacco and Vanzetti is often cited by historians as an example of:</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_8" value="0"> A) The success of the American legal system in catching dangerous terrorists.</label>
+                <label class="cp-option"><input type="radio" name="cp_8" value="1"> B) How nativism and political radicalism could influence the judicial process during the Red Scare.</label>
+                <label class="cp-option"><input type="radio" name="cp_8" value="2"> C) The first time Italian immigrants were allowed to serve on a jury.</label>
+                <label class="cp-option"><input type="radio" name="cp_8" value="3"> D) A successful appeal that overturned an unjust conviction.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-1')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('section-3')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="section-3" class="chapter-section">
+        <div class="content-block">
+          <h2>Labor Unrest and the Post-War Economy</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_3.png" alt="State militiamen facing striking workers">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">The deployment of armed state militias to suppress industrial walkouts exemplifies the heavy-handed government tactics used to break the massive wave of labor unrest triggered by post-war inflation and the sudden rollback of wartime worker protections.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_03" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">How does the visual of armed troops facing civilian workers illustrate the government's stance on organized labor and public safety during periods of severe economic instability?</label>
+                <textarea id="visual_q_03" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <p>The year 1919 was also defined by an unprecedented wave of labor strikes. During the war, the government had worked closely with labor unions to ensure continuous production. In exchange for a "no-strike" pledge, unions saw their memberships grow and their wages increase. However, once the war ended, the government lifted price controls, and inflation skyrocketed. The cost of living doubled, but wages remained stagnant. Furthermore, business leaders, no longer under pressure to maintain wartime production, moved to roll back the gains unions had made, such as the eight-hour workday.</p>
+          <br>
+          <p>The result was a massive explosion of industrial conflict. Over 3,600 strikes occurred in 1919, involving more than 4 million workers. Two of the most significant were the <strong>Seattle General Strike</strong> and the <strong>Boston Police Strike</strong>. In Seattle, more than 60,000 workers walked off the job, bringing the entire city to a standstill for five days.</p>
+
+          <div class="spotlight-wrapper spotlight-right">
+            <img src="assets/Spotlight_5.png" alt="Seattle General Strike">
+            <p class="spotlight-caption">Crowds gather during the Seattle General Strike of 1919, the first citywide general strike in American history. (Credit: Picryl)</p>
+          </div>
+
+          <p>This was the first "general strike" in American history, where workers from many different industries struck together in solidarity. Although the strike was peaceful, the mayor of Seattle and many national newspapers labeled it a "Bolshevik" attempt to start a revolution, further fueling the Red Scare.</p>
+          <br>
+          <p>The Boston Police Strike of September 1919 had an even greater political impact. Boston police officers had not received a raise in years and were working in deteriorating conditions. When they attempted to form a union and went on strike, the city was left without police protection, and some looting occurred. The Governor of Massachusetts, Calvin Coolidge, took a hardline stance. He called in the National Guard to restore order and famously declared, "There is no right to strike against the public safety by anybody, anywhere, any time."</p>
+
+          <div class="spotlight-wrapper spotlight-left">
+            <img src="assets/Spotlight_6.png" alt="Boston Police Strike">
+            <p class="spotlight-caption">Massachusetts National Guard soldiers patrol Boston during the Boston Police Strike, after Governor Calvin Coolidge fired striking officers. (Credit: Post-Gazette)</p>
+          </div>
+
+          <p>Coolidge fired all the striking officers and replaced them with new recruits. His firm handling of the situation made him a national hero among conservatives and eventually propelled him to the vice presidency and then the presidency. The failure of the 1919 strikes was a major setback for organized labor. Business leaders used the public’s fear of radicalism to associate unions with communism, a tactic that would keep the labor movement on the defensive throughout the 1920s.</p>
+          <br>
+          <p>The transition from a wartime to a peacetime economy was rocky. The sudden cancellation of billions of dollars in war contracts led to a brief but sharp recession. Returning soldiers struggled to find jobs, often competing with African Americans and women who had entered the industrial workforce during the war. This economic competition, combined with the underlying racial tensions of the era, created a volatile social environment that was ready to explode. The lack of a clear federal plan for demobilization meant that millions of Americans were left to navigate a rapidly changing economy with little support, leading to deep-seated resentment that often found an outlet in social conflict.</p>
+
+          <div class="checkpoint-container">
+            <h3 style="margin-top: 0;">Checkpoint 3</h3>
+            
+            <div class="cp-question-block">
+              <p>1. How did Governor Calvin Coolidge respond to the Boston Police Strike of 1919?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_9" value="0"> A) He negotiated a settlement that gave the police a 20% pay raise.</label>
+                <label class="cp-option"><input type="radio" name="cp_9" value="1"> B) He supported the police's right to form a union and bargain collectively.</label>
+                <label class="cp-option"><input type="radio" name="cp_9" value="2"> C) He fired the striking officers and declared that no one has the right to strike against public safety.</label>
+                <label class="cp-option"><input type="radio" name="cp_9" value="3"> D) He invited the Bolsheviks to help mediate the dispute between the police and the city.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>2. Which economic factor most contributed to the explosion of labor strikes in 1919?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_10" value="0"> A) A sudden drop in the cost of living that made unions unnecessary.</label>
+                <label class="cp-option"><input type="radio" name="cp_10" value="1"> B) Skyrocketing inflation and stagnant wages following the lifting of wartime price controls.</label>
+                <label class="cp-option"><input type="radio" name="cp_10" value="2"> C) A government mandate that all workers must join a union.</label>
+                <label class="cp-option"><input type="radio" name="cp_10" value="3"> D) The discovery of new gold mines that devalued the American dollar.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>3. How did the Seattle General Strike differ from most other labor disputes of the era?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_11" value="0"> A) It was the first time workers from many different industries struck together in solidarity.</label>
+                <label class="cp-option"><input type="radio" name="cp_11" value="1"> B) It was led entirely by the Seattle Police Department.</label>
+                <label class="cp-option"><input type="radio" name="cp_11" value="2"> C) It was the only strike that the federal government officially supported.</label>
+                <label class="cp-option"><input type="radio" name="cp_11" value="3"> D) It lasted for over a year and led to the total bankruptcy of the city.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>4. Governor Calvin Coolidge’s response to the Boston Police Strike was significant because:</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_12" value="0"> A) He became a national hero to labor unions for his fair negotiations.</label>
+                <label class="cp-option"><input type="radio" name="cp_12" value="1"> B) He argued that the police had a constitutional right to strike for higher pay.</label>
+                <label class="cp-option"><input type="radio" name="cp_12" value="2"> C) His hardline stance against striking "against the public safety" propelled him toward the presidency.</label>
+                <label class="cp-option"><input type="radio" name="cp_12" value="3"> D) He was the first governor to be impeached for his handling of a strike.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-2')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('section-4')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="section-4" class="chapter-section">
+        <div class="content-block">
+          <h2>The Red Summer: Racial Violence and the New Negro</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_4.png" alt="Aftermath of the Tulsa Race Massacre">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">The systematic annihilation of the prosperous Greenwood district in Tulsa, Oklahoma, illustrates the extreme and systemic nature of racial violence during this era, where economic resentment and unchecked white supremacy culminated in the targeted destruction of a thriving Black community and its foundational wealth.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_04" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">How does the scale of destruction in the Greenwood district reflect the broader consequences of economic competition and racial hostility in the post-World War I United States?</label>
+                <textarea id="visual_q_04" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <p>As if the pandemic, the Red Scare, and labor unrest were not enough, 1919 also witnessed some of the worst racial violence in American history. This period became known as the <strong>Red Summer (1919)</strong>, a term coined by NAACP leader James Weldon Johnson to describe the blood that flowed in dozens of American cities. The violence was the result of a "perfect storm" of factors: the Great Migration, economic competition, and the changed expectations of African American veterans.</p>
+          <br>
+          <p>During the war, hundreds of thousands of African Americans had moved from the rural South to the industrial North in search of jobs and an escape from Jim Crow laws. This demographic shift created intense competition for housing and employment in northern cities. Furthermore, about 400,000 African American men had served in the military during World War I. Having fought "to make the world safe for democracy" in Europe, these veterans returned home with a new sense of pride and a determination to claim their full rights as citizens. This assertive attitude was often met with violent resistance from white citizens who wanted to maintain the pre-war racial status quo.</p>
+          <br>
+          <p>The violence erupted in more than two dozen cities. The <strong>Chicago Race Riot</strong> was one of the most severe. It began when a Black teenager, Eugene Williams, accidentally drifted into the "white" section of a segregated beach on Lake Michigan. White bathers threw rocks at him, causing him to drown. When the police refused to arrest the man identified as the rock-thrower, fighting broke out between Black and white crowds. The violence lasted for nearly a week, resulting in 38 deaths and leaving over 1,000 families—mostly Black—homeless.</p>
+
+          <div class="spotlight-wrapper spotlight-right">
+            <img src="assets/Spotlight_7.png" alt="Chicago Race Riot">
+            <p class="spotlight-caption">Destroyed homes following the Chicago Race Riot of 1919, illustrating the scale of racial violence during the Red Summer. (Credit: Chicago Commission on Race Relations)</p>
+          </div>
+
+          <p>What distinguished the Red Summer from previous eras of racial violence was the level of Black resistance. African Americans did not simply flee; they fought back. In Washington D.C., Black veterans organized armed patrols to protect their neighborhoods from white mobs. This spirit of defiance was part of a broader cultural and political movement often called the "New Negro" movement. It signaled that the era of passive submission to racial violence was over.</p>
+          <br>
+          <p>Although it occurred slightly later, the <strong>Tulsa Race Massacre (1921)</strong> represented the extreme peak of this era's racial hostility. In the early 20th century, the Greenwood district of Tulsa, Oklahoma, was one of the most prosperous African American communities in the nation, often called the "Black Wall Street." In June 1921, following an unproven accusation against a Black man involving a white woman, white mobs—some of them deputized and armed by city officials—invaded Greenwood.</p>
+          <br>
+          <p>Over the course of 48 hours, the mobs burned more than 35 square blocks of the district to the ground.</p>
+
+          <div class="spotlight-wrapper spotlight-left">
+            <img src="assets/Spotlight_8.png" alt="Ruins of the Greenwood District">
+            <p class="spotlight-caption">Ruins of the Greenwood District after the Tulsa Race Massacre of 1921, once known as "Black Wall Street." (Credit: Library of Congress)</p>
+          </div>
+
+          <p>Private airplanes were reportedly used to drop incendiary devices on the neighborhood. While the official death toll at the time was listed as 36, modern historians believe as many as 300 people were killed. Thousands were left homeless and held in internment camps. For decades, the massacre was largely omitted from history books and public discussion, representing a profound collective failure to address the depths of American racial trauma. The massacre destroyed not just buildings, but the economic foundation of a generation of Black Tulsans, illustrating the high cost of African American success in a society dominated by white supremacy.</p>
+
+          <div class="checkpoint-container">
+            <h3 style="margin-top: 0;">Checkpoint 4</h3>
+            
+            <div class="cp-question-block">
+              <p>1. What was a major cause of the "Red Summer" of 1919?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_13" value="0"> A) The sudden migration of white workers to the rural South.</label>
+                <label class="cp-option"><input type="radio" name="cp_13" value="1"> B) The refusal of African American veterans to return to the United States after the war.</label>
+                <label class="cp-option"><input type="radio" name="cp_13" value="2"> C) Competition for jobs and housing between white citizens and African Americans who moved North during the Great Migration.</label>
+                <label class="cp-option"><input type="radio" name="cp_13" value="3"> D) A federal law that mandated the total integration of all American beaches and parks.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>2. What demographic shift provided the backdrop for the racial violence of the Red Summer?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_14" value="0"> A) The movement of white factory owners to the rural South.</label>
+                <label class="cp-option"><input type="radio" name="cp_14" value="1"> B) The Great Migration of African Americans from the rural South to industrial Northern cities.</label>
+                <label class="cp-option"><input type="radio" name="cp_14" value="2"> C) The massive immigration of Russian Bolsheviks to Chicago.</label>
+                <label class="cp-option"><input type="radio" name="cp_14" value="3"> D) The relocation of Native Americans to urban centers in Oklahoma.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>3. The "New Negro" movement of the post-war era was characterized by:</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_15" value="0"> A) A return to the passive submission strategies of the late 19th century.</label>
+                <label class="cp-option"><input type="radio" name="cp_15" value="1"> B) A refusal to serve in the military during future conflicts.</label>
+                <label class="cp-option"><input type="radio" name="cp_15" value="2"> C) A new sense of pride and a determination to fight back against racial violence and claim full rights.</label>
+                <label class="cp-option"><input type="radio" name="cp_15" value="3"> D) The total abandonment of the NAACP in favor of the Bolshevik party.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>4. What was the ultimate impact of the Tulsa Race Massacre on the Greenwood district?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_16" value="0"> A) The district was immediately rebuilt with federal emergency funds.</label>
+                <label class="cp-option"><input type="radio" name="cp_16" value="1"> B) The massacre destroyed the economic foundation of a generation of Black Tulsans and their "Black Wall Street."</label>
+                <label class="cp-option"><input type="radio" name="cp_16" value="2"> C) It led to the immediate integration of all schools in Oklahoma.</label>
+                <label class="cp-option"><input type="radio" name="cp_16" value="3"> D) It was widely celebrated in history books as a turning point for civil rights.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-3')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('section-5')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="section-5" class="chapter-section">
+        <div class="content-block">
+          <h2>The Search for Stability: Harding and the "Return to Normalcy"</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_5.png" alt="1920s-style campaign poster for Harding">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">The accumulated trauma of global war, a deadly pandemic, and severe domestic turmoil created a profound psychological exhaustion within the electorate, leading to a decisive rejection of progressive reform and internationalism in favor of isolationist and pro-business policies.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_05" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">What underlying societal fears made the vague promise of "normalcy" more appealing to voters than continued progressive reform in 1920?</label>
+                <textarea id="visual_q_05" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <p>By the end of 1919, the American public was exhausted. The idealism of Woodrow Wilson’s "Fourteen Points" had been replaced by the grim realities of a pandemic, domestic terrorism, labor strikes, and race riots. Americans were tired of reform, tired of sacrifice, and tired of international responsibilities. They craved stability and a sense of the familiar.</p>
+          <br>
+          <p>In the election of 1920, the Republican candidate, <strong>Warren G. Harding</strong>,</p>
+
+          <div class="spotlight-wrapper spotlight-right">
+            <img src="assets/Spotlight_11.png" alt="Warren G. Harding">
+            <p class="spotlight-caption">President Warren G. Harding during his 1920 campaign, promising Americans a "Return to Normalcy" after years of crisis. (Credit: Library of Congress)</p>
+          </div>
+
+          <p>captured this national mood perfectly. Harding was a genial senator from Ohio who lacked the intellectual depth of Wilson but possessed a comforting presence. His campaign slogan was a promise of a <strong>"Return to Normalcy"</strong>. While "normalcy" wasn't actually a word in the dictionary at the time, everyone understood what Harding meant. He meant a return to a time before the war, before the Progressive reforms, and before the world became so complicated.</p>
+          <br>
+          <p>Harding’s vision of normalcy included a retreat from international entanglements (isolationism) and a return to pro-business economic policies (laissez-faire). His overwhelming victory—winning over 60% of the popular vote—signaled the end of the Progressive Era and the beginning of a decade of Republican dominance. The American people had decided that they were done trying to change the world; they just wanted to enjoy the benefits of peace and prosperity. However, as the 1920s would prove, the forces of modernization had already changed the country forever, and there was no true way to go back to the world as it was before 1914. Harding’s presidency would mark the start of a period where business interests and social traditionalism would define the national agenda, even as the undercurrents of the 1919 shocks continued to vibrate beneath the surface of American life.</p>
+
+          <div class="checkpoint-container">
+            <h3 style="margin-top: 0;">Checkpoint 5</h3>
+            
+            <div class="cp-question-block">
+              <p>1. Warren G. Harding’s promise of a "Return to Normalcy" essentially meant:</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_17" value="0"> A) Continuing Woodrow Wilson’s aggressive international reforms.</label>
+                <label class="cp-option"><input type="radio" name="cp_17" value="1"> B) A retreat from international entanglements and a return to pro-business, laissez-faire policies.</label>
+                <label class="cp-option"><input type="radio" name="cp_17" value="2"> C) Expanding the power of labor unions to ensure economic equality.</label>
+                <label class="cp-option"><input type="radio" name="cp_17" value="3"> D) A mandatory national quarantine to finally end the flu pandemic.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>2. The election of 1920 is considered a turning point because it:</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_18" value="0"> A) Signaled the end of the Progressive Era and the beginning of a decade of Republican dominance.</label>
+                <label class="cp-option"><input type="radio" name="cp_18" value="1"> B) Was the first time a third-party candidate won more than 50% of the vote.</label>
+                <label class="cp-option"><input type="radio" name="cp_18" value="2"> C) Led to the immediate entry of the United States into the League of Nations.</label>
+                <label class="cp-option"><input type="radio" name="cp_18" value="3"> D) Resulted in the lowest voter turnout in American history due to the flu.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>3. Why was Harding’s message so effective with the 1920 electorate?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_19" value="0"> A) Americans were eager to join more international wars to prove their strength.</label>
+                <label class="cp-option"><input type="radio" name="cp_19" value="1"> B) The public was exhausted by years of reform, pandemic trauma, and social unrest.</label>
+                <label class="cp-option"><input type="radio" name="cp_19" value="2"> C) Harding promised to bring the Bolshevik Revolution to the United States.</label>
+                <label class="cp-option"><input type="radio" name="cp_19" value="3"> D) He was the only candidate who supported women’s suffrage.</label>
+              </div>
+            </div>
+
+            <div class="cp-question-block">
+              <p>4. What policy shift characterized the start of the 1920s following Harding's victory?</p>
+              <div class="cp-options">
+                <label class="cp-option"><input type="radio" name="cp_20" value="0"> A) A surge in government regulation of private industries.</label>
+                <label class="cp-option"><input type="radio" name="cp_20" value="1"> B) An increase in international military alliances.</label>
+                <label class="cp-option"><input type="radio" name="cp_20" value="2"> C) A move toward isolationism and a pro-business national agenda.</label>
+                <label class="cp-option"><input type="radio" name="cp_20" value="3"> D) The abolition of the Republican party in favor of Progressive reform.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-4')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('section-6')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="section-6" class="chapter-section">
+        <div class="content-block">
+          <h2>📊 Data and Debate: The Invisible Enemy</h2>
+
+          <div class="visual-wrapper">
+            <div class="visual-image-glass">
+              <img src="assets/Visual_6.png" alt="Data visualization WWI vs WWI domestic deaths">
+            </div>
+            <div class="visual-caption-glass">
+              <p class="caption-content">The statistical reality of the 1918 pandemic eclipsed the mortality of military combat by more than tenfold, directly impacting the domestic workforce and devastating the exact demographic most needed for economic and military mobilization.</p>
+              <div class="visual-question-container">
+                <label for="visual_q_06" style="color: var(--color-gold); font-weight: bold; display: block; margin-bottom: 0.5rem;">How does comparing the statistical magnitude of pandemic mortality to combat mortality challenge traditional historical narratives of the World War I era?</label>
+                <textarea id="visual_q_06" placeholder="Enter your response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <h3>The Evidence</h3>
+          <p>If we look at the death statistics for the year 1918–1919, we see a startling comparison. United States combat deaths in World War I totaled approximately 53,000. In contrast, deaths from the <strong>Spanish Flu (1918 Pandemic)</strong> in the U.S. are estimated at approximately 675,000. This data reveals that for every American soldier who died from a German bullet or shell, more than 12 Americans died from a microscopic virus. The pandemic was mathematically a much larger disaster for the American population than the war itself. Furthermore, the death rate for the flu was highest among people aged 20 to 40, which is typically the group most resistant to disease.</p>
+          <br>
+          <p>What the Data Reveals The demographic skew toward healthy young adults significantly impacted the U.S. workforce and military readiness. Troop movements, both domestic and international, acted as a primary vector for the disease. For example, the crowded conditions at Camp Funston in Kansas and the subsequent transit of those soldiers to the Western Front provided an ideal environment for the virus to mutate and spread.</p>
+
+          <h3>The Historical Debate</h3>
+          <p>Historians often debate why the pandemic is frequently treated as a "footnote" in history books compared to the massive amount of space dedicated to the military history of World War I. One theory is that war fits into a traditional narrative of "heroism" and "national purpose," while a pandemic feels like a senseless, random tragedy that people would rather forget. Another theory is that because the pandemic happened simultaneously with the end of the war, the two events became blurred in the public's memory.</p>
+
+          <h3>Why It Matters</h3>
+          <p>Understanding the scale of the pandemic helps us understand the profound "exhaustion" of the American public in 1919. It wasn't just war weariness; it was a deep psychological trauma caused by a year where death was present in every neighborhood, not just on a distant battlefield. This collective trauma directly contributed to the desire for a <strong>"Return to Normalcy"</strong> and the xenophobia of the <strong>First Red Scare</strong>.</p>
+
+          <div style="background: rgba(255,255,255,0.05); border-left: 3px solid var(--color-gold); padding: 1.5rem; margin-top: 2rem; border-radius: 4px;">
+            <h4 style="margin-top: 0; border: none;">Perspective Questions</h4>
+            
+            <div class="visual-question-container" style="background: none; border: none; padding: 0;">
+              <p style="margin-bottom: 0.5rem;"><strong>Analyze the Imagery:</strong> Why do historical accounts and memorials often focus on combat soldiers and battlefields rather than the civilian victims of the pandemic? How does the "heroic" narrative of war contrast with the "senseless" nature of a viral outbreak in the public imagination?</p>
+              <textarea id="persp_q_01" placeholder="Enter your response here..."></textarea>
+            </div>
+
+            <div class="visual-question-container" style="background: none; border: none; padding: 0;">
+              <p style="margin-bottom: 0.5rem;"><strong>Compare Viewpoints:</strong> Contrast the likely perspective of a politician in 1919 who wanted to focus on the Treaty of Versailles with that of a local health official in Philadelphia struggling with filled morgues. How do these differing priorities explain the tension between "international diplomacy" and "domestic crisis" during this period?</p>
+              <textarea id="persp_q_02" placeholder="Enter your response here..."></textarea>
+            </div>
+
+            <div class="visual-question-container" style="background: none; border: none; padding: 0;">
+              <p style="margin-bottom: 0.5rem;"><strong>Evaluate Strategy:</strong> Why was Warren G. Harding’s slogan of "Return to Normalcy" more effective in winning the 1920 election than the high-minded internationalism of the Democrats? Consider how the dual trauma of the war and the pandemic might have made Americans more receptive to simple, comforting messages than to complex global problems.</p>
+              <textarea id="persp_q_03" placeholder="Enter your response here..."></textarea>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-5')">← Back</button></div>
+            <div class="center-actions"></div>
+            <div class="side-action right"><button class="action-btn" onclick="switchTab('cloze')">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLOZE VOCABULARY (FINAL TAB) -->
+      <section id="cloze" class="chapter-section">
+        <div class="content-block">
+          <h2>Vocabulary Check</h2>
+
+          <div class="word-bank">
+            <div class="wb-title">Word Bank</div>
+            <span class="wb-word">A. Mitchell Palmer</span>
+            <span class="wb-word">Bolshevik Revolution</span>
+            <span class="wb-word">Boston Police Strike</span>
+            <span class="wb-word">Chicago Race Riot</span>
+            <span class="wb-word">Emma Goldman</span>
+            <span class="wb-word">First Red Scare</span>
+            <span class="wb-word">J. Edgar Hoover</span>
+            <span class="wb-word">Palmer Raids</span>
+            <span class="wb-word">Red Summer (1919)</span>
+            <span class="wb-word">"Return to Normalcy"</span>
+            <span class="wb-word">Sacco and Vanzetti</span>
+            <span class="wb-word">Seattle General Strike</span>
+            <span class="wb-word">Spanish Flu (1918 Pandemic)</span>
+            <span class="wb-word">Tulsa Race Massacre (1921)</span>
+            <span class="wb-word">Warren G. Harding</span>
+          </div>
+
+          <div class="cloze-narrative">
+            <p>As World War I came to a close, Americans hoped for an era of peace. Instead, they were met with a series of overlapping crises. Even before the troops returned, a deadly biological threat known as the <input type="text" class="cloze-input" id="cloze_1" placeholder="(1)"> swept the globe, ultimately killing over 600,000 Americans—many of them healthy young adults.</p>
+
+            <p>Alongside this public health disaster, a wave of political paranoia took hold. Sparked by the 1917 <input type="text" class="cloze-input" id="cloze_2" placeholder="(2)"> in Russia, Americans grew increasingly fearful of a communist uprising at home. This period of intense anti-radical hysteria became known as the <input type="text" class="cloze-input" id="cloze_3" placeholder="(3)">. Following a series of mail bombings, U.S. Attorney General <input type="text" class="cloze-input" id="cloze_4" placeholder="(4)"> used the attacks to justify a massive government crackdown. He appointed a young <input type="text" class="cloze-input" id="cloze_5" placeholder="(5)"> to head a new anti-radical division, and together they orchestrated the <input type="text" class="cloze-input" id="cloze_6" placeholder="(6)">. During these sweeps, thousands of suspected radicals were arrested without warrants. Many immigrants were deported for their political beliefs, including the famous anarchist and feminist <input type="text" class="cloze-input" id="cloze_7" placeholder="(7)">. The intense nativism of the era also influenced the justice system, most notably in the controversial murder trial of <input type="text" class="cloze-input" id="cloze_8" placeholder="(8)">, two Italian immigrants who were convicted despite weak evidence.</p>
+
+            <p>The post-war economy also suffered severe turbulence. Inflation skyrocketed, leading to over 3,600 labor strikes in 1919 alone. In the Pacific Northwest, over 60,000 workers walked out in solidarity during the <input type="text" class="cloze-input" id="cloze_9" placeholder="(9)">. Later that year, the <input type="text" class="cloze-input" id="cloze_10" placeholder="(10)"> left a major East Coast city without law enforcement, prompting Governor Calvin Coolidge to fire the striking officers and declare that no one had the right to strike against public safety.</p>
+
+            <p>Simultaneously, the nation faced an explosion of racial violence. NAACP leader James Weldon Johnson coined the term <input type="text" class="cloze-input" id="cloze_11" placeholder="(11)"> to describe the bloody conflicts that erupted in dozens of cities, fueled by economic competition and the return of assertive African American veterans. One of the worst conflicts was the <input type="text" class="cloze-input" id="cloze_12" placeholder="(12)">, which began when a Black teenager drowned at a segregated beach and escalated into a week of deadly violence. This era of racial hostility reached a devastating peak a couple of years later during the <input type="text" class="cloze-input" id="cloze_13" placeholder="(13)">, when white mobs completely destroyed the prosperous Greenwood district, often called "Black Wall Street."</p>
+
+            <p>Exhausted by disease, terrorism, strikes, and riots, the American public yearned for stability. In the 1920 election, Republican candidate <input type="text" class="cloze-input" id="cloze_14" placeholder="(14)"> captured this mood perfectly. By promising a comforting <input type="text" class="cloze-input" id="cloze_15" placeholder="(15)">, he won a landslide victory, signaling an end to the Progressive Era and a retreat from the turbulent shocks of 1919.</p>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="side-action left"><button class="action-btn" onclick="switchTab('section-6')">← Back</button></div>
+            <div class="center-actions">
+              <button class="action-btn" onclick="downloadJSON()">Finished</button>
+            </div>
+            <div class="side-action right"></div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // --- DATA (INJECTED) ---
+  const UNIT_LABEL = "Unit 5: Modern America Emerges";
+  const CHAPTER_LABEL = "Chapter 13.1";
+  const CHAPTER_TITLE = "The Post-War Shock (1919)";
+
+  const CP_DATA = { 
+    1: { question:"Why did the Spanish Flu pandemic have such a significant impact on the U.S. military effort during World War I?", options:["It primarily affected the elderly, who were the main financial supporters of the war.","The movement of troops in crowded barracks and ships accelerated the spread of the virus among young soldiers.","It caused a shortage of rubber and steel needed for military equipment.","The virus was developed as a biological weapon by the Central Powers."], correctIndex:1 },
+    2: { question:"Why was the 1918 flu strain considered uniquely terrifying compared to typical seasonal flus?", options:["It only affected neutral countries not involved in World War I.","It was uniquely lethal to healthy young adults rather than the very old or very young.","It was spread primarily through the consumption of contaminated water.","It caused permanent blindness in most survivors."], correctIndex:1 },
+    3: { question:"What role did the U.S. military play in the global spread of the Spanish Flu?", options:["The military intentionally used the virus as a biological weapon.","Soldiers refused to wear masks, leading to a civilian uprising.","The movement of troops in crowded barracks and transport ships acted as a global delivery system for the disease.","Military hospitals were the only places with a functioning vaccine."], correctIndex:2 },
+    4: { question:"How did the limitations of medical science in 1919 affect the response to the pandemic?", options:["Doctors focused on surgery because they believed the flu was a physical injury.","Scientists had not yet discovered how to treat viruses, and there were no antibiotics for secondary infections.","The government banned the use of masks because they were seen as ineffective.","Most healthcare workers went on strike to protest the lack of medical equipment."], correctIndex:1 },
+    5: { question:"What was the primary justification used by A. Mitchell Palmer for the 'Palmer Raids'?", options:["To ensure that labor unions received fair wages and safe working conditions.","To combat a perceived communist and anarchist plot to overthrow the U.S. government.","To protect the civil liberties of Italian immigrants like Sacco and Vanzetti.","To encourage more immigrants to join the Bolshevik movement in Russia."], correctIndex:1 },
+    6: { question:"What event in Russia served as the primary catalyst for the First Red Scare in the United States?", options:["The assassination of the Archduke Franz Ferdinand.","The signing of the Treaty of Versailles.","The Bolshevik Revolution and the call for a worldwide worker's uprising.","The Russian decision to join the League of Nations."], correctIndex:2 },
+    7: { question:"What was a significant outcome of the Palmer Raids led by A. Mitchell Palmer and J. Edgar Hoover?", options:["The immediate arrest and conviction of the mail bombers.","The creation of a federal minimum wage for immigrant workers.","The deportation of hundreds of immigrants, such as Emma Goldman, based on their political beliefs.","A public apology from the Justice Department for violating civil liberties."], correctIndex:2 },
+    8: { question:"The case of Sacco and Vanzetti is often cited by historians as an example of:", options:["The success of the American legal system in catching dangerous terrorists.","How nativism and political radicalism could influence the judicial process during the Red Scare.","The first time Italian immigrants were allowed to serve on a jury.","A successful appeal that overturned an unjust conviction."], correctIndex:1 },
+    9: { question:"How did Governor Calvin Coolidge respond to the Boston Police Strike of 1919?", options:["He negotiated a settlement that gave the police a 20% pay raise.","He supported the police's right to form a union and bargain collectively.","He fired the striking officers and declared that no one has the right to strike against public safety.","He invited the Bolsheviks to help mediate the dispute between the police and the city."], correctIndex:2 },
+    10: { question:"Which economic factor most contributed to the explosion of labor strikes in 1919?", options:["A sudden drop in the cost of living that made unions unnecessary.","Skyrocketing inflation and stagnant wages following the lifting of wartime price controls.","A government mandate that all workers must join a union.","The discovery of new gold mines that devalued the American dollar."], correctIndex:1 },
+    11: { question:"How did the Seattle General Strike differ from most other labor disputes of the era?", options:["It was the first time workers from many different industries struck together in solidarity.","It was led entirely by the Seattle Police Department.","It was the only strike that the federal government officially supported.","It lasted for over a year and led to the total bankruptcy of the city."], correctIndex:0 },
+    12: { question:"Governor Calvin Coolidge’s response to the Boston Police Strike was significant because:", options:["He became a national hero to labor unions for his fair negotiations.","He argued that the police had a constitutional right to strike for higher pay.","His hardline stance against striking 'against the public safety' propelled him toward the presidency.","He was the first governor to be impeached for his handling of a strike."], correctIndex:2 },
+    13: { question:"What was a major cause of the 'Red Summer' of 1919?", options:["The sudden migration of white workers to the rural South.","The refusal of African American veterans to return to the United States after the war.","Competition for jobs and housing between white citizens and African Americans who moved North during the Great Migration.","A federal law that mandated the total integration of all American beaches and parks."], correctIndex:2 },
+    14: { question:"What demographic shift provided the backdrop for the racial violence of the Red Summer?", options:["The movement of white factory owners to the rural South.","The Great Migration of African Americans from the rural South to industrial Northern cities.","The massive immigration of Russian Bolsheviks to Chicago.","The relocation of Native Americans to urban centers in Oklahoma."], correctIndex:1 },
+    15: { question:"The 'New Negro' movement of the post-war era was characterized by:", options:["A return to the passive submission strategies of the late 19th century.","A refusal to serve in the military during future conflicts.","A new sense of pride and a determination to fight back against racial violence and claim full rights.","The total abandonment of the NAACP in favor of the Bolshevik party."], correctIndex:2 },
+    16: { question:"What was the ultimate impact of the Tulsa Race Massacre on the Greenwood district?", options:["The district was immediately rebuilt with federal emergency funds.","The massacre destroyed the economic foundation of a generation of Black Tulsans and their 'Black Wall Street.'","It led to the immediate integration of all schools in Oklahoma.","It was widely celebrated in history books as a turning point for civil rights."], correctIndex:1 },
+    17: { question:"Warren G. Harding’s promise of a 'Return to Normalcy' essentially meant:", options:["Continuing Woodrow Wilson’s aggressive international reforms.","A retreat from international entanglements and a return to pro-business, laissez-faire policies.","Expanding the power of labor unions to ensure economic equality.","A mandatory national quarantine to finally end the flu pandemic."], correctIndex:1 },
+    18: { question:"The election of 1920 is considered a turning point because it:", options:["Signaled the end of the Progressive Era and the beginning of a decade of Republican dominance.","Was the first time a third-party candidate won more than 50% of the vote.","Led to the immediate entry of the United States into the League of Nations.","Resulted in the lowest voter turnout in American history due to the flu."], correctIndex:0 },
+    19: { question:"Why was Harding’s message so effective with the 1920 electorate?", options:["Americans were eager to join more international wars to prove their strength.","The public was exhausted by years of reform, pandemic trauma, and social unrest.","Harding promised to bring the Bolshevik Revolution to the United States.","He was the only candidate who supported women’s suffrage."], correctIndex:1 },
+    20: { question:"What policy shift characterized the start of the 1920s following Harding's victory?", options:["A surge in government regulation of private industries.","An increase in international military alliances.","A move toward isolationism and a pro-business national agenda.","The abolition of the Republican party in favor of Progressive reform."], correctIndex:2 }
+  };
+  const CP_ANSWERS = { 1: "1", 2: "1", 3: "2", 4: "1", 5: "1", 6: "2", 7: "2", 8: "1", 9: "2", 10: "1", 11: "0", 12: "2", 13: "2", 14: "1", 15: "2", 16: "1", 17: "1", 18: "0", 19: "1", 20: "2" };
+
+  const VISUAL_Q_IDS = ["visual_q_01", "visual_q_02", "visual_q_03", "visual_q_04", "visual_q_05", "visual_q_06", "persp_q_01", "persp_q_02", "persp_q_03"];
+  const VISUAL_Q_PROMPTS = {
+    "visual_q_01": "How does the conversion of public spaces into medical wards reflect the structural limitations of early 20th-century urban healthcare systems during a biological crisis?",
+    "visual_q_02": "In what ways did the association between radical politics and recent immigrants serve to justify the suspension of civil liberties during periods of national anxiety?",
+    "visual_q_03": "How does the visual of armed troops facing civilian workers illustrate the government's stance on organized labor and public safety during periods of severe economic instability?",
+    "visual_q_04": "How does the scale of destruction in the Greenwood district reflect the broader consequences of economic competition and racial hostility in the post-World War I United States?",
+    "visual_q_05": "What underlying societal fears made the vague promise of 'normalcy' more appealing to voters than continued progressive reform in 1920?",
+    "visual_q_06": "How does comparing the statistical magnitude of pandemic mortality to combat mortality challenge traditional historical narratives of the World War I era?",
+    "persp_q_01": "Analyze the Imagery: Why do historical accounts and memorials often focus on combat soldiers and battlefields rather than the civilian victims of the pandemic?",
+    "persp_q_02": "Compare Viewpoints: Contrast the likely perspective of a politician in 1919 who wanted to focus on the Treaty of Versailles with that of a local health official in Philadelphia struggling with filled morgues.",
+    "persp_q_03": "Evaluate Strategy: Why was Warren G. Harding’s slogan of 'Return to Normalcy' more effective in winning the 1920 election than the high-minded internationalism of the Democrats?"
+  };
+
+  const CLOZE_DATA = [
+    { id: 1, sentence: "Even before the troops returned, a deadly biological threat known as the _____ swept the globe...", answer: "Spanish Flu (1918 Pandemic)" },
+    { id: 2, sentence: "Sparked by the 1917 _____ in Russia...", answer: "Bolshevik Revolution" },
+    { id: 3, sentence: "This period of intense anti-radical hysteria became known as the _____.", answer: "First Red Scare" },
+    { id: 4, sentence: "Following a series of mail bombings, U.S. Attorney General _____ used the attacks to justify...", answer: "A. Mitchell Palmer" },
+    { id: 5, sentence: "He appointed a young _____ to head a new anti-radical division...", answer: "J. Edgar Hoover" },
+    { id: 6, sentence: "...and together they orchestrated the _____.", answer: "Palmer Raids" },
+    { id: 7, sentence: "...including the famous anarchist and feminist _____.", answer: "Emma Goldman" },
+    { id: 8, sentence: "...most notably in the controversial murder trial of _____, two Italian immigrants...", answer: "Sacco and Vanzetti" },
+    { id: 9, sentence: "In the Pacific Northwest, over 60,000 workers walked out in solidarity during the _____.", answer: "Seattle General Strike" },
+    { id: 10, sentence: "Later that year, the _____ left a major East Coast city without law enforcement...", answer: "Boston Police Strike" },
+    { id: 11, sentence: "NAACP leader James Weldon Johnson coined the term _____ to describe the bloody conflicts...", answer: "Red Summer (1919)" },
+    { id: 12, sentence: "One of the worst conflicts was the _____, which began when a Black teenager drowned...", answer: "Chicago Race Riot" },
+    { id: 13, sentence: "...reached a devastating peak a couple of years later during the _____, when white mobs completely destroyed...", answer: "Tulsa Race Massacre (1921)" },
+    { id: 14, sentence: "In the 1920 election, Republican candidate _____ captured this mood perfectly.", answer: "Warren G. Harding" },
+    { id: 15, sentence: "By promising a comforting _____, he won a landslide victory...", answer: "\"Return to Normalcy\"" }
+  ];
+
+  // --- STATE ---
+  let currentTab = 'start-page';
+  let studentName = "";
+  let studentPeriod = "";
+  const cpTotal = Object.keys(CP_DATA).length;
+
+  window.onload = function() {
+    loadProgress();
+
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 6000);
+  };
+
+  // --- NAVIGATION ---
+  function validateStartPage() {
+    let name = document.getElementById('student-name').value;
+    let period = document.getElementById('student-period').value;
+
+    if (name.trim().toUpperCase() === "RUNNING TEST") {
+      studentName = "TEST USER";
+      studentPeriod = "1";
+      switchTab('section-1');
+      return;
+    }
+
+    if (!name || !period) { alert("Please enter your Name and Period."); return; }
+
+    studentName = name;
+    studentPeriod = period;
+    switchTab('section-1');
+  }
+
+  function switchTab(id) {
+    document.querySelectorAll('.chapter-section').forEach(s => {
+      s.classList.remove('active-section');
+      s.style.display = 'none';
+    });
+
+    const target = document.getElementById(id);
+    target.style.display = 'block';
+    setTimeout(() => target.classList.add('active-section'), 10);
+
+    // Update Nav Panel styling
+    document.querySelectorAll('.nav-panel button').forEach(btn => btn.classList.remove('active-nav'));
+    const navBtn = document.getElementById('nav-' + id);
+    if (navBtn) navBtn.classList.add('active-nav');
+
+    currentTab = id;
+    window.scrollTo(0,0);
+    saveProgress();
+  }
+
+  // --- SAVE / LOAD (LOCALSTORAGE) ---
+  function saveProgress() {
+    const data = {};
+
+    data.studentName = document.getElementById('student-name')?.value || "";
+    data.studentPeriod = document.getElementById('student-period')?.value || "";
+    data.currentTab = currentTab || "start-page";
+
+    if (typeof cpTotal !== 'undefined') {
+      data.checkpoints = {};
+      for (let i = 1; i <= cpTotal; i++) {
+        const radios = document.getElementsByName(`cp_${i}`);
+        let selected = "";
+        for (const r of radios) { if (r.checked) { selected = r.value; break; } }
+        data.checkpoints[i] = selected;
+      }
+    }
+
+    if (typeof VISUAL_Q_IDS !== 'undefined') {
+      data.visuals = {};
+      VISUAL_Q_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) data.visuals[id] = el.value;
+      });
+    }
+
+    if (typeof CLOZE_DATA !== 'undefined') {
+      data.cloze = {};
+      CLOZE_DATA.forEach(item => {
+        const el = document.getElementById(`cloze_${item.id}`);
+        if (el) data.cloze[item.id] = el.value;
+      });
+    }
+
+    localStorage.setItem('chapter_13_1_progress', JSON.stringify(data));
+  }
+
+  function loadProgress() {
+    const raw = localStorage.getItem('chapter_13_1_progress');
+    if (!raw) return;
+
+    try {
+      const data = JSON.parse(raw);
+
+      if (document.getElementById('student-name')) document.getElementById('student-name').value = data.studentName || "";
+      if (document.getElementById('student-period')) document.getElementById('student-period').value = data.studentPeriod || "";
+
+      if (data.checkpoints) {
+        Object.keys(data.checkpoints).forEach(k => {
+          const val = data.checkpoints[k];
+          if (!val && val !== "0") return;
+          const radios = document.getElementsByName(`cp_${k}`);
+          for (const r of radios) { if (r.value === val) r.checked = true; }
+        });
+      }
+
+      if (data.visuals) {
+        Object.keys(data.visuals).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = data.visuals[id];
+        });
+      }
+
+      if (data.cloze) {
+        Object.keys(data.cloze).forEach(id => {
+          const el = document.getElementById(`cloze_${id}`);
+          if (el) el.value = data.cloze[id];
+        });
+      }
+
+      if (data.currentTab && document.getElementById(data.currentTab)) {
+        currentTab = data.currentTab;
+      }
+    } catch (e) {
+      console.error("Progress load error:", e);
+    }
+  }
+
+  // --- SCORING (SILENT) ---
+  function calculateCheckpointScore() {
+    let earned = 0;
+    let possible = 0;
+
+    if (typeof cpTotal === 'undefined') return { earned: 0, possible: 0 };
+
+    for (let i = 1; i <= cpTotal; i++) {
+      possible += 1;
+      const radios = document.getElementsByName(`cp_${i}`);
+      let selected = null;
+      for (const r of radios) { if (r.checked) { selected = r.value; break; } }
+      if (selected !== null && typeof CP_ANSWERS !== 'undefined' && selected === CP_ANSWERS[i]) {
+        earned += 1;
+      }
+    }
+
+    return { earned, possible };
+  }
+
+  function calculateVisualScore() {
+    let earned = 0;
+    let possible = 0;
+
+    if (typeof VISUAL_Q_IDS === 'undefined') return { earned: 0, possible: 0 };
+
+    VISUAL_Q_IDS.forEach(id => {
+      possible += 2;
+      const el = document.getElementById(id);
+      if (!el) return;
+      const val = el.value.trim();
+      if (!val) return;
+      const wordCount = val.split(/\s+/).filter(Boolean).length;
+      earned += (wordCount > 5) ? 2 : 1;
+    });
+
+    return { earned, possible };
+  }
+
+  function calculateClozeScore() {
+    let earned = 0;
+    let possible = 0;
+
+    if (typeof CLOZE_DATA === 'undefined') return { earned: 0, possible: 0 };
+
+    CLOZE_DATA.forEach(item => {
+      possible += 1;
+      const el = document.getElementById(`cloze_${item.id}`);
+      if (!el) return;
+      const response = (el.value || "").trim();
+      if (!response) return;
+      const correct = (item.answer || "").trim();
+      if (response.toLowerCase() === correct.toLowerCase()) earned += 1;
+    });
+
+    return { earned, possible };
+  }
+
+  // --- JSON DOWNLOAD ---
+  function downloadJSON() {
+    saveProgress();
+
+    const dateStr = new Date().toLocaleDateString();
+    const dateField = document.getElementById('display-date');
+    if (dateField) dateField.value = dateStr;
+
+    const nameRaw = (document.getElementById('student-name')?.value || "").trim();
+    const period = (document.getElementById('student-period')?.value || "").trim();
+
+    const cleanName = (nameRaw || "Student").replace(/\s+/g, '_');
+
+    const cp = calculateCheckpointScore();
+    const vis = calculateVisualScore();
+    const clz = calculateClozeScore();
+
+    const totalEarned = cp.earned + vis.earned + clz.earned;
+    const totalPossible = cp.possible + vis.possible + clz.possible;
+
+    const cpResponses = [];
+    if (typeof cpTotal !== 'undefined' && typeof CP_DATA !== 'undefined') {
+      for (let i = 1; i <= cpTotal; i++) {
+        const qObj = CP_DATA[i];
+        const radios = document.getElementsByName(`cp_${i}`);
+        let selectedVal = "";
+        let selectedText = "";
+        for (const r of radios) {
+          if (r.checked) { selectedVal = r.value; break; }
+        }
+        if (qObj && qObj.options && selectedVal !== "") {
+          const idx = parseInt(selectedVal, 10);
+          if (!isNaN(idx) && qObj.options[idx] !== undefined) selectedText = qObj.options[idx];
+        }
+        const correctIdx = qObj?.correctIndex;
+        const correctText = (qObj && qObj.options && correctIdx !== undefined) ? qObj.options[correctIdx] : "";
+        const earned = (selectedVal !== "" && typeof CP_ANSWERS !== 'undefined' && selectedVal === CP_ANSWERS[i]) ? 1 : 0;
+
+        cpResponses.push({
+          id: i,
+          question: qObj?.question || "",
+          selected: selectedText || "",
+          correct: correctText || "",
+          earned: earned,
+          possible: 1
+        });
+      }
+    }
+
+    const visualResponses = [];
+    if (typeof VISUAL_Q_IDS !== 'undefined') {
+      VISUAL_Q_IDS.forEach(id => {
+        const prompt = (typeof VISUAL_Q_PROMPTS !== 'undefined' && VISUAL_Q_PROMPTS[id]) ? VISUAL_Q_PROMPTS[id] : "";
+        const el = document.getElementById(id);
+        const response = el ? el.value.trim() : "";
+        let earned = 0;
+        if (response) {
+          const wc = response.split(/\s+/).filter(Boolean).length;
+          earned = (wc > 5) ? 2 : 1;
+        }
+        visualResponses.push({
+          id: id,
+          prompt: prompt,
+          response: response,
+          earned: earned,
+          possible: 2
+        });
+      });
+    }
+
+    const clozeResponses = [];
+    if (typeof CLOZE_DATA !== 'undefined') {
+      CLOZE_DATA.forEach(item => {
+        const el = document.getElementById(`cloze_${item.id}`);
+        const response = el ? (el.value || "").trim() : "";
+        const answer = (item.answer || "").trim();
+        const earned = response && (response.toLowerCase() === answer.toLowerCase()) ? 1 : 0;
+
+        clozeResponses.push({
+          id: item.id,
+          sentence: item.sentence || "",
+          response: response,
+          answer: answer,
+          earned: earned,
+          possible: 1
+        });
+      });
+    }
+
+    const payload = {
+      meta: {
+        unit: UNIT_LABEL,
+        chapter: CHAPTER_LABEL,
+        title: CHAPTER_TITLE,
+        studentName: nameRaw,
+        period: period,
+        date: dateStr
+      },
+      scores: {
+        checkpoint: { earned: cp.earned, possible: cp.possible },
+        visual: { earned: vis.earned, possible: vis.possible },
+        cloze: { earned: clz.earned, possible: clz.possible },
+        total: { earned: totalEarned, possible: totalPossible }
+      },
+      responses: {
+        checkpoints: cpResponses,
+        visualAnalysis: visualResponses,
+        clozeVocabulary: clozeResponses
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Ch13.1_${cleanName}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Final popup alert
+    alert("Upload the file to canvas");
+  }
+
+</script>
+
+</body>
+</html>
