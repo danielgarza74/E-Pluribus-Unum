@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14.3 - The Alphabet Soup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #3A1E1C; 
+            --color-cream: #F6EBD9;    
+            --color-navy: #5A6742;     
+            --color-steel-nib: #7B7670; 
+            --color-gold: #D49A1F;     
+            --color-gold-light: #E8C56A;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(43, 33, 24, 0.45); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+
+        @media (max-width: 1024px) { 
+            .side-nav { display: none; } 
+            .main-content { margin-left: 0; } 
+            .content-wrapper { padding: 30px 20px; } 
+            .content-block { padding: 2rem; } 
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) { 
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="bg-slideshow"></div>
+
+    <div class="app-container">
+        <!-- Navigation Panel -->
+        <nav class="side-nav">
+            <div class="nav-title">Table of Contents</div>
+            <div class="nav-links">
+                <button class="nav-btn active-nav" id="nav-sec-1" onclick="switchTab('sec-1', 'nav-sec-1')">Start Page</button>
+                <button class="nav-btn" id="nav-sec-2" onclick="switchTab('sec-2', 'nav-sec-2')">I. The Three R's of the New Deal</button>
+                <button class="nav-btn" id="nav-sec-3" onclick="switchTab('sec-3', 'nav-sec-3')">II. The Constitutional Crisis and the Court Packing Plan</button>
+                <button class="nav-btn" id="nav-sec-4" onclick="switchTab('sec-4', 'nav-sec-4')">III. Voices in Ink: Political Cartoon Analysis</button>
+                <button class="nav-btn" id="nav-sec-5" onclick="switchTab('sec-5', 'nav-sec-5')">IV. Vocabulary Activity</button>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                    Load Progress
+                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+                </label>
+                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: Start Page -->
+            <div id="sec-1" class="chapter-section active-section">
+                <img src="assets/Header%20Banner%20Chapter%2014.3.png" class="hero-banner-flush" alt="Chapter Header Banner">
+                <div class="content-wrapper">
+                    
+                    <div class="id-panel">
+                        <div>
+                            <label for="student-name">Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter your full name">
+                        </div>
+                        <div>
+                            <label for="student-period">Class Period</label>
+                            <select id="student-period">
+                                <option value="">Select...</option>
+                                <option value="1">Period 1</option>
+                                <option value="2">Period 2</option>
+                                <option value="3">Period 3</option>
+                                <option value="4">Period 4</option>
+                                <option value="5">Period 5</option>
+                                <option value="6">Period 6</option>
+                                <option value="7">Period 7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="completion-date">Date Completed</label>
+                            <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>Core Objectives</h3>
+                        <ul>
+                            <li>Categorize major New Deal agencies (CCC, WPA, NRA, AAA, FDIC, SEC) by their primary function: Relief, Recovery, or Reform.</li>
+                            <li>Evaluate the economic and social impact of job creation programs like the Civilian Conservation Corps (CCC) and the Works Progress Administration (WPA).</li>
+                            <li>Analyze the constitutional challenges to the New Deal, specifically the Supreme Court's strikedown of the NRA and AAA, and FDR's subsequent "Court Packing" plan.</li>
+                        </ul>
+
+                        <h3>Key Terms</h3>
+                        <p class="first-p" style="line-height: 2.2;">
+                            <span class="word-pill">Relief, Recovery, Reform</span> 
+                            <span class="word-pill">CCC</span> 
+                            <span class="word-pill">WPA</span> 
+                            <span class="word-pill">AAA</span> 
+                            <span class="word-pill">NRA</span> 
+                            <span class="word-pill">TVA</span> 
+                            <span class="word-pill">FDIC</span> 
+                            <span class="word-pill">SEC</span> 
+                            <span class="word-pill">Glass-Steagall Act</span> 
+                            <span class="word-pill">Schechter Poultry Corp v. U.S.</span> 
+                            <span class="word-pill">Court Packing Plan</span>
+                        </p>
+
+                        <div class="bottom-nav">
+                            <div></div>
+                            <button class="action-btn" id="btn-next-sec-1" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: The Three R's of the New Deal -->
+            <div id="sec-2" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>The Three R's of the New Deal</h2>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_1.png" alt="Franklin D. Roosevelt Delivering a Fireside Chat">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">Franklin D. Roosevelt addresses the nation by radio as he explains the goals and direction of the New Deal.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> Roosevelt’s fireside chats helped define the New Deal as a coordinated response built around Relief, Recovery, and Reform. They also signaled a major shift in the relationship between citizens and the federal government by presenting Washington as an active manager of national economic life. The section emphasizes that this new federal role was one of the most important changes of the era.</div>
+                                <div class="question-box" style="margin-top: auto;">
+                                    <p class="first-p"><strong>Spotlight 1 Analysis:</strong> Why was Roosevelt’s direct public explanation of Relief, Recovery, and Reform historically significant in changing Americans’ expectations about what the federal government should do during an economic crisis?</p>
+                                    <textarea class="textarea-dark" id="va_1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">When Franklin D. Roosevelt took office in 1933, he did not have a single, unified blueprint for ending the Great Depression. Instead, he brought a spirit of "bold, persistent experimentation" to Washington, believing that it was more important to act than to be ideologically consistent. To organize this chaotic flurry of legislation, historians and economists often categorize the New Deal programs into three distinct goals: <strong>Relief, Recovery, and Reform</strong>. This framework helps explain how the government attempted to address the immediate suffering of the people while simultaneously trying to fix the broken machinery of the economy and prevent future collapses.</p>
+                        
+                        <p>The first goal, Relief, was designed to provide immediate assistance to the millions of Americans who were currently starving, homeless, or without any source of income. These programs were the "emergency room" of the New Deal, focusing on direct aid or, more commonly, work relief. The second goal, Recovery, aimed at restarting the flow of consumer demand and industrial production. These were temporary programs intended to prime the economic pump and get the business cycle moving again. Finally, the third goal was Reform. Unlike the temporary relief and recovery measures, reform programs were intended to be permanent changes to the American financial and social system. These laws were designed to address the root causes of the 1929 crash, such as banking instability and stock market manipulation, ensuring that the nation would never again experience a depression of such magnitude.</p>
+                        
+                        <p>The sheer volume of new agencies created during this time led to what critics and supporters alike called "Alphabet Soup." From the CCC to the SEC, the nation was suddenly flooded with new bureaucracies and acronyms. While this expansion of the federal government was confusing to many, it signaled a fundamental shift in the American experience. For the first time, the federal government was assuming a direct, hands-on role in managing the daily economic life of its citizens. The success or failure of these agencies would determine the fate of the Roosevelt presidency and the future of the American republic.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_1.png" class="visual-img" alt="Relief Recovery Reform Gears">
+                            <p class="caption-text">Franklin D. Roosevelt's New Deal policies operated through three distinct but interconnected frameworks: immediate relief for the impoverished, temporary recovery programs to stimulate economic growth, and permanent structural reforms to prevent future financial collapse. This multifaceted approach allowed the federal government to simultaneously address short-term crises and long-term economic instability.</p>
+                        </div>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 2</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. How did the division of the New Deal into Relief, Recovery, and Reform influence the government's approach to the Great Depression?</p>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) It restricted federal intervention to temporary measures only.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) It allowed the government to provide immediate aid while simultaneously addressing systemic economic flaws.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) It prioritized long-term financial regulation over direct assistance to unemployed citizens.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) It created a rigid, ideological blueprint that prevented experimental policy-making.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">2. What was the primary consequence of the "Alphabet Soup" agencies on the relationship between citizens and the federal government?</p>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) It reduced the federal bureaucracy by shifting responsibilities to state governments.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) It created widespread public apathy toward economic policy and governance.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) It marked the first time the federal government took a direct, hands-on role in managing daily economic life.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) It eliminated the need for future economic reform by solving the immediate crisis.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-1', -1)" style="display:none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-1', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: rgba(212,160,23,0.3); margin: 3rem 0;">
+
+                        <h3 id="sub-1">Relief: Putting America Back to Work</h3>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_2.png" alt="CCC Workers Planting Trees in a Reforestation Camp">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">Young men in the Civilian Conservation Corps plant trees and carry out conservation labor in a federally organized work camp.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The CCC represented Roosevelt’s belief that work relief was better than direct cash assistance because employment restored dignity while also supporting families and improving the nation’s land. The section shows that relief programs were designed to address immediate suffering while leaving behind lasting public benefits. The CCC also demonstrated how federal aid could blend social policy with conservation and infrastructure work.</div>
+                                <div class="question-box" style="margin-top: auto;">
+                                    <p class="first-p"><strong>Spotlight 2 Analysis:</strong> How did the federal government’s decision to emphasize work relief through programs like the CCC affect both unemployed workers and the broader American landscape during the Depression?</p>
+                                    <textarea class="textarea-dark" id="va_2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">Roosevelt was a firm believer that "work relief"—giving people a job paid for by the government—was far superior to "the dole," or direct cash payments. He believed that a steady paycheck provided more than just food and shelter; it provided the dignity and self-respect that the Depression had stripped away from the American worker. One of the most popular and successful of these programs was the <strong>CCC (Civilian Conservation Corps)</strong>. Established in March 1933, the CCC focused on young men between the ages of 18 and 25. These men were sent to work camps in the nation's forests, parks, and rangelands. They planted trees, built hiking trails, developed fire towers, and worked on soil erosion projects.</p>
+                        
+                        <p>The CCC was an environmental and social success. By the time the program ended in 1942, nearly 3 million young men had passed through its camps. They had planted over 3 billion trees and developed over 800 state parks. Each worker earned $30 a month, $25 of which was sent directly home to their families. This ensured that the relief money was distributed across the country, helping to support millions of people who were not themselves in the camps. The program also provided the workers with education, vocational training, and a sense of discipline and purpose. It remains one of the most enduring legacies of the New Deal’s commitment to human and natural resource conservation.</p>
+                        
+                        <p>As the Depression persisted, the administration launched an even more massive work relief program in 1935: the <strong>WPA (Works Progress Administration)</strong>. Led by Harry Hopkins, the WPA aimed to create as many jobs as possible as quickly as possible. Between 1935 and 1943, the WPA spent $11 billion and employed more than 8 million people. The scale of the WPA’s construction projects was staggering. Its workers built 651,000 miles of roads, 125,000 public buildings, and 853 airports. But the WPA was unique because it also recognized that professionals and artists were suffering as much as laborers. The WPA's Federal Art Project, Federal Writers' Project, and Federal Theater Project hired painters to create murals in post offices, writers to collect oral histories from former slaves, and actors to perform in communities that had never seen a live play. This investment in culture ensured that the American spirit survived alongside the American economy.</p>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 2</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did the Roosevelt administration prioritize "work relief" programs like the CCC over direct cash payments?</p>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) Work relief was significantly cheaper to administer than direct cash distribution.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) The administration believed steady employment restored dignity and purpose to workers while building public infrastructure.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) Cash payments were ruled unconstitutional by the Supreme Court early in the New Deal.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) The government lacked the banking infrastructure necessary to distribute cash to individual citizens.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">2. How did the Works Progress Administration (WPA) distinguish itself from previous employment programs in its approach to relief?</p>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) It exclusively hired young men for rural conservation and environmental projects.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) It focused entirely on manufacturing jobs to stimulate industrial production.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) It recognized that professionals and artists needed relief, funding cultural projects alongside infrastructure.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) It required workers to repay the government once the economic depression ended.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-2', -1)" style="display:none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-2', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: rgba(212,160,23,0.3); margin: 3rem 0;">
+
+                        <h3 id="sub-2">Recovery: Healing the Farm and the Factory</h3>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_3.png" alt="NRA Blue Eagle Storefront Poster">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A business displays the Blue Eagle emblem of the National Recovery Administration to show compliance with federal recovery codes.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The Blue Eagle symbol represented the New Deal’s attempt to restart industrial production by coordinating wages, prices, and competition through federal policy. The section also contrasts industrial recovery under the NRA with agricultural recovery under the AAA, showing that different sectors of the economy required different kinds of intervention. Together, those policies reveal how ambitious and controversial federal recovery efforts became during the mid-1930s.</div>
+                            </div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Spotlight 3 Analysis:</strong> How did the NRA’s approach to industrial recovery differ from the AAA’s approach to agricultural recovery, and what does that difference reveal about New Deal economic strategy?</p>
+                                <textarea class="textarea-dark" id="va_3"></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">While relief programs addressed the human toll of the Depression, the recovery programs attempted to fix the underlying industrial and agricultural systems. The most controversial and ambitious of these was the <strong>NRA (National Recovery Administration)</strong>, created by the National Industrial Recovery Act (NIRA). The NRA was designed to stop the destructive cycle of falling prices and wages in the industrial sector. It encouraged businesses in the same industry to work together to draft "codes of fair competition." These codes set minimum prices, established maximum work hours, and guaranteed the right of labor to organize and bargain collectively.</p>
+                        
+                        <p>The NRA was symbolized by the "Blue Eagle" logo, which businesses displayed to show they were "doing their part" by following the codes. The philosophy behind the NRA was that if businesses stopped competing by cutting wages, workers would have more money to spend, which would eventually lead to higher demand and a return to profitability. However, the NRA struggled with enforcement. Small businesses complained that the codes were written by and for large corporations, and many critics argued that the NRA’s price-fixing was actually a form of socialism that interfered with the free market. Despite its popularity in the early days of the New Deal, the NRA’s complexity and its tendency to favor big business eventually led to a loss of public and legal support.</p>
+                        
+                        <p>In the agricultural sector, the administration faced a paradox: farmers were going bankrupt because they were producing too much, which drove prices so low that they couldn't cover the cost of production. To solve this, Congress passed the <strong>AAA (Agricultural Adjustment Act)</strong>. The AAA was based on the theory of "scarcity." The government essentially paid farmers a subsidy to leave a portion of their land unplanted or to destroy a portion of their crops and livestock. The goal was to reduce the supply of agricultural products, which would naturally drive prices up. While the AAA did succeed in raising farm income, it was highly controversial. Many Americans, who were standing in breadlines and suffering from hunger, were outraged by the sight of the government paying farmers to plow under cotton fields and slaughter millions of healthy pigs. Furthermore, the AAA often hurt tenant farmers and sharecroppers, as landowners would take the government subsidies and then evict the laborers they no longer needed for the reduced acreage.</p>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 2</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the intended economic effect of the National Recovery Administration's (NRA) "codes of fair competition"?</p>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) To increase industrial competition by breaking up large corporate monopolies.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) To halt the cycle of falling wages and prices, thereby boosting consumer purchasing power.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) To transition the American economy into a fully state-owned socialist system.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) To eliminate labor unions so businesses could operate more efficiently.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">2. How did the Agricultural Adjustment Act (AAA) attempt to solve the crisis of plummeting farm incomes?</p>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) By paying subsidies to farmers to reduce crop supply and drive up market prices.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) By purchasing surplus crops and distributing them directly to the urban poor.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) By seizing bankrupt farms and redistributing the land to sharecroppers and tenant farmers.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) By imposing high tariffs on imported agricultural goods to protect domestic markets.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-3', -1)" style="display:none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-3', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: rgba(212,160,23,0.3); margin: 3rem 0;">
+
+                        <h3 id="sub-3">Regional Recovery: The TVA</h3>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_4.png" alt="TVA Dam Under Construction">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">Workers and heavy equipment build a Tennessee Valley Authority dam intended for flood control and hydroelectric power generation.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The TVA showed that recovery could involve the transformation of an entire region through dams, electrification, navigation improvements, and soil conservation. The section explains that the Tennessee Valley had long been one of the poorest and least developed parts of the country, making it a prime target for large-scale federal planning. The TVA became a model for how the government could reshape both the physical landscape and the regional economy.</div>
+                                <div class="question-box" style="margin-top: auto;">
+                                    <p class="first-p"><strong>Spotlight 4 Analysis:</strong> How did the poverty, underdevelopment, and environmental problems of the Tennessee Valley make large-scale federal planning appear necessary during the New Deal?</p>
+                                    <textarea class="textarea-dark" id="va_4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">Perhaps the most ambitious regional recovery project was the <strong>TVA (Tennessee Valley Authority)</strong>. Established in May 1933, the TVA was designed to revitalize the Tennessee River Valley, one of the poorest and least developed regions in the country. The project involved the construction of a massive series of dams to control the river's frequent and devastating floods. But the TVA did much more than control water. The dams were used to generate cheap hydroelectric power, bringing electricity to rural homes and farms for the first time.</p>
+                        
+                        <p>The TVA was a transformative force. It provided thousands of jobs, improved navigation on the river, and taught farmers new techniques for soil conservation and crop rotation. By providing low-cost electricity, the TVA encouraged industrial development in the region, helping to lift the South out of its long-standing economic isolation. However, the TVA also faced fierce opposition from private utility companies, who argued that the government-run agency was an unfair competitor and a dangerous step toward "creeping socialism." Despite the legal battles, the TVA became a model for integrated regional planning, demonstrating that the federal government could use its resources to transform the physical and economic landscape of an entire region.</p>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 1</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. In addition to controlling floods, what was a major regional impact of the Tennessee Valley Authority (TVA)?</p>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) It privatized local utility companies to increase corporate competition in the South.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) It generated low-cost hydroelectric power, spurring industrial development and modernizing rural areas.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) It relocated millions of citizens from the Tennessee Valley to urban manufacturing centers.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) It focused exclusively on agricultural reform, ignoring industrial and infrastructural growth.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-4', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Finish Checkpoint</button>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: rgba(212,160,23,0.3); margin: 3rem 0;">
+
+                        <h3 id="sub-4">Reform: Rebuilding the Financial Foundation</h3>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_5.png" alt="Roosevelt Signs the Banking Act of 1935">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">Franklin D. Roosevelt signs major banking reform legislation designed to stabilize the financial system after the collapse of the early Depression years.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> Reform differed from relief and recovery because it aimed to create permanent protections against future collapse. The section identifies the Glass-Steagall Act, the FDIC, and the SEC as central efforts to rebuild trust in banks and the stock market by separating risky practices from ordinary deposits and increasing transparency. Those measures marked a lasting expansion of federal responsibility over the financial system.</div>
+                                <div class="question-box" style="margin-top: auto;">
+                                    <p class="first-p"><strong>Spotlight 5 Analysis:</strong> Why were banking and stock market reforms such as the FDIC and SEC historically significant in reshaping the long-term relationship between ordinary Americans and the financial system?</p>
+                                    <textarea class="textarea-dark" id="va_5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">The third "R" of the New Deal, Reform, focused on the long-term changes needed to ensure that the American financial system remained stable. The most immediate concern was the banking system, which had collapsed in 1933. To prevent future "bank runs" and restore public trust, Congress passed the <strong>Glass-Steagall Act</strong> in 1933. This landmark law required a strict separation between commercial banking and investment banking. It prohibited banks that held people’s everyday deposits from gambling with that money in the stock market. Most importantly, the act created the <strong>FDIC (Federal Deposit Insurance Corporation)</strong>, which provided federal insurance for individual bank accounts. Today, if a bank fails, the FDIC ensures that depositors get their money back, up to a certain limit. This reform effectively ended the era of bank runs in America.</p>
+                        
+                        <p>The administration also turned its attention to the stock market, which had been a Wild West of manipulation and insider trading in the 1920s. In 1934, the <strong>SEC (Securities and Exchange Commission)</strong> was created to regulate the stock market and prevent the kind of fraudulent activities that had led to the 1929 crash. The SEC required companies to provide full and accurate information about their financial health before selling stock to the public. It also restricted the practice of buying on margin, which had fueled the speculative bubble of the 1920s. By bringing transparency and accountability to Wall Street, the SEC sought to protect small investors and ensure that the market functioned as a place for legitimate investment rather than a giant casino.</p>
+
+                        <p>These reform measures represented a permanent expansion of federal power over the private sector. They were based on the realization that in a modern, interconnected economy, the failure of a single large bank or a fraudulent stock market could cause a national catastrophe. By establishing the FDIC and the SEC, the New Deal created a regulatory framework that remains the foundation of the American financial system today. While these measures were seen as radical at the time, they eventually gained widespread support as they successfully stabilized the economy and protected the savings and investments of millions of ordinary citizens.</p>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 2</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. How did the Glass-Steagall Act and the creation of the FDIC attempt to stabilize the banking system?</p>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-5')"> A) By nationalizing all commercial banks to ensure direct government oversight.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-5')"> B) By separating commercial and investment banking and insuring individual deposits to prevent bank runs.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-5')"> C) By requiring banks to lend exclusively to federal infrastructure projects.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-5')"> D) By replacing the gold standard with a new currency system managed by the SEC.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">2. What effect did the creation of the Securities and Exchange Commission (SEC) have on the American stock market?</p>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) It guaranteed a fixed return on all domestic investments.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) It banned the public sale of corporate stock, limiting investment to government bonds.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) It introduced transparency and regulatory oversight to prevent fraud and excessive speculation.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) It eliminated the need for state-level financial regulation by dissolving local banks.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-5', -1)" style="display:none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-5', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
+                            <button class="action-btn" id="btn-next-sec-2" disabled onclick="switchTab('sec-3', 'nav-sec-3')">🔒 Answer Checkpoints to Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: The Constitutional Crisis and the Court Packing Plan -->
+            <div id="sec-3" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>The Constitutional Crisis and the Court Packing Plan</h2>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_6.png" alt="Political Cartoon on Roosevelt and the Supreme Court">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A political cartoon depicts Roosevelt’s clash with the Supreme Court during the controversy over the Court Packing Plan.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The constitutional crisis emerged after the Supreme Court struck down major New Deal laws such as the NRA and AAA, threatening Roosevelt’s larger program. The section presents the Court Packing Plan as a dramatic response to judicial resistance, but also as a political misstep that raised fears about executive overreach. That conflict revealed the tension between popular reform movements and constitutional limits on federal power.</div>
+                                <div class="question-box" style="margin-top: auto;">
+                                    <p class="first-p"><strong>Spotlight 6 Analysis:</strong> How did Supreme Court decisions against major New Deal programs lead Roosevelt to propose the Court Packing Plan, and why did that proposal trigger such strong opposition?</p>
+                                    <textarea class="textarea-dark" id="va_6"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">Despite the popularity of many New Deal programs, the Roosevelt administration soon ran into a formidable obstacle: the United States Supreme Court. In the mid-1930s, the Court was dominated by a group of conservative justices who believed that the New Deal represented an unconstitutional expansion of federal power. They argued that many of the new laws violated the "commerce clause" of the Constitution, which limited the federal government's power to regulate business that took place entirely within a single state. The first major blow came in 1935 with the case of <strong>Schechter Poultry Corp v. U.S.</strong>, often called the "sick chicken" case.</p>
+                        
+                        <p>The Schechter case involved a poultry company in New York that had been accused of violating the NRA’s codes of fair competition. The Supreme Court ruled unanimously that the National Industrial Recovery Act was unconstitutional. The justices argued that the law gave the president too much legislative power and that the federal government had no authority to regulate a business that operated locally. This ruling effectively destroyed the NRA, the centerpiece of the New Deal’s industrial recovery program. Shortly after, in the case of <em>U.S. v. Butler</em>, the Court struck down the Agricultural Adjustment Act (AAA), ruling that agriculture was a local matter that should be regulated by the states, not the federal government. By early 1937, it appeared that the Supreme Court was systematically dismantling the entire New Deal.</p>
+                        
+                        <p>Roosevelt, fresh from his landslide reelection in 1936, was outraged. He believed that the "nine old men" on the Court were out of touch with the needs of the country and were obstructing the will of the people. In February 1937, he proposed a radical solution: the <strong>Court Packing Plan</strong>. Roosevelt asked Congress for the power to appoint a new Supreme Court justice for every current justice who reached the age of 70 and did not retire, up to a total of six new justices. Roosevelt argued that the aging justices needed help handling their workload, but everyone understood his true motive: he wanted to "pack" the Court with liberal justices who would support his programs.</p>
+
+                        <p>The Court Packing Plan proved to be a major political miscalculation. It was met with immediate and widespread criticism from both Republicans and Democrats, who saw it as a dangerous attempt to destroy the independence of the judicial branch and upset the system of checks and balances. Critics accused Roosevelt of acting like a dictator. Even many of his most ardent supporters felt that he had gone too far. Although the plan ultimately failed in Congress, it had an interesting effect on the Court itself. Shortly after the plan was proposed, one of the conservative justices began voting to uphold New Deal legislation, and another retired, allowing Roosevelt to make a liberal appointment. This shift became known as the "switch in time that saved nine." While Roosevelt technically lost the battle over the Court Packing Plan, he ultimately won the war to preserve the New Deal, as the Court became increasingly supportive of federal intervention in the economy.</p>
+
+                        <!-- Checkpoint -->
+                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                            <div class="cp-indicator" style="margin-bottom: 10px; font-family: var(--font-ui); color: var(--color-gold);">1 of 3</div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. On what constitutional grounds did the Supreme Court strike down early New Deal programs like the NRA?</p>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-6')"> A) The programs violated the First Amendment rights of business owners.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-6')"> B) The federal government exceeded its authority to regulate local, intrastate commerce.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-6')"> C) The laws bypassed the legislative branch entirely and were enacted via executive order.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-6')"> D) The administration failed to provide equal employment opportunities in federal agencies.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">2. What was President Roosevelt's primary motivation for proposing the "Court Packing Plan" in 1937?</p>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) To alleviate the heavy workload of aging justices on the Supreme Court.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) To bypass Congress and pass New Deal legislation via the judicial branch.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) To appoint liberal justices who would stop striking down his New Deal programs.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) To fulfill a campaign promise made during his 1936 landslide reelection.</label>
+                            </div>
+
+                            <div class="checkpoint-q" style="display:none;">
+                                <p class="first-p">3. What was the ultimate political consequence of Roosevelt's Court Packing Plan?</p>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) It was widely praised and easily passed through a supportive Congress.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) It resulted in Roosevelt's impeachment and removal from office.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) It sparked intense bipartisan backlash, though the Court eventually began upholding New Deal laws anyway.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) It led to a permanent constitutional amendment capping the number of Supreme Court justices at nine.</label>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-6', -1)" style="display:none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-6', 1)" disabled style="width: auto; opacity: 0.5; cursor: not-allowed;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
+                            <button class="action-btn" id="btn-next-sec-3" disabled onclick="switchTab('sec-4', 'nav-sec-4')">🔒 Answer Checkpoints to Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: Voices in Ink: Political Cartoon Analysis -->
+            <div id="sec-4" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Voices in Ink: Political Cartoon Analysis</h2>
+                        
+                        <h3>The "Alphabet Soup" Agencies.</h3>
+                        <p class="first-p">During the mid-1930s, the Roosevelt administration created a staggering number of new federal agencies, each known by its initials. This rapid expansion of the bureaucracy was a gift to political cartoonists. Critics used the "Alphabet Soup" as a symbol of government waste, confusion, and overreach. They depicted FDR as a doctor, a magician, or a confused chef, trying to fix the nation with an endless series of unproven "remedies." These cartoons reflected a deep national debate: was this a bold rescue mission, or was it a dangerous experiment that would lead to the loss of individual liberty?</p>
+
+                        <h3>Visual Symbols</h3>
+                        <p class="first-p">Common symbols in these cartoons included the "Blue Eagle" of the NRA, which was often shown as a predatory bird or a dying one, and the "bag of tricks" or "medicine cabinet" overflowing with acronyms. One famous cartoon showed FDR as a "Doctor" bringing a suitcase full of "New Deal remedies" to a sick Uncle Sam. Another showed the White House literally buried under a mountain of letters representing the different agencies. These images captured the sense of a nation being transformed by a government that seemed to be growing faster than anyone could track.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" class="visual-img" alt="Cartoon of FDR as chef with Alphabet Soup">
+                            <p class="caption-text">The rapid proliferation of New Deal agencies created a vast and complex bureaucracy that critics quickly dubbed an "Alphabet Soup." Political satire of the era frequently highlighted the experimental nature of Roosevelt's policies and the resulting public confusion over the unprecedented expansion of federal executive power.</p>
+                        </div>
+
+                        <h3>Analyzing the Satire</h3>
+                        <p class="first-p">Satire allowed Americans to process the massive changes happening in their government. By depicting the New Deal as a "soup" or a "game of cards," cartoonists could point out the inconsistencies and the experimental nature of Roosevelt's policies. For example, a cartoonist might show FDR dealing cards labeled CCC, WPA, and AAA to a group of confused citizens, suggesting that the president was "gambling" with the nation's future. This visual shorthand was essential for a public that was often overwhelmed by the complex economic theories behind the New Deal.</p>
+
+                        <h3 style="margin-top: 3rem;">Perspective Questions</h3>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Analyze the Imagery:</strong> Why did cartoonists frequently depict FDR as a doctor with a medicine bag labeled with various acronyms? How did this choice of imagery affect the public’s perception of the New Deal as a temporary "cure" versus a permanent change to the government?</p>
+                            <textarea class="textarea-dark" id="pq_1"></textarea>
+                        </div>
+                        
+                        <div class="question-box">
+                            <p class="first-p"><strong>Compare Viewpoints:</strong> Contrast a cartoon that shows the "Blue Eagle" of the NRA as a protector of workers with one that shows it as a vulture preying on small businesses. How do these differing perspectives explain the eventual failure of the NRA to maintain public support?</p>
+                            <textarea class="textarea-dark" id="pq_2"></textarea>
+                        </div>
+                        
+                        <div class="question-box">
+                            <p class="first-p"><strong>Evaluate Strategy:</strong> Why was a political cartoon often more effective in communicating criticism of the New Deal than a long, academic speech by a politician? Consider the role of visual simplicity in shaping public opinion during a time of crisis and confusion.</p>
+                            <textarea class="textarea-dark" id="pq_3"></textarea>
+                        </div>
+
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
+                            <button class="action-btn" id="btn-next-sec-4" onclick="switchTab('sec-5', 'nav-sec-5')">Next Section &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: Vocabulary Activity -->
+            <div id="sec-5" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Vocabulary Activity</h2>
+                        
+                        <div class="word-bank">
+                            <span class="word-pill">Relief</span>
+                            <span class="word-pill">Recovery</span>
+                            <span class="word-pill">Reform</span>
+                            <span class="word-pill">CCC</span>
+                            <span class="word-pill">WPA</span>
+                            <span class="word-pill">AAA</span>
+                            <span class="word-pill">NRA</span>
+                            <span class="word-pill">TVA</span>
+                            <span class="word-pill">FDIC</span>
+                            <span class="word-pill">SEC</span>
+                            <span class="word-pill">Glass-Steagall Act</span>
+                            <span class="word-pill">Schechter Poultry Corp v. U.S.</span>
+                            <span class="word-pill">Court Packing Plan</span>
+                        </div>
+
+                        <p class="first-p" style="line-height: 2.8;">
+                            When Franklin D. Roosevelt took office, he implemented the New Deal, which was categorized into three main goals: providing immediate <input type="text" class="cloze-input" data-answer="Relief"> to the suffering, spurring economic <input type="text" class="cloze-input" data-answer="Recovery"> to get businesses moving again, and passing permanent <input type="text" class="cloze-input" data-answer="Reform"> to prevent future depressions. To put young men to work in environmental conservation, the government created the <input type="text" class="cloze-input" data-answer="CCC">, while the <input type="text" class="cloze-input" data-answer="WPA"> provided massive public works jobs and even hired artists and writers. To fix the industrial sector, the <input type="text" class="cloze-input" data-answer="NRA"> established codes of fair competition, but it was later struck down by the Supreme Court in the landmark <input type="text" class="cloze-input" data-answer="Schechter Poultry Corp v. U.S."> decision. Meanwhile, the <input type="text" class="cloze-input" data-answer="AAA"> addressed agricultural overproduction by paying farmers to reduce crop supply. Regional revitalization was spearheaded by the <input type="text" class="cloze-input" data-answer="TVA">, which built dams to provide cheap hydroelectric power to the South. To restore trust in the financial system, the <input type="text" class="cloze-input" data-answer="Glass-Steagall Act"> separated commercial and investment banking, which also created the <input type="text" class="cloze-input" data-answer="FDIC"> to insure individual bank deposits. Furthermore, the <input type="text" class="cloze-input" data-answer="SEC"> was established to regulate the stock market and prevent rampant speculation. Frustrated by the Supreme Court striking down his programs, FDR proposed the controversial <input type="text" class="cloze-input" data-answer="Court Packing Plan"> to add liberal justices to the bench, though it ultimately failed due to bipartisan backlash.
+                        </p>
+
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
+                            <button class="action-btn" style="background-color: var(--color-navy); color: var(--color-cream); border-color: var(--color-navy);" onclick="finishChapter()">Finished &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        /* Background Management */
+        const bgImages = ['assets/bg_1.PNG', 'assets/bg_2.PNG', 'assets/bg_3.PNG', 'assets/bg_4.PNG'];
+        let bgIndex = 0;
+
+        function rotateBackground() {
+            if (bgImages.length === 0) return;
+            const bgEl = document.getElementById('bg-slideshow');
+            if (!bgEl) return;
+            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+            bgIndex = (bgIndex + 1) % bgImages.length;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateBackground();
+            setInterval(rotateBackground, 10000); 
+        });
+
+        /* Navigation */
+        function switchTab(id, btnId = null, scrollTarget = null) {
+            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            
+            const activeBtnId = btnId || ('nav-' + id);
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+            
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if(target) {
+                        const offset = 40;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            saveProgress();
+        }
+
+        /* Data Collection & Export */
+        function collectAssignmentData(isFinal) {
+            const studentName = document.getElementById('student-name').value || "Unknown_Student";
+            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+            const now = new Date().toLocaleDateString();
+
+            const assignmentData = {
+                assignmentTitle: "Interactive Chapter 14.3 - The Alphabet Soup",
+                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+            };
+
+            // Gather Visual Analysis Answers
+            for(let i=1; i<=20; i++) {
+                let el = document.getElementById('va_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+                }
+            }
+
+            // Gather Checkpoint Answers
+            for(let i=1; i<=30; i++) {
+                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                if(inputs.length > 0) {
+                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+                }
+            }
+
+            // Gather Perspective Questions
+            for(let i=1; i<=10; i++) {
+                let el = document.getElementById('pq_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+                }
+            }
+
+            // Gather Cloze Activity Answers
+            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+            });
+
+            return assignmentData;
+        }
+
+        function triggerDownload(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadProgress() {
+            const data = collectAssignmentData(false);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+        }
+
+        function finishChapter() {
+            const dateField = document.getElementById('completion-date');
+            const now = new Date().toLocaleDateString();
+            if(dateField) dateField.value = now;
+
+            const data = collectAssignmentData(true);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            triggerDownload(data, `Chapter_Export_${safeName}.json`);
+
+            alert('Upload JSON file to Canvas');
+            switchTab('sec-1', 'nav-sec-1');
+        }
+
+        /* Loading Progress */
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    
+                    // Restore ID Panel and Burn In
+                    const nameInput = document.getElementById('student-name');
+                    const periodInput = document.getElementById('student-period');
+                    
+                    if (loadedData.studentInfo) {
+                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                            nameInput.value = loadedData.studentInfo.name;
+                            nameInput.setAttribute('readonly', 'true');
+                            nameInput.style.opacity = '0.7'; 
+                        }
+                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                            periodInput.value = loadedData.studentInfo.period;
+                            periodInput.setAttribute('disabled', 'true');
+                            periodInput.style.opacity = '0.7'; 
+                        }
+                    }
+
+                    if (loadedData.responses) {
+                        if (loadedData.responses.visualAnalysis) {
+                            for(let i=1; i<=20; i++) {
+                                let el = document.getElementById('va_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                    if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                                }
+                            }
+                        }
+                        
+                        if (loadedData.responses.checkpoints) {
+                            for(let i=1; i<=30; i++) {
+                                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                                if(inputs.length > 0) {
+                                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                    let savedVal = loadedData.responses.checkpoints[qText];
+                                    if (savedVal && savedVal !== "No Answer") {
+                                        let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                        if(radio) radio.checked = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (loadedData.responses.perspectiveQuestions) {
+                            for(let i=1; i<=10; i++) {
+                                let el = document.getElementById('pq_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                    if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                                }
+                            }
+                        }
+
+                        if (loadedData.responses.clozeActivity) {
+                            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                                let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                                if (savedVal) input.value = savedVal;
+                            });
+                        }
+                    }
+                    
+                    initCheckpoints();
+                    alert('Progress loaded successfully!');
+                    
+                } catch (err) {
+                    console.error(err);
+                    alert('Error loading progress file. Please make sure it is a valid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        /* Save & Reset Logic */
+        function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+
+        function resetProgress() {
+            if(confirm('Are you sure you want to reset all progress?')) {
+                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+                
+                // Un-burn ID panel fields
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                nameInput.removeAttribute('readonly');
+                nameInput.style.opacity = '1';
+                periodInput.removeAttribute('disabled');
+                periodInput.style.opacity = '1';
+
+                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+                initCheckpoints();
+                switchTab('sec-1', 'nav-sec-1');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /* Checkpoint Management */
+        const TOTAL_SECTIONS = 6; 
+
+        function initCheckpoints() {
+            for(let i=1; i<=TOTAL_SECTIONS; i++) { updateCpUI(`cp-block-${i}`); }
+            checkSectionUnlock();
+        }
+
+        function updateCpUI(blockId) {
+            const block = document.getElementById(blockId);
+            if(!block) return;
+            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            const indicator = block.querySelector('.cp-indicator');
+            const prevBtn = block.querySelector('.cp-prev-btn');
+            const nextBtn = block.querySelector('.cp-next-btn');
+
+            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+
+            if(nextBtn) {
+                const currentQ = questions[currentIndex];
+                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+                if (currentIndex === questions.length - 1) {
+                    if (isAnswered) {
+                        nextBtn.innerText = "Checkpoint Completed ✓";
+                        nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
+                        nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+                    } else {
+                        nextBtn.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
+                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    }
+                } else {
+                    nextBtn.innerText = "Next Question \u2192";
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; } 
+                    else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+                }
+            }
+            checkSectionUnlock();
+        }
+
+        function navigateCp(blockId, dir) {
+            const block = document.getElementById(blockId);
+            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            currentIndex += dir;
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+            block.setAttribute('data-current', currentIndex);
+            updateCpUI(blockId);
+        }
+
+        function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
+        function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+
+        function setNavButtonState(btnId, enabled) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (enabled) {
+                btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+                btn.innerHTML = 'Next Section &rarr;'; btn.style.borderColor = 'var(--color-gold)';
+            } else {
+                btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
+                btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+            }
+        }
+
+        function checkSectionUnlock() {
+            setNavButtonState('btn-next-sec-1', true); 
+            
+            // Section 2 contains all 5 checkpoint blocks (cp1 through cp9)
+            setNavButtonState('btn-next-sec-2', 
+                isAnswered('cp1') && isAnswered('cp2') && 
+                isAnswered('cp3') && isAnswered('cp4') && 
+                isAnswered('cp5') && isAnswered('cp6') && 
+                isAnswered('cp7') && 
+                isAnswered('cp8') && isAnswered('cp9')
+            );
+            
+            // Section 3 (Constitutional Crisis)
+            setNavButtonState('btn-next-sec-3', isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+            
+            // Section 4 (Voices in Ink)
+            setNavButtonState('btn-next-sec-4', true);
+        }
+
+        window.onload = initCheckpoints;
+    </script>
+</body>
+</html>
