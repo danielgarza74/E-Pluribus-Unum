@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14.4 - A Changed Republic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #111827; 
+            --color-cream: #F3F4F6;    
+            --color-navy: #1F2937;     
+            --color-steel-nib: #9CA3AF; 
+            --color-gold: #D4A017;     
+            --color-gold-light: #FDE047;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+        
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(43, 33, 24, 0.45); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        
+        @media (max-width: 1024px) { 
+            .side-nav { display: none; } 
+            .main-content { margin-left: 0; } 
+            .content-wrapper { padding: 30px 20px; } 
+            .content-block { padding: 2rem; } 
+        }
+        
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+        
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+        
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        
+        @media (max-width: 768px) { 
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+        
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Birth of the Welfare State</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. The Legal Revolution of Labor</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The New Deal Coalition and Political Realignment</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. A New Relationship with the Land and Native Peoples</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. The Legacy of the Changed Republic</button>
+            <button id="nav-sec-7" class="nav-btn" onclick="switchTab('sec-7')">VI. Individuals & Leadership: Agents of Change</button>
+            <button id="nav-sec-8" class="nav-btn" onclick="switchTab('sec-8')">VII. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 1: Start Page -->
+        <section id="sec-1" class="chapter-section active-section">
+            <img src="assets/Header%20Banner%20Chapter%2014.4.png" alt="Chapter 14.4 Banner" class="hero-banner-flush">
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="5">Period 5</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills upon completion">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3 class="first-p">Core Objectives</h3>
+                    <ul>
+                        <li>Analyze the long-term significance of the Social Security Act in establishing a federal safety net for the elderly and disabled.</li>
+                        <li>Trace the rise of organized labor under the Wagner Act and the formation of the Congress of Industrial Organizations (CIO).</li>
+                        <li>Synthesize the components of the "New Deal Coalition" (labor unions, minorities, urbanites, Southern whites) and how it dominated politics for decades.</li>
+                    </ul>
+
+                    <h3>Key Terms</h3>
+                    <p class="first-p">Social Security Act | Wagner Act (National Labor Relations Act) | CIO (Congress of Industrial Organizations) | John L. Lewis | Frances Perkins | Fair Labor Standards Act | New Deal Coalition | Mary McLeod Bethune | The Black Cabinet | Indian Reorganization Act of 1934 | Welfare State</p>
+                </div>
+
+                <div class="bottom-nav">
+                    <div></div>
+                    <button class="action-btn" id="btn-next-sec-1" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Birth of the Welfare State -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Birth of the Welfare State</h2>
+                    <p class="first-p">By 1935, the initial "emergency" phase of the New Deal—often referred to as the First New Deal—had successfully halted the immediate freefall of the American financial system. The bank holiday had restored faith in the credit markets, and early agencies like the CCC had provided a psychological boost to the nation’s youth. However, the Great Depression remained a grueling reality. Unemployment hovered at stubbornly high levels, and the structural causes of economic insecurity remained unaddressed. Franklin D. Roosevelt and his advisors realized that the American people did not just need temporary relief; they needed a permanent foundation for economic stability that could withstand the inevitable cycles of the market. This realization ushered in the Second New Deal, a period of legislative intensity that sought to provide long-term security. The centerpiece of this transformation was the <strong>Social Security Act</strong> of 1935. This law represented one of the most fundamental shifts in American political philosophy in the history of the republic. For the first time, the federal government accepted a permanent, legal responsibility for the financial well-being of its citizens, effectively creating the modern American <strong>Welfare State</strong>.</p>
+                    
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_1.png" alt="Roosevelt Signs the Social Security Act, 1935">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Franklin D. Roosevelt signs the Social Security Act into law in 1935, with Frances Perkins and congressional allies standing behind him.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The Social Security Act marked a decisive shift in the role of the federal government, establishing a permanent responsibility for economic security in old age, unemployment, and family hardship. It embodied the chapter’s argument that the New Deal created a new social contract between citizens and the national state.</div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> Why did the Social Security Act become one of the most important long-term legacies of the New Deal in redefining what Americans expected from their government?</p>
+                                <textarea id="va_1" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="first-p">The creation of a <strong>Welfare State</strong> marked the end of an era in which the individual was solely responsible for their own survival regardless of external economic shocks. Before 1935, an American who became too old to work or too sick to labor was entirely dependent on their family’s savings, which were often nonexistent, or the meager, often humiliating resources of local private charities. The <strong>Social Security Act</strong> replaced this uncertainty with a federally managed "safety net." The program was designed as a three-pillar system of insurance. The first and most famous pillar was an old-age insurance system for retirees aged 65 or older and their spouses. This was a contributory system; workers and their employers paid into a federal fund through a payroll tax. Roosevelt specifically designed the funding this way so that workers would feel they had an "earned right" to their benefits, making it nearly impossible for future politicians to take the program away. He famously remarked that "we put those payroll contributions there so as to give the contributors a legal, moral, and political right to collect their pensions and their unemployment benefits. With those taxes in there, no damn politician can ever scrap my social security program."</p>
+
+                    <p>The second pillar of the act established a national unemployment compensation system. This provided a temporary financial cushion for workers who were laid off through no fault of their own. It was funded by a federal tax on employers but administered at the state level, ensuring that the "breadlines" of the early 1930s would not be repeated every time the economy slowed down. The third pillar offered federal aid to families with dependent children and the disabled. By providing these forms of assistance, the government signaled a new social contract: in exchange for their contributions and labor, citizens were guaranteed a basic level of security from the "cradle to the grave." While the initial payments were quite modest and the act originally excluded many workers, such as farmers and domestic servants, the precedent was revolutionary. The government was no longer just a distant referee of the economy; it was now a protector of the people’s daily lives.</p>
+
+                    <p>The long-term significance of the Social Security Act was as much psychological as it was economic. It provided elderly Americans with a sense of dignity and independence that had been previously unavailable to the working class. It also fundamentally changed the American family structure, as children were no longer the sole financial support for their aging parents. However, the initial exclusions of the act were a significant source of tension. To secure the votes of powerful Southern Democrats, Roosevelt agreed to exclude domestic and agricultural laborers—occupations held by a disproportionate number of African Americans and women. This meant that the very people who needed the safety net the most were often the last to be covered by it. Despite these early failures of inclusion, the <strong>Social Security Act</strong> became the bedrock of the American social contract, establishing the principle that in a modern industrial society, the government has a moral and legal duty to protect its citizens from the ravages of poverty.</p>
+
+                    <!-- Checkpoint 1 -->
+                    <div id="cp-block-1" class="checkpoint-block" data-current="0">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0 !important;">Checkpoint 1</h3>
+                            <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib);"></span>
+                        </div>
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the primary economic rationale for establishing a national unemployment compensation system?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> To permanently replace wages for workers who refused to join labor unions.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> To punish employers who laid off workers during economic downturns.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> To provide a temporary financial cushion and prevent a total collapse of consumer demand during layoffs.</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> To encourage workers to leave the industrial sector and return to agricultural labor.</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the initial exclusions in the Social Security Act affect its early impact on marginalized groups?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> The exclusion of domestic and agricultural laborers meant many African Americans and women initially lacked safety net coverage.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> The exclusions specifically targeted urban factory workers to prevent the growth of organized labor.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> The act excluded wealthy business owners, causing a steep decline in corporate tax revenue.</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> The exemptions allowed states to deny benefits to anyone who belonged to a labor union.</label>
+                        </div>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-1', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-1', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-2" onclick="switchTab('sec-3', 'nav-sec-3')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Legal Revolution of Labor -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Legal Revolution of Labor</h2>
+                    <p class="first-p">While Social Security addressed the needs of those out of the workforce, the New Deal also sought to transform the lives of those still in the factory and the shop. Throughout the 1920s, the American labor movement had been in a state of terminal decline. Employers utilized "yellow-dog contracts"—agreements that forced workers to pledge not to join a union as a condition of employment—and the courts consistently issued injunctions to halt strikes. Roosevelt, however, viewed a strong labor movement as essential to the health of the capitalist system. He believed that if workers had more bargaining power, they could secure higher wages, which would then fuel economic recovery through increased consumer demand. This vision was realized in 1935 with the passage of the National Labor Relations Act, better known as the <strong>Wagner Act</strong>.</p>
+                    
+                    <p>The <strong>Wagner Act</strong> was a landmark piece of legislation that essentially served as a "Bill of Rights" for American labor. It established the federal government as the ultimate arbiter in industrial disputes, and it prohibited a series of "unfair labor practices" by employers. Under the act, it became illegal for a company to fire a worker for union activity, to threaten employees who wanted to organize, or to interfere with the formation of a labor organization. Most significantly, the act created the National Labor Relations Board (NLRB), an independent federal agency with the power to conduct secret-ballot elections among workers to determine if they wanted a union to represent them. If a majority voted for a union, the employer was legally required to bargain in good faith. This shifted the power dynamic in the American workplace from one of absolute management whim to one of legal negotiation.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="Flint Sit-Down Strikers Inside the Fisher Body Plant">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Auto workers occupy the Fisher Body plant during the Flint Sit-Down Strike of 1936–1937.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The Flint strike captured the new power workers gained under the Wagner Act and the rise of industrial unionism through the CIO. It helps students see how federal protection for organizing changed labor from a weak defensive movement into a force that reshaped wages, hours, and working conditions.</div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How did the Wagner Act and the creation of the NLRB help make victories like the Flint Sit-Down Strike possible, and what were the broader consequences for industrial workers?</p>
+                                <textarea id="va_2" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="first-p">This legal empowerment led to a historic explosion in union membership and the rise of a more aggressive type of labor organization. Historically, the American Federation of Labor (AFL) had been composed of "craft unions," which organized workers based on their specific skills, such as plumbers, electricians, or carpenters. This approach often left the millions of unskilled workers in mass-production industries—like steel, automobiles, and rubber—without any representation. In response, <strong>John L. Lewis</strong>, the charismatic and bushy-browed leader of the United Mine Workers, joined with other labor leaders to form the Committee for Industrial Organization. After a bitter internal struggle with the AFL leadership, this group broke away and became the <strong>CIO (Congress of Industrial Organizations)</strong>. The CIO sought to organize entire industries regardless of skill level, a strategy known as industrial unionism.</p>
+
+                    <p>The CIO utilized new and highly effective tactics to achieve its goals, most notably the "sit-down strike." In December 1936, workers at the General Motors plant in Flint, Michigan, refused to leave the factory. They simply sat down at their machines and stayed there, preventing the company from bringing in "scabs," or strikebreakers, to take their places. While the company tried to cut off their heat and water, and the police attempted to storm the plant, the workers remained for 44 days. Eventually, General Motors was forced to recognize the United Auto Workers (UAW) as the sole bargaining agent for its employees. This victory triggered a wave of similar successes across the nation. By 1938, the federal government further cemented these gains by passing the <strong>Fair Labor Standards Act</strong>, which established a national minimum wage, a maximum 44-hour workweek, and outlawed child labor in many industries. For the first time, the "working class" was being legally transformed into a "middle class," with the federal government ensuring they received a fairer share of the nation's wealth.</p>
+
+                    <!-- Checkpoint 2 -->
+                    <div id="cp-block-2" class="checkpoint-block" data-current="0">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0 !important;">Checkpoint 2</h3>
+                            <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib);"></span>
+                        </div>
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the Wagner Act fundamentally alter the power dynamic between factory workers and management?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> It required all workers to join a union as a condition of their employment.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> It established federal protection for union organizing and mandated good-faith bargaining by employers.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> It outlawed the use of strikes and forced all labor disputes into federal courts.</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> It gave management the legal right to fire employees who engaged in secret-ballot elections.</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was the direct consequence of the successful sit-down strike at the General Motors plant in Flint, Michigan?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> General Motors permanently shut down its Michigan factories and moved production overseas.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> The federal government declared sit-down strikes illegal under the Fair Labor Standards Act.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> The company was forced to recognize the United Auto Workers as the sole bargaining agent for its employees.</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> The American Federation of Labor absorbed the CIO to prevent further militant strikes.</label>
+                        </div>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-2', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-3" onclick="switchTab('sec-4', 'nav-sec-4')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The New Deal Coalition and Political Realignment -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The New Deal Coalition and Political Realignment</h2>
+                    <p class="first-p">The economic and social shifts of the 1930s led to a profound and lasting realignment of American politics. Franklin Roosevelt did more than just pass laws; he forged a new political majority that would dominate the United States for the next forty years. This alliance, known as the <strong>New Deal Coalition</strong>, brought together a diverse and often unlikely group of voters who found common ground in their support for the activist government of the 1930s. The coalition was anchored by urban workers, labor unions, various ethnic groups (particularly Catholics and Jews), and Southern whites. Perhaps most significantly, the New Deal oversaw a historic shift in the voting patterns of African Americans.</p>
+                    
+                    <p>Since the era of Reconstruction, African Americans had remained loyal to the "Party of Lincoln," the Republicans. However, the Great Depression hit Black communities with twice the intensity of white communities, and the relief programs of the New Deal, despite their flaws and the persistence of segregation, became a vital lifeline. Millions of African Americans felt that for the first time in their lives, the federal government was paying attention to their needs. By the election of 1936, the vast majority of Black voters had switched their allegiance to the Democratic Party. This political realignment was not just about the economy; it was also about representation and the rhetoric of inclusion that emanated from the White House.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_3.png" alt="Mary McLeod Bethune and the Black Cabinet">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Portrait of Mary McLeod Bethune, one of the most influential African American advisers associated with the New Deal administration.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> Bethune symbolized the growing, though still incomplete, political inclusion of African Americans within the Democratic coalition of the 1930s. Her prominence helps explain why many Black voters shifted away from the Republican Party and why representation in federal government became politically meaningful during the New Deal era.</div>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Analysis Question:</strong> How did Mary McLeod Bethune’s role in the New Deal administration reflect the broader political realignment taking place among African American voters in the 1930s?</p>
+                            <textarea id="va_3" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">This coalition was not without its internal tensions. Southern whites, who had been the backbone of the Democratic Party since the 1800s, often clashed with the more progressive urban and labor wings of the party. Roosevelt was a master at navigating these tensions, carefully balancing the needs of his diverse supporters. He was often criticized by civil rights leaders for failing to support an anti-lynching bill or for allowing the poll tax to continue in the South—compromises he made to avoid losing the support of powerful Southern committee chairmen in Congress. Despite these contradictions, the <strong>New Deal Coalition</strong> proved to be an incredibly resilient force, as it gave millions of Americans a sense of direct stake in the success of the federal government and the presidency.</p>
+
+                    <p>The coalition also drew strength from the visible inclusion of previously marginalized groups in the halls of power. Under the influence of Eleanor Roosevelt, who served as the administration’s conscience on social issues, the President appointed more than 100 African Americans to secondary positions in the federal government. This informal group of advisors became known as <strong>The Black Cabinet</strong>. They worked behind the scenes to ensure that New Deal agencies provided at least some level of fair treatment to Black citizens and to push for greater inclusion in job training programs. One of the most prominent and influential members of this group was <strong>Mary McLeod Bethune</strong>, a legendary educator who served as the director of the Office of Minority Affairs in the National Youth Administration. Her leadership and her close friendship with Eleanor Roosevelt provided a powerful example of the "new" Democratic Party’s commitment to a more inclusive republic, even as the nation continued to struggle with the deep-seated reality of segregation.</p>
+
+                    <!-- Checkpoint 3 -->
+                    <div id="cp-block-3" class="checkpoint-block" data-current="0">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0 !important;">Checkpoint 3</h3>
+                            <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib);"></span>
+                        </div>
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the New Deal's economic relief programs influence the voting patterns of African Americans?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> They caused a mass exodus of Black voters from the Democratic Party to the Republican Party.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> They motivated a historic political realignment, with the vast majority of Black voters shifting their allegiance to the Democratic Party.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> They led to widespread disenfranchisement, decreasing African American voter turnout in the North.</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> They convinced Black communities to form an independent, third-party political movement.</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What role did "The Black Cabinet" play within the Roosevelt administration?</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> They served as an informal group of advisors pushing for fair treatment and inclusion of Black citizens in New Deal programs.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> They were an official, Senate-confirmed committee that wrote all major civil rights legislation during the 1930s.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> They operated as a radical faction that openly campaigned against the New Deal Coalition.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> They controlled the distribution of all federal relief funds sent to Southern states.</label>
+                        </div>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-3', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-4" onclick="switchTab('sec-5', 'nav-sec-5')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: A New Relationship with the Land and Native Peoples -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>A New Relationship with the Land and Native Peoples</h2>
+                    <p class="first-p">The transformative power of the New Deal also reached into the most remote regions of the American West, altering the lives of Native Americans and the management of the nation’s natural resources. For decades prior to the 1930s, the federal government’s policy toward Native Americans had been defined by the Dawes Act of 1887, which sought to "civilize" Native peoples by breaking up tribal lands into individual plots and forcing them to assimilate into white culture. This policy had been an unmitigated disaster, leading to the loss of over 90 million acres of tribal land and the destruction of traditional social and cultural structures. Under the New Deal, this approach was radically reversed by John Collier, the Commissioner of Indian Affairs, through the <strong>Indian Reorganization Act of 1934</strong>.</p>
+                    
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_4.png" alt="John Collier Meeting with Tribal Leaders, 1934">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Commissioner of Indian Affairs John Collier meets with Native leaders in 1934 during debate over the Wheeler-Howard Act, later known as the Indian Reorganization Act.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> This moment represents the New Deal’s reversal of the assimilationist logic of the Dawes Act and the turn toward tribal self-government. It helps students connect federal reform to the recognition of Native sovereignty, land rights, and cultural survival.</div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How did the Indian Reorganization Act differ from the earlier Dawes Act in its assumptions about land, citizenship, and Native self-government?</p>
+                                <textarea id="va_4" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="first-p">This "Indian New Deal" marked a significant shift from forced assimilation toward tribal autonomy. The act ended the further allotment of tribal lands to individuals and returned "surplus" lands to tribal ownership. Most importantly, it provided federal funds for tribes to purchase additional land and authorized them to establish their own tribal governments and businesses. While the act was controversial—some Native Americans feared it was just another attempt by the government to control their lives, while others felt it didn't go far enough—it represented a major recognition of tribal sovereignty and the inherent value of Native cultures. It provided the legal framework that many tribes still use today to manage their resources and govern their people, signaling that the federal government’s responsibility now included the protection of cultural diversity.</p>
+
+                    <p>Simultaneously, the New Deal introduced a new level of federal management of the American landscape. Projects like the Tennessee Valley Authority (TVA) and the Central Valley Project in California used the power of the federal government to transform entire regions. By building massive dams, the government controlled floods, improved navigation, and brought electricity to rural areas that had been left in the dark by private utility companies. These projects were not just about infrastructure; they were about the idea that the government could use science and technology to "plan" a more prosperous and equitable society. This era saw the birth of the idea that the nation’s natural resources—its rivers, its soil, and its forests—were a public trust that the federal government was obligated to manage for the benefit of all citizens.</p>
+
+                    <p>The environmental legacy of the New Deal was also seen in the response to the Dust Bowl. The Soil Conservation Service was established to teach farmers how to protect their land through contour plowing and crop rotation. The government also oversaw the planting of millions of trees to create "shelterbelts" that would act as windbreaks across the Great Plains. These efforts were based on the realization that the "rugged individualism" of the past had led to an ecological catastrophe, and that the long-term health of the nation’s land required a centralized, scientific approach to management. By the end of the 1930s, the American landscape had been physically reshaped by the federal government, mirroring the way the American government had been reshaped by the New Deal.</p>
+
+                    <!-- Checkpoint 4 -->
+                    <div id="cp-block-4" class="checkpoint-block" data-current="0">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0 !important;">Checkpoint 4</h3>
+                            <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib);"></span>
+                        </div>
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the Indian Reorganization Act of 1934 represent a reversal of previous federal Native American policy?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> It accelerated the Dawes Act by breaking up all remaining reservations into individual plots.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> It shifted away from forced assimilation and restored tribal autonomy and communal land ownership.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> It mandated the relocation of all Native American tribes to urban industrial centers.</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> It required tribes to surrender their sovereignty in exchange for New Deal relief funds.</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the federal government respond to the ecological disaster of the Dust Bowl?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> By abandoning the Great Plains and incentivizing farmers to relocate to California.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> By introducing centralized, scientific land management practices such as contour plowing and planting shelterbelts.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> By deregulating the agricultural sector to allow farmers to plant more cash crops.</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> By privatizing all federal lands in the Midwest to promote rugged individualism.</label>
+                        </div>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-4', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-5" onclick="switchTab('sec-6', 'nav-sec-6')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: The Legacy of the Changed Republic -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Legacy of the Changed Republic</h2>
+                    <p class="first-p">By the late 1930s, the United States had emerged from the crucible of the Great Depression as a fundamentally different nation. The New Deal had not ended the economic crisis—unemployment would remain high until the massive military mobilization for World War II—but it had successfully prevented the total collapse of the American democratic system. At a time when other nations were turning to the "easy answers" of fascism or communism, the New Deal proved that a liberal democracy could adapt to an industrial age without sacrificing its core values. The republic was no longer a collection of isolated individuals and states; it was a highly organized society where the federal government served as the "broker" of the common good.</p>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="Broker State Illustration" class="visual-img">
+                        <p class="caption-text"> The New Deal transformed the federal government into a "Broker State," fundamentally shifting its role to mediate between the competing interests of labor, business, and agriculture. By establishing permanent regulatory agencies, the government assumed direct responsibility for the stability of the economy, ensuring that the rules of commerce and finance were supervised by federal experts rather than dictated by unregulated market forces.</p>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Analysis Question:</strong> How did the transition to a "Broker State" alter the traditional balance of power between private business interests and the working class?</p>
+                            <textarea id="va_5" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">The most significant legacy of this era was the permanent expansion of the federal government’s reach. The "alphabet soup" of agencies established the principle that the government is responsible for the health of the economy and the security of its people. This shift created what historians call the "Broker State," where the government acts as a mediator between the competing interests of labor, business, and agriculture. The creation of the FDIC, the SEC, and the NLRB ensured that the "rules of the game" in the American economy would be supervised by federal experts, rather than left to the whims of unregulated markets. While this expansion of power led to decades of debate over the proper size of government, it also provided the stability that allowed for the unprecedented economic growth of the post-war era.</p>
+
+                    <p>Perhaps the deepest change was psychological. Americans now expected their government to be active, empathetic, and involved. The image of the president as a distant figure was replaced by the "Fireside Chat" and the "New Deal" program. This shift in expectations was personified by leaders like <strong>Frances Perkins</strong>, the first female cabinet member, whose work as Secretary of Labor was instrumental in crafting the Social Security Act and the Fair Labor Standards Act. Her career demonstrated that the government could be a force for moral progress as well as economic management. Even as the specific agencies of the 1930s were eventually phased out or replaced, the concept of a "living Constitution" that can expand to meet the needs of the people became the bedrock of modern American civic life.</p>
+
+                    <p>Ultimately, the New Deal did not solve every problem. It did not end racial segregation, it did not achieve full economic equality, and it did not eliminate poverty. However, it provided the tools and the political framework that future generations would use to fight for those goals. It established the principle that in a democracy, the government belongs to the people, and that its primary purpose is to ensure that everyone has a fair chance to succeed. The republic had been tested by the greatest failure of the capitalist system, and it had responded by reinventing itself as a nation that sought to provide "a more perfect union" not just in the halls of justice, but at the kitchen table of every American family. This transformation remains the defining feature of modern American life.</p>
+
+                    <!-- Checkpoint 5 -->
+                    <div id="cp-block-5" class="checkpoint-block" data-current="0">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0 !important;">Checkpoint 5</h3>
+                            <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib);"></span>
+                        </div>
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the New Deal alter the psychological expectations Americans had of their federal government?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> Americans became more distrustful of federal agencies and demanded a return to laissez-faire economics.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> Americans expected the presidency and the federal government to be an active, empathetic force in ensuring economic security.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> Americans accepted that the federal government was powerless to intervene during periods of economic depression.</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> Americans concluded that state governments were the only reliable source of social welfare.</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Despite its transformative impact, what was a significant limitation of the New Deal's legacy?</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> It completely failed to establish any new financial regulations.</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> It did not successfully resolve the immediate banking crisis of the early 1930s.</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> It did not achieve full economic equality or put an end to racial segregation.</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> It permanently dismantled the constitutional separation of powers.</label>
+                        </div>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-5', -1)">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-6" onclick="switchTab('sec-7', 'nav-sec-7')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Individuals & Leadership: Agents of Change -->
+        <section id="sec-7" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Individuals & Leadership: Agents of Change</h2>
+                    <h3>Frances Perkins: The Woman Behind the Safety Net</h3>
+                    
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.png" alt="Frances Perkins, Secretary of Labor">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Frances Perkins, the first woman to serve in a presidential cabinet, photographed during the New Deal era.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> Frances Perkins was a principal architect of the Social Security Act and the Fair Labor Standards Act, making her central to the construction of the American welfare state. Her leadership also reveals how reform in the 1930s depended on determined administrators who translated broad ideals into durable law.</div>
+                        </div>
+                    </div>
+
+                    <p class="first-p"><strong>The Path to Power</strong><br>
+                    Frances Perkins did not arrive in Washington as a career politician. Her life as a reformer began in the tenements and factories of New York City. The defining moment of her life occurred in 1911, when she witnessed the horrific Triangle Shirtwaist Factory fire. Watching young women jump to their deaths because factory doors were locked convinced her that an "unregulated" market was a threat to human life. She spent the next two decades fighting for industrial safety and labor laws in New York, eventually serving as the state’s industrial commissioner under Governor Franklin Roosevelt. When FDR was elected president, he chose her as his Secretary of Labor, making her the first woman in American history to serve in a presidential cabinet.</p>
+
+                    <p><strong>Architect of the New Deal</strong><br>
+                    Perkins’s influence on the New Deal was profound. Before she accepted the cabinet position, she presented Roosevelt with a list of policy goals that she insisted must be pursued: a 40-hour workweek, a minimum wage, worker’s compensation, and—most importantly—a permanent system of old-age and unemployment insurance. Roosevelt agreed, and Perkins became the primary architect of the legislation that defined the modern safety net. She chaired the Committee on Economic Security, which drafted the Social Security Act of 1935. She was a master of the legislative process, working tirelessly to convince skeptical congressmen and business leaders that social insurance was a common-sense necessity for a modern industrial nation.</p>
+
+                    <p><strong>Challenges and Identity</strong><br>
+                    Perkins faced immense obstacles as a woman in a male-dominated political world. Male labor leaders often resented being told what to do by a woman they viewed as a "social worker," and her political enemies frequently tried to label her as a radical or a communist. To navigate these challenges, she adopted a conservative, "motherly" public persona, often wearing simple tricorn hats and avoiding the flashy style of the era. Behind this persona, however, was a brilliant and determined leader who understood that for the New Deal to last, it had to be built on solid, defensible legal ground.</p>
+
+                    <p><strong>Historical Significance</strong><br>
+                    The work of Frances Perkins is visible in the lives of almost every American today. Every time a worker receives a minimum-wage paycheck, utilizes worker’s compensation after an injury, or receives a Social Security check in retirement, they are experiencing the legacy of the woman who believed that the government’s highest calling was the protection of its people. She proved that a woman could lead a major federal department during a national crisis, and she transformed the Department of Labor from a minor agency into the engine of the American welfare state.</p>
+
+                    <hr style="border-color: rgba(212,160,23,0.3); margin: 3rem 0;">
+                    
+                    <h3>Perspective Questions</h3>
+                    <div style="margin-bottom: 2rem;">
+                        <p class="first-p"><strong>1. Analyze the Imagery:</strong> Why did Frances Perkins choose to witness the Triangle Shirtwaist Fire as the "founding moment" of her political career? How did this specific choice of imagery help her frame labor reform as a moral necessity rather than just an economic policy?</p>
+                        <textarea id="pq_1" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <p class="first-p"><strong>2. Compare Viewpoints:</strong> Contrast the reaction of a male union leader in the 1930s to the appointment of Frances Perkins with the reaction of a woman working in a textile mill. How do these differing perspectives explain the social barriers Perkins had to overcome to implement her programs?</p>
+                        <textarea id="pq_2" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <p class="first-p"><strong>3. Evaluate Strategy:</strong> Why was Perkins’s decision to focus on "social insurance" (Social Security) more effective as a long-term strategy than simply asking for more direct relief payments? Consider the role of political sustainability and the idea of "earned" benefits.</p>
+                        <textarea id="pq_3" class="textarea-dark" placeholder="Enter your answer here..."></textarea>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-7" onclick="switchTab('sec-8', 'nav-sec-8')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Vocabulary Activity -->
+        <section id="sec-8" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Instructions: Read the following historical narrative. Fill in the blanks using the terms provided in the word bank below. Each term will be used exactly once.</p>
+                    
+                    <div class="word-bank">
+                        <span class="word-pill">CIO (Congress of Industrial Organizations)</span>
+                        <span class="word-pill">Fair Labor Standards Act</span>
+                        <span class="word-pill">Frances Perkins</span>
+                        <span class="word-pill">Indian Reorganization Act of 1934</span>
+                        <span class="word-pill">John L. Lewis</span>
+                        <span class="word-pill">Mary McLeod Bethune</span>
+                        <span class="word-pill">New Deal Coalition</span>
+                        <span class="word-pill">Social Security Act</span>
+                        <span class="word-pill">The Black Cabinet</span>
+                        <span class="word-pill">Wagner Act</span>
+                        <span class="word-pill">Welfare State</span>
+                    </div>
+
+                    <div style="line-height: 2.2; font-size: 1.15rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <p class="first-p">
+                            <strong>Forging a New America</strong><br><br>
+                            The sweeping reforms of the 1930s permanently altered the relationship between the federal government and its citizens. A major shift occurred with the birth of the modern <input type="text" class="cloze-input" data-index="1">, as the government accepted responsibility for providing a basic economic safety net for the vulnerable. The chief architect of much of this legislation was <input type="text" class="cloze-input" data-index="2">, the Secretary of Labor and the first female cabinet member in U.S. history. She played a pivotal role in drafting the monumental <input type="text" class="cloze-input" data-index="3"> of 1935, which established a federal system of old-age pensions and unemployment insurance.
+                        </p>
+                        <p>
+                            Industrial workers also experienced a legal revolution during this era. The passage of the <input type="text" class="cloze-input" data-index="4"> effectively served as a "Bill of Rights" for labor, legally protecting the right of workers to organize and form unions without employer interference. Empowered by these new protections, charismatic labor leaders like <input type="text" class="cloze-input" data-index="5"> pushed for the aggressive unionization of unskilled workers in mass-production industries. This effort led to the creation of the <input type="text" class="cloze-input" data-index="6">, a labor organization that successfully used tactics like the sit-down strike to win recognition from massive corporations. The federal government further solidified the "middle class" status of these workers by passing the <input type="text" class="cloze-input" data-index="7">, which established a national minimum wage and outlawed child labor.
+                        </p>
+                        <p>
+                            Politically, President Franklin D. Roosevelt forged the <input type="text" class="cloze-input" data-index="8">, a diverse political alliance of urban workers, labor unions, Southern whites, and minorities that dominated American politics for decades. As African Americans shifted their voting allegiance to the Democratic Party, an informal group of minority advisors known as <input type="text" class="cloze-input" data-index="9"> worked behind the scenes to ensure New Deal agencies treated Black citizens fairly. A highly influential member of this group was the renowned educator <input type="text" class="cloze-input" data-index="10">, who directed the Office of Minority Affairs. The transformative reach of the New Deal also extended to Native American communities; the passage of the <input type="text" class="cloze-input" data-index="11"> finally ended the disastrous Dawes Act policies of forced assimilation and restored tribal sovereignty and communal land ownership.
+                        </p>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-7', 'nav-sec-7')">&larr; Previous</button>
+                    <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+/* Background Management */
+const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+let bgIndex = 0;
+function rotateBackground() {
+    if (bgImages.length === 0) return;
+    const bgEl = document.getElementById('bg-slideshow');
+    if (!bgEl) return;
+    bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+    bgIndex = (bgIndex + 1) % bgImages.length;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    rotateBackground();
+    setInterval(rotateBackground, 10000); 
+});
+
+/* Navigation */
+function switchTab(id, btnId = null, scrollTarget = null) {
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+    
+    const activeBtnId = btnId || ('nav-' + id);
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) {
+        activeBtn.classList.add('active-nav');
+    }
+    
+    if (scrollTarget) {
+        setTimeout(() => {
+            const target = document.getElementById(scrollTarget);
+            if(target) {
+                const offset = 40;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = target.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }, 50);
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    saveProgress();
+}
+
+/* Data Collection & Export */
+function collectAssignmentData(isFinal) {
+    const studentName = document.getElementById('student-name').value || "Unknown_Student";
+    const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+    const now = new Date().toLocaleDateString();
+
+    const assignmentData = {
+        assignmentTitle: "Interactive Chapter 14.4 - A Changed Republic",
+        studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+        responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+    };
+
+    // Gather Visual Analysis Answers
+    for(let i=1; i<=20; i++) {
+        let el = document.getElementById('va_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+            assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+        }
+    }
+
+    // Gather Checkpoint Answers
+    for(let i=1; i<=30; i++) {
+        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+        if(inputs.length > 0) {
+            let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+            assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+        }
+    }
+
+    // Gather Perspective Questions
+    for(let i=1; i<=10; i++) {
+        let el = document.getElementById('pq_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+            assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+        }
+    }
+
+    // Gather Cloze Activity Answers
+    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+        assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+    });
+
+    return assignmentData;
+}
+
+function triggerDownload(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadProgress() {
+    const data = collectAssignmentData(false);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+}
+
+function finishChapter() {
+    const dateField = document.getElementById('completion-date');
+    const now = new Date().toLocaleDateString();
+    if(dateField) dateField.value = now;
+
+    const data = collectAssignmentData(true);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    triggerDownload(data, `Chapter_Export_${safeName}.json`);
+
+    alert('Upload JSON file to Canvas');
+    switchTab('sec-1', 'nav-sec-1');
+}
+
+/* Loading Progress */
+function loadProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedData = JSON.parse(e.target.result);
+            
+            // Restore ID Panel and Burn In
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            
+            if (loadedData.studentInfo) {
+                if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                    nameInput.value = loadedData.studentInfo.name;
+                    nameInput.setAttribute('readonly', 'true');
+                    nameInput.style.opacity = '0.7'; 
+                }
+                if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                    periodInput.value = loadedData.studentInfo.period;
+                    periodInput.setAttribute('disabled', 'true');
+                    periodInput.style.opacity = '0.7'; 
+                }
+            }
+
+            if (loadedData.responses) {
+                if (loadedData.responses.visualAnalysis) {
+                    for(let i=1; i<=20; i++) {
+                        let el = document.getElementById('va_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                            if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                        }
+                    }
+                }
+                
+                if (loadedData.responses.checkpoints) {
+                    for(let i=1; i<=30; i++) {
+                        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                        if(inputs.length > 0) {
+                            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                            let savedVal = loadedData.responses.checkpoints[qText];
+                            if (savedVal && savedVal !== "No Answer") {
+                                let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                if(radio) radio.checked = true;
+                            }
+                        }
+                    }
+                }
+
+                if (loadedData.responses.perspectiveQuestions) {
+                    for(let i=1; i<=10; i++) {
+                        let el = document.getElementById('pq_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                            if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                        }
+                    }
+                }
+
+                if (loadedData.responses.clozeActivity) {
+                    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                        let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                        if (savedVal) input.value = savedVal;
+                    });
+                }
+            }
+            
+            initCheckpoints();
+            alert('Progress loaded successfully!');
+            
+        } catch (err) {
+            console.error(err);
+            alert('Error loading progress file. Please make sure it is a valid JSON file.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* Save & Reset Logic */
+function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+function resetProgress() {
+    if(confirm('Are you sure you want to reset all progress?')) {
+        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        
+        // Un-burn ID panel fields
+        const nameInput = document.getElementById('student-name');
+        const periodInput = document.getElementById('student-period');
+        nameInput.removeAttribute('readonly');
+        nameInput.style.opacity = '1';
+        periodInput.removeAttribute('disabled');
+        periodInput.style.opacity = '1';
+
+        document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+        initCheckpoints();
+        switchTab('sec-1', 'nav-sec-1');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* Checkpoint Management */
+const TOTAL_SECTIONS = 8; 
+
+function initCheckpoints() {
+    for(let i=1; i<=TOTAL_SECTIONS; i++) { updateCpUI(`cp-block-${i}`); }
+    checkSectionUnlock();
+}
+
+function updateCpUI(blockId) {
+    const block = document.getElementById(blockId);
+    if(!block) return;
+    const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    const indicator = block.querySelector('.cp-indicator');
+    const prevBtn = block.querySelector('.cp-prev-btn');
+    const nextBtn = block.querySelector('.cp-next-btn');
+
+    questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+    if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+    if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+
+    if(nextBtn) {
+        const currentQ = questions[currentIndex];
+        const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+        if (currentIndex === questions.length - 1) {
+            if (isAnswered) {
+                nextBtn.innerText = "Checkpoint Completed ✓";
+                nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
+                nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+            } else {
+                nextBtn.innerText = "Finish Checkpoint";
+                nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+            }
+        } else {
+            nextBtn.innerText = "Next Question \u2192";
+            nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+            if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; } 
+            else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+        }
+    }
+    checkSectionUnlock();
+}
+
+function navigateCp(blockId, dir) {
+    const block = document.getElementById(blockId);
+    let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+    block.setAttribute('data-current', currentIndex);
+    updateCpUI(blockId);
+}
+
+function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
+function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+
+function setNavButtonState(btnId, enabled) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (enabled) {
+        btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+        btn.innerHTML = 'Next Section &rarr;'; btn.style.borderColor = 'var(--color-gold)';
+    } else {
+        btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
+        btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+    }
+}
+
+function checkSectionUnlock() {
+    setNavButtonState('btn-next-sec-1', true); 
+    setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2'));
+    setNavButtonState('btn-next-sec-3', isAnswered('cp3') && isAnswered('cp4'));
+    setNavButtonState('btn-next-sec-4', isAnswered('cp5') && isAnswered('cp6'));
+    setNavButtonState('btn-next-sec-5', isAnswered('cp7') && isAnswered('cp8'));
+    setNavButtonState('btn-next-sec-6', isAnswered('cp9') && isAnswered('cp10'));
+    setNavButtonState('btn-next-sec-7', true); // No radio buttons in this section
+}
+
+window.onload = () => {
+    initCheckpoints();
+};
+</script>
+
+</body>
+</html>
