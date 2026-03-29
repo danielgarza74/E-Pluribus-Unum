@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 15.5: The Holocaust</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #20263A;
+            --color-cream: #F4EBDD;
+            --color-navy: #4F6FA3;
+            --color-steel-nib: #7F7A74;
+            --color-gold: #C45A44;
+            --color-gold-light: #D86B56;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+        
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(196, 90, 68, 0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(196, 90, 68, 0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(196, 90, 68, 0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+        
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+        
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+        
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+        
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(196, 90, 68, 0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; grid-column: 1 / -1; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(196, 90, 68, 0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(79, 111, 163, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(196, 90, 68, 0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    
+    <!-- Left Navigation -->
+    <div class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button class="nav-btn active-nav" id="nav-sec-1" onclick="switchTab('sec-1', this.id)">Start Page</button>
+            <button class="nav-btn" id="nav-sec-2" onclick="switchTab('sec-2', this.id)">I. The Origins of Genocide</button>
+            <button class="nav-btn" id="nav-sec-3" onclick="switchTab('sec-3', this.id)">II. Annihilation and Defiance</button>
+            <button class="nav-btn" id="nav-sec-4" onclick="switchTab('sec-4', this.id)">III. Bearing Witness</button>
+            <button class="nav-btn" id="nav-sec-5" onclick="switchTab('sec-5', this.id)">IV. Voices of the Era: The Testimony of the Survivors</button>
+            <button class="nav-btn" id="nav-sec-6" onclick="switchTab('sec-6', this.id)">V. Vocabulary Activity</button>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- SECTION 1: START PAGE -->
+        <div id="sec-1" class="chapter-section active-section">
+            <img src="assets/Header%20Banner%20Chapter%2015.5.png" alt="Chapter 15.5 Header" class="hero-banner-flush">
+            
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label>Student Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label>Class Period</label>
+                        <select id="student-period">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Core Objectives</h3>
+                    <ul class="first-p">
+                        <li>Analyze the ideological roots of Nazi anti-Semitism and the escalation of persecution from the Nuremberg Laws to Kristallnacht.</li>
+                        <li>Trace the development of the "Final Solution," comparing the "Holocaust by bullets" to the industrial murder of the death camps.</li>
+                        <li>Evaluate the international response to the genocide and the establishment of "crimes against humanity" at the Nuremberg Trials.</li>
+                    </ul>
+                    
+                    <h3>Key Terms</h3>
+                    <p class="first-p" style="font-family: var(--font-ui); color: var(--color-steel-nib);">
+                        The Holocaust | Anti-Semitism | Nuremberg Laws | Kristallnacht | Final Solution | Ghettos | Concentration Camps | Death Camps | Auschwitz | Genocide | Elie Wiesel | Righteous Among the Nations | War Crimes Trials
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <h2>Introduction | The Descent into Darkness and the Endurance of the Human Spirit</h2>
+                    <p class="first-p">The systematic, state-sponsored murder of approximately six million Jewish people and millions of others by the Nazi regime stands as the most horrific crime of the twentieth century. Rooted in a virulent, pseudo-scientific ideology, the German state transformed traditional prejudices into a biological war, methodically stripping citizens of their rights before escalating to industrial-scale extermination. This section traces the horrific evolution of the Holocaust, from discriminatory laws to the implementation of the "Final Solution," while also highlighting the profound resilience of those who resisted the machinery of death. Ultimately, the liberation of the camps and the subsequent search for justice laid the foundational framework for modern international human rights. By examining this catastrophe, we confront the consequences of unchecked hatred and the enduring imperative to protect the vulnerable</p>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="Auschwitz-Birkenau main gate" class="visual-img">
+                        <p class="caption-text first-p">The systematic murder of millions by the Nazi regime was an unprecedented event in human history, fundamentally transforming the understanding of state-sponsored terror. The scale of the genocide required a vast, industrialized infrastructure of death, forever altering international frameworks for human rights.</p>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                            <p class="first-p" style="margin-bottom: 15px;">How does the presence of industrial infrastructure, such as railway tracks leading directly into a camp, alter our understanding of how the Holocaust was executed compared to earlier historical massacres?</p>
+                            <textarea id="va_1" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <div></div>
+                    <button class="action-btn" id="btn-next-sec-1" onclick="switchTab('sec-2', 'nav-sec-2', 'sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: THE ORIGINS OF GENOCIDE -->
+        <div id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Origins of Genocide</h2>
+                    <p class="first-p">The descent into genocide began not with mass murder, but with words and discriminatory laws driven by a radical, pseudo-scientific ideology. The Nazi regime utilized a distorted version of social Darwinism to dehumanize the Jewish people, setting the stage for their systematic exclusion from German society. Through sweeping legislation like the Nuremberg Laws, the state stripped Jews of their citizenship and economic independence, culminating in the state-sponsored violence of Kristallnacht. This marked a terrifying shift from legal discrimination to organized terror, making it violently clear that the Jewish community's very existence in Europe was under threat</p>
+
+                    <h3>The Ideological Foundations of Hatred</h3>
+                    <p class="first-p">The systematic, state-sponsored murder of approximately six million European Jews and millions of others by the Nazi regime remains the most horrific crime of the twentieth century. This event, known today as <strong>The Holocaust</strong>, was not a random act of wartime violence or a byproduct of the chaos of conflict. Instead, it was the calculated result of a radical racial ideology that had been central to the National Socialist movement since its earliest days in the beer halls of Munich. To understand the scale of this tragedy, historians must look beyond the military history of World War II and examine the intellectual and social structures that made such a catastrophe possible in a modern, industrialized nation.</p>
+                    <p>At the very core of Nazi belief was a virulent and pseudo-scientific form of <strong>Anti-Semitism</strong>, or hatred of the Jewish people. While prejudice against Jews had existed in Europe for over a thousand years, often rooted in religious differences or economic scapegoating, the Nazis transformed this traditional bigotry into a biological struggle for survival. Adolf Hitler, in his semi-autobiographical manifesto <em>Mein Kampf</em>, argued that history was not a struggle between classes or nations, but a relentless war between races. He claimed that the "Aryan" race—the Germanic peoples—was a "master race" responsible for all human progress, while the Jews were a "counter-race" whose very existence threatened to "poison" the purity of German blood and collapse civilization itself.</p>
+                    <p>This ideology relied heavily on a distorted version of social Darwinism, suggesting that just as animals compete for resources in nature, human "races" were locked in a zero-sum game for territory and dominance. The Nazis used this framework to dehumanize their targets, labeling Jews, Roma, Sinti, and the disabled as <em>Untermenschen</em> (subhumans) or "lives unworthy of life." By framing the "Jewish Question" as a biological emergency rather than a political disagreement, the Nazi state prepared the German public to accept increasingly radical "solutions" that would eventually lead from legal discrimination to industrial-scale extermination.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_1.png" alt="Nazi Racial Classification Chart">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">A pseudo-scientific instructional chart used by the Nazi regime to classify individuals into racial categories based on ancestry.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> The pseudo-scientific ideology of social Darwinism formed the intellectual foundation for the Holocaust. By framing the Germanic peoples as a "master race" and others as biological threats, the Nazi state manufactured a justification for profound cruelty. This systematic dehumanization prepared the German public to accept increasingly radical measures against Jewish citizens.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">How did the promotion of pseudo-scientific racial theories prepare the German populace to accept the persecution of their Jewish neighbors?</p>
+                                <textarea id="va_2" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. How did the Nazi regime use "social Darwinism" to support their ideology?</p>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) By promoting the idea of universal human cooperation</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) By claiming human races were in a zero-sum struggle for territory and dominance</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) By arguing that religious differences were the primary cause of history</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) By emphasizing the importance of environmental conservation</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What was the purpose of labeling certain groups as <em>Untermenschen</em>?</p>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) To grant them special legal protections under the German state</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) To dehumanize them and prepare the public for their eventual extermination</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) To encourage their integration into the "master race"</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) To distinguish between different political parties in the Reichstag</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-1', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-1', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>The Legal Path to Exclusion</h3>
+                    <p class="first-p">When Hitler was appointed Chancellor in January 1933, the Nazi state immediately began using the law as a weapon to isolate the Jewish community. The first major step was the Law for the Restoration of the Professional Civil Service, which stripped Jewish Germans of their right to hold government jobs. This was followed by a series of decrees that banned Jews from practicing law, medicine, or journalism, and restricted their access to higher education. These early measures were designed to break the economic and social back of the Jewish middle class, forcing them into a state of poverty and desperation that would, the Nazis hoped, lead them to flee the country.</p>
+                    <p>The most significant legislative turning point occurred in September 1935 with the announcement of the <strong>Nuremberg Laws</strong>. These two laws—the Reich Citizenship Law and the Law for the Protection of German Blood and German Honor—officially institutionalized racial discrimination. The laws stripped Jews of their German citizenship, effectively making them subjects of the state without legal rights. They also forbade marriage or romantic relationships between Jews and non-Jewish Germans. Crucially, the laws defined "Jewishness" not by religious belief or cultural practice, but by ancestry. Even individuals who had converted to Christianity or whose families had been secular for generations were classified as Jews if they had three or four Jewish grandparents.</p>
+                    <p>Following the <strong>Nuremberg Laws</strong>, the process of "Aryanization" accelerated. This involved the systematic theft of Jewish property and businesses. Jewish owners were forced to sell their shops, factories, and homes to non-Jewish Germans for a tiny fraction of their actual value. This state-sanctioned plunder destroyed the financial independence of the Jewish community and enriched many ordinary Germans who participated in the theft. By 1937, the physical and social walls around the Jewish community were closing in, yet the world remained largely silent as a modern state systematically dismantled the lives of its own citizens based on the fiction of racial science.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="1933 Boycott of Jewish Businesses">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">A Nazi SA stormtrooper stands guard outside a Jewish-owned shop in Berlin during the state-coordinated boycott of April 1933, enforcing the economic isolation of the Jewish community.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> Before escalating to physical violence, the Nazi state utilized legal and economic weapons to isolate its Jewish citizens. State-sanctioned actions like boycotts and the subsequent "Aryanization" of property systematically destroyed the financial independence of the Jewish middle class, forcing them to the margins of German society.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">How did early state-sponsored actions against Jewish-owned businesses affect the economic and social stability of the Jewish community in Germany?</p>
+                                <textarea id="va_3" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was a primary consequence of the Nuremberg Laws of 1935?</p>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) Jewish citizens were granted equal rights in exchange for property</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) Jews were stripped of their citizenship and forbidden from marrying non-Jews</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) All Jewish residents were immediately deported to Western Europe</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) Religious freedom was declared the highest law of the Nazi state</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What did the process of "Aryanization" involve?</p>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) The conversion of German citizens to the Jewish faith</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) The systematic theft and forced sale of Jewish property and businesses</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) The construction of new government housing for all German subjects</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) The establishment of international trade agreements with neutral nations</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-2', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>From Legislation to State-Sponsored Terror</h3>
+                    <p class="first-p">The transition from legal exclusion to open violence occurred on the night of November 9, 1938, in an event known as <strong>Kristallnacht</strong>, or the "Night of Broken Glass." The pretext for the violence was the assassination of a minor German diplomat in Paris by Herschel Grynszpan, a Jewish teenager whose parents had been brutally expelled from Germany. Using this incident as an excuse, the Nazi government coordinated a nationwide wave of violence. Across Germany, Austria, and the newly occupied Sudetenland, Nazi stormtroopers and their sympathizers attacked Jewish homes, businesses, and houses of worship.</p>
+                    <p>The destruction was catastrophic. More than 7,000 Jewish-owned businesses were looted and destroyed, and hundreds of synagogues were burned to the ground as fire departments stood by and watched, instructed only to prevent the flames from spreading to "Aryan" property. Even more significantly, roughly 30,000 Jewish men were arrested and sent to <strong>Concentration Camps</strong> like Dachau and Buchenwald. This marked the first time the camp system was used for the mass detention of people simply because they were Jewish. In a final act of cruelty, the Nazi government fined the Jewish community one billion marks to pay for the damage caused by the state-sponsored rioters. <strong>Kristallnacht</strong> was a clear signal to the world that the Nazi regime had moved beyond discrimination and into the realm of state-organized terror.</p>
+                    <p>Following <strong>Kristallnacht</strong>, the remaining Jewish population was forced into a state of total social death. They were banned from public parks, theaters, and swimming pools, and were forced to wear a yellow Star of David on their clothing to ensure they were easily identifiable at all times. The goal was to make life so intolerable that the Jewish people would disappear from Germany. However, as the war began in 1939, the Nazi leadership realized that their "Jewish Question" could no longer be solved through emigration alone, especially as they conquered territories with millions of additional Jewish residents in Poland and the Soviet Union.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_3.png" alt="Destroyed Storefronts Following Kristallnacht">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">Shattered windows and debris outside a Jewish-owned business in Germany following the coordinated nationwide violence of November 1938.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> Kristallnacht demonstrated a terrifying shift from legal discrimination to organized, violent state terror against the Jewish population. The targeted destruction of synagogues and businesses, coupled with the mass arrests of Jewish men, shattered any illusion of safety within German borders. This event signaled to the world that the Nazi regime was willing to utilize open violence to eliminate the Jewish presence in Europe.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">What immediate consequences did the orchestrated violence of Kristallnacht have on the safety and social standing of the Jewish community within Germany?</p>
+                                <textarea id="va_4" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the Nazi regime's response to the violence of Kristallnacht?</p>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) They arrested the rioters and compensated the Jewish community</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) They fined the Jewish community one billion marks for the damages</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) They abolished the concentration camp system to restore order</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) They issued an official apology to the French government</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Why was Kristallnacht considered a "turning point" in the Holocaust?</p>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It was the first time the law was used to protect Jewish property</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It marked the shift from legal discrimination to state-organized terror</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It led to the immediate end of anti-Semitic propaganda in Germany</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It resulted in the Allies declaring war on Germany the following day</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-3', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1', 'sec-1')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-2" disabled onclick="switchTab('sec-3', 'nav-sec-3', 'sec-3')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: ANNIHILATION AND DEFIANCE -->
+        <div id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Annihilation and Defiance</h2>
+                    <p class="first-p">As World War II expanded across Europe, the Nazi persecution mutated into a continent-wide campaign of extermination. Initially relying on mobile killing squads and the brutal containment of Ghettos during the "Holocaust by bullets," the regime soon pivoted to the horrifyingly efficient "Final Solution"—the industrial-scale murder of millions in specialized death camps. Despite the overwhelming machinery of death designed to crush human dignity, victims did not go passively into the night; Jewish resistance erupted in ghettos, killing centers, and forests, demonstrating an unbreakable spirit in the face of absolute despair.</p>
+
+                    <h3>The Holocaust by Bullets</h3>
+                    <p class="first-p">The outbreak of World War II in September 1939 fundamentally changed the nature of Nazi persecution. As German armies swept through Poland, the SS began the process of rounding up Jewish populations and forcing them into <strong>Ghettos</strong>. These were segregated, walled-off sections of cities, such as Warsaw and Lodz, where hundreds of thousands of people were crowded into dilapidated housing. The <strong>Ghettos</strong> were designed to be temporary holding pens where Jews would die of starvation, disease, and overwork. In the Warsaw Ghetto, over 400,000 people were packed into an area of about 1.3 square miles, with as many as nine people sharing a single room.</p>
+                    <p>The most radical escalation of the genocide occurred with the invasion of the Soviet Union in June 1941. As the German <em>Wehrmacht</em> advanced, they were followed by four mobile killing units known as <em>Einsatzgruppen</em>. These units, composed of SS, police, and local collaborators, were tasked with the systematic execution of entire Jewish communities. This phase is often called the "Holocaust by bullets." The method was brutal and personal: the killing squads would enter a town, round up the Jewish men, women, and children, march them to the outskirts, and force them to dig massive pits. The victims were then shot at point-blank range and buried in mass graves.</p>
+                    <p>The scale of the "Holocaust by bullets" was staggering. At Babi Yar, a ravine near the city of Kyiv, the <em>Einsatzgruppen</em> murdered 33,771 Jews in a single two-day operation in September 1941. By the end of the war, these mobile killing units had murdered more than two million people across Eastern Europe and the Soviet Union. However, the Nazi leadership viewed this method as problematic for two reasons: it was too slow to achieve the total elimination of the Jewish people, and the psychological toll of shooting women and children was causing breakdowns among the German soldiers. To solve these "problems" of efficiency and psychology, the Nazi state looked toward the industrial methods of the factory.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_4.png" alt="Wall of the Warsaw Ghetto">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">Brick walls and barbed wire enclosing the Warsaw Ghetto, where hundreds of thousands of Polish Jews were forcibly confined by German authorities.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> The establishment of walled ghettos represented a brutal method of segregating, starving, and controlling the Jewish population during the early years of the war. Overcrowding and deplorable conditions were intentionally designed to decimate the population through disease and overwork. These temporary holding centers served as a precursor to the systematic mass murder that would follow with the mobile killing squads and death camps.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">How did the forced confinement of Jewish populations into overcrowded, walled districts reflect the broader wartime goals of the Nazi regime?</p>
+                                <textarea id="va_5" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the purpose of the Ghettos created in Poland after 1939?</p>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) To provide safe housing for Jewish refugees fleeing the war</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) To serve as temporary holding pens where people would die of hunger and disease</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) To encourage the integration of Jewish people into German society</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) To establish centers for the study of Jewish culture and law</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Why did the Nazi leadership seek an alternative to the "Holocaust by bullets"?</p>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) They believed the shootings were too merciful for their victims</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) The method was too slow and caused psychological breakdowns among German soldiers</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) The international community threatened to intervene if the shootings continued</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) They ran out of ammunition needed for the front lines of the war</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-4', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>The Industrialization of Death</h3>
+                    <p class="first-p">In January 1942, fifteen high-ranking Nazi officials met at a villa in Wannsee, a suburb of Berlin, to coordinate the logistics of what they called the <strong>Final Solution</strong>. Led by Reinhard Heydrich and organized by Adolf Eichmann, the Wannsee Conference was not where the decision to commit genocide was made—that had already been decided by Hitler—but rather where the machinery of the state was aligned to carry it out with industrial efficiency. The plan was to deport the entire Jewish population of Europe to specialized <strong>Death Camps</strong> in occupied Poland.</p>
+                    <p>Unlike <strong>Concentration Camps</strong>, which were used for detention and slave labor, <strong>Death Camps</strong> such as Belzec, Sobibor, and Treblinka were essentially "murder factories." They were designed for the sole purpose of mass execution upon arrival. The technology of murder evolved from mobile gas vans to permanent, industrial-scale gas chambers using Zyklon B, a hydrogen cyanide gas originally developed as a pesticide. This "industrialization of death" was intended to distance the killers from their victims, allowing the state to murder thousands of people a day with minimal psychological impact on the perpetrators.</p>
+                    <p>The most notorious of these facilities was <strong>Auschwitz</strong>-Birkenau. It was a massive complex that served as both a labor camp and a killing center. Victims from across occupied Europe were transported to <strong>Auschwitz</strong> in crowded, windowless cattle cars, often traveling for days without food or water. Upon arrival, they were subjected to a "selection" process on the train platform. Those deemed fit for work were tattooed with an identification number and sent to live in horrific conditions of slave labor. The elderly, the sick, and mothers with young children were sent immediately to the gas chambers, which were disguised as communal shower rooms to prevent panic and resistance.</p>
+                    <p>Survivors of <strong>Auschwitz</strong>, such as the writer <strong>Elie Wiesel</strong>, would later describe the surreal and hellish atmosphere of the camp. In his memoir <em>Night</em>, Wiesel wrote of the "flames that consumed my faith forever" and the "silent blue sky" that offered no intervention. The camp authorities meticulously harvested everything from the victims: their clothes, their shoes, their hair to be used in industrial products, and even the gold fillings from their teeth. This absolute rejection of human dignity transformed the victims into mere "units" to be processed and disposed of, marking a total collapse of morality in the heart of modern Europe.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.png" alt="Railway Tracks Entering Auschwitz-Birkenau">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">The main railway lines passing through the brick gatehouse of the Auschwitz-Birkenau extermination camp in occupied Poland.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> The construction of specialized death camps marked the implementation of the "Final Solution," transitioning the genocide from mobile killings to an efficient, factory-like system of mass murder. The use of railways and gas chambers allowed the Nazi state to systematically execute millions of people while minimizing the psychological toll on the perpetrators. This industrialization of death represents a total collapse of morality and human dignity in modern Europe.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">How did the transition to permanent extermination facilities alter the scale and method of the Nazi regime's genocidal campaign?</p>
+                                <textarea id="va_6" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary purpose of the Wannsee Conference in 1942?</p>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) To debate the morality of the concentration camp system</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) To coordinate the logistics and state machinery for the "Final Solution"</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) To negotiate a peace treaty with the Allied powers</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) To organize the voluntary emigration of Jews to Madagascar</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did Death Camps differ from Concentration Camps?</p>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) Death Camps were used primarily for long-term political detention</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) Death Camps were designed as "murder factories" for mass execution upon arrival</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Concentration Camps were located only within the borders of Germany</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) Concentration Camps provided better medical care for their prisoners</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-5', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Defiance and Resistance</h3>
+                    <p class="first-p">A common misconception of the Holocaust is that the victims went to their deaths without a fight. In reality, Jewish resistance occurred at every level of the catastrophe, from the <strong>Ghettos</strong> to the <strong>Death Camps</strong> themselves. The most famous example was the Warsaw Ghetto Uprising in the spring of 1943. When the Nazis began the final "liquidation" of the ghetto, a group of young Jewish fighters, armed with smuggled pistols and homemade grenades, launched an armed revolt. They held off the superior might of the German army for nearly a month, forcing the Nazis to burn the ghetto building by building to crush the resistance. While the fighters knew they could not win, they chose to die with dignity and to send a message of defiance to the world.</p>
+                    <p>Resistance also took place in the heart of the killing centers. At Treblinka and Sobibor, prisoners organized armed revolts and managed to blow up parts of the gas chambers and escape into the surrounding forests. In <strong>Auschwitz</strong>, members of the <em>Sonderkommando</em>—the prisoners forced to work in the crematoria—launched an uprising in October 1944, successfully destroying one of the four main gas chambers. Beyond physical combat, there was also "spiritual resistance." In the face of dehumanization, victims maintained underground schools, held religious services, and created archives, such as the "Oneg Shabbat" in the Warsaw Ghetto, to ensure that their stories would survive even if they did not.</p>
+                    <p>Outside of the camps and ghettos, thousands of Jews escaped into the forests of Poland, Belarus, and Ukraine to join partisan groups. These fighters conducted sabotage against German supply lines and rescued other Jews from certain death. The Bielski partisans, for example, established a "forest village" that protected over 1,200 Jewish men, women, and children. These acts of resistance prove that even under the most extreme conditions of totalitarian terror, the human spirit sought ways to fight back against the machinery of <strong>Genocide</strong>.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_6.png" alt="Captured Fighters of the Warsaw Ghetto Uprising">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">Jewish resistance fighters being led out of a bunker by German troops during the armed uprising of spring 1943.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> The Warsaw Ghetto Uprising stands as a powerful testament to the physical and spiritual resilience of those targeted by the Holocaust. Despite facing overwhelming military odds, young Jewish fighters chose to launch an armed revolt to die with dignity and send a message of defiance. These acts of resistance prove that the victims did not go passively to their deaths, but actively fought back against the machinery of genocide.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">What does the willingness to launch an armed revolt against overwhelming military force reveal about the enduring human spirit during the Holocaust?</p>
+                                <textarea id="va_7" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the significance of the Warsaw Ghetto Uprising?</p>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) It successfully liberated the ghetto and ended the Holocaust in Poland</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) It was an armed revolt that held off the German army for nearly a month</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) It convinced the Nazi leadership to shut down the death camps</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) It was the only instance of resistance during the entire war</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What is an example of "spiritual resistance" described in the text?</p>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) Building secret tunnels to the German high command</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) Smuggling heavy artillery into the death camps</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) Maintaining underground schools and archives to preserve stories</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) Organizing large-scale military invasions from neutral countries</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-6', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-6', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2', 'sec-2')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-3" disabled onclick="switchTab('sec-4', 'nav-sec-4', 'sec-4')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: BEARING WITNESS -->
+        <div id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Bearing Witness</h2>
+                    <p class="first-p">The global response to the unfolding atrocity was tragically delayed, with Allied powers largely prioritizing military victory over immediate humanitarian intervention, though courageous individuals known as the Righteous Among the Nations risked everything to save lives. The eventual liberation of the camps in 1945 exposed the undeniable, nightmarish reality of the Holocaust, forcing the international community to grapple with the aftermath. Through the groundbreaking Nuremberg War Crimes Trials and the harrowing testimonies of survivors, the world sought justice and established vital new legal frameworks to ensure such crimes against humanity would never be forgotten or repeated.</p>
+
+                    <h3>The International Response and the Rescuers</h3>
+                    <p class="first-p">For much of the war, the Allied powers—the United States, Great Britain, and the Soviet Union—were aware that a mass murder of unprecedented scale was occurring in Europe. As early as 1942, the Polish resistance fighter Jan Karski met with President Roosevelt to provide eyewitness testimony of the death camps. However, the Allies largely prioritized military victory over humanitarian intervention. They argued that the most effective way to save the victims was to defeat Nazi Germany as quickly as possible. The U.S. government even rejected proposals to bomb the rail lines leading to <strong>Auschwitz</strong>, citing the need to focus all air power on industrial targets.</p>
+                    <p>There were, however, individuals who refused to be bystanders. These people are honored today as the <strong>Righteous Among the Nations</strong>. They were ordinary citizens, diplomats, and religious leaders who risked their own lives to hide or rescue Jews. The Swedish diplomat Raoul Wallenberg issued thousands of "protective passports" to Hungarian Jews, saving them from deportation to <strong>Auschwitz</strong>. In the French village of Le Chambon-sur-Lignon, the entire community worked together to shelter thousands of refugees. In the Netherlands, Corrie ten Boom and her family hid Jews in a secret room in their clock shop. These acts of courage provided a flicker of light during a period of absolute darkness, proving that individual moral choices remained possible even in the midst of a world at war.</p>
+                    <p>It was not until 1944 that the United States government took direct action by establishing the War Refugee Board. This agency worked with neutral nations and the Red Cross to save tens of thousands of lives in the final months of the war. Nevertheless, for millions, the help came far too late. By the time Allied soldiers began liberating the camps in 1945, the Nazi state had already succeeded in murdering two out of every three European Jews. The world that emerged from the war would have to find a way to live with the knowledge of what had happened and to ensure that it would never happen again.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_7.png" alt="Protective Passport Issued by Raoul Wallenberg">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">A Swedish "Schutz-Pass" document utilized by diplomat Raoul Wallenberg to protect Hungarian Jews from deportation.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> While the major Allied powers largely prioritized military victory over immediate humanitarian intervention, courageous individuals known as the Righteous Among the Nations risked their lives to save others. The issuance of protective passports demonstrates how diplomatic tools were subverted to rescue tens of thousands of people from certain death. These individual acts of moral courage provided a stark contrast to the widespread indifference of the era.</div>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                            <p class="first-p" style="margin-bottom: 15px;">How did the actions of individual rescuers contrast with the broader strategic priorities of the Allied governments during the war?</p>
+                            <textarea id="va_8" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did the Allied powers often refuse to conduct specific humanitarian missions, such as bombing rail lines to Auschwitz?</p>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) They did not believe the reports of mass murder were true</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) They prioritized total military victory over specific humanitarian interventions</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) They feared that such actions would lead to a German invasion of Britain</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) They had signed a treaty promising not to interfere with German domestic policy</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Who are the "Righteous Among the Nations"?</p>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) High-ranking Nazi officials who turned against Hitler at the end of the war</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) Allied generals who led the liberation of the death camps</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) Individuals who risked their lives to rescue or hide Jews during the Holocaust</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) Survivors who moved to Israel after the war concluded</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-7', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-7', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Liberation and the Search for Justice</h3>
+                    <p class="first-p">The liberation of the camps by Allied soldiers in 1945 provided the world with the forensic and photographic proof of the Holocaust. When American units entered camps like Buchenwald and Dachau, they found emaciated survivors who looked like "living skeletons" and piles of unburied corpses. General Dwight D. Eisenhower was so horrified that he ordered local German civilians to walk through the camps to see what their government had done. He also insisted that every detail be photographed and filmed by professional units, stating that one day "some son of a b****" would try to say it never happened.”</p>
+                    <p>The end of the war did not bring an immediate end to the suffering of the survivors. Many found themselves in "Displaced Persons" (DP) camps for years, as their homes had been destroyed or taken over by hostile neighbors. This humanitarian crisis led to a massive migration of survivors to the United States and the eventual creation of the State of Israel in 1948. The experience of the Holocaust also forced the international community to create new legal frameworks to deal with such crimes. In late 1945, the Allied powers established the International Military Tribunal to conduct <strong>War Crimes Trials</strong> in Nuremberg, Germany.</p>
+                    <p>The Nuremberg <strong>War Crimes Trials</strong> established the revolutionary principle that individual leaders could be held personally responsible for the actions of their state. Twenty-two high-ranking Nazi leaders were charged with "crimes against peace," "war crimes," and a new legal concept: "crimes against humanity." The trials rejected the "superior orders" defense, establishing that "just following orders" was no excuse for participating in atrocities. While many lower-level perpetrators were never brought to justice, the Nuremberg legacy provided the foundation for modern international law, including the Universal Declaration of Human Rights and the UN Genocide Convention. The Holocaust remains a permanent warning of the fragility of democracy and the catastrophic consequences of allowing hatred and extremism to go unchecked.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_8.png" alt="The Defendants' Dock at the Nuremberg Trials">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption first-p">High-ranking Nazi officials seated in the defendants' dock during the International Military Tribunal in Nuremberg, Germany.</div>
+                            <div class="spotlight-why first-p"><strong>Why it Matters:</strong> The Nuremberg Trials established the revolutionary legal precedent that national leaders could be held personally accountable for atrocities committed by their state. By introducing the concept of "crimes against humanity" and rejecting the defense of merely following orders, the tribunal sought justice for the millions murdered in the Holocaust. This process laid the foundational framework for modern international human rights law and the United Nations Genocide Convention.</div>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--color-cream); font-weight: bold; margin-bottom: 10px;">Analysis Question:</p>
+                                <p class="first-p" style="margin-bottom: 15px;">How did the establishment of an international tribunal reflect the changing global expectations for human rights and legal accountability following World War II?</p>
+                                <textarea id="va_9" class="textarea-dark" placeholder="Write your analysis here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-8" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did General Eisenhower insist on photographing and filming the liberated camps?</p>
+                                <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) To use the footage for Nazi recruitment propaganda</label>
+                                <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) To ensure there was undeniable evidence to prevent future denials of the Holocaust</label>
+                                <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) To show the German public the efficiency of their government's industrial methods</label>
+                                <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) To provide entertainment for the Allied troops back home</label>
+                            </div>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What major legal principle was established by the Nuremberg War Crimes Trials?</p>
+                                <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) Nations cannot be held responsible for the actions of their leaders</label>
+                                <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) "Just following orders" is a valid legal defense for committing atrocities</label>
+                                <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) Individual leaders can be held personally responsible for state-sponsored crimes</label>
+                                <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) Only the soldiers on the front lines can be prosecuted for war crimes</label>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-8', -1)">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px;" onclick="navigateCp('cp-block-8', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3', 'sec-3')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-4" disabled onclick="switchTab('sec-5', 'nav-sec-5', 'sec-5')">🔒 Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: VOICES OF THE ERA -->
+        <div id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Voices of the Era: The Testimony of the Survivors</h2>
+                    
+                    <h4>"Never Shall I Forget"</h4>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_2.png" alt="View from inside a cattle car" class="visual-img">
+                        <p class="caption-text first-p">Firsthand accounts provide a visceral understanding of the trauma inflicted upon the victims, capturing the sensory and psychological horrors that official documents omit. Memorializing these experiences is vital to understanding the depth of the atrocity and the imperative of collective memory.</p>
+                    </div>
+
+                    <h4>The Historical Context</h4>
+                    <p class="first-p">During the war, the Nazi regime went to great lengths to hide the reality of the <strong>Death Camps</strong>. Information was suppressed, and the voices of the victims were nearly extinguished. In the decades following 1945, survivors began to speak out, providing the world with a "social history" of the genocide that official government documents could not capture. These testimonies transformed the Holocaust from a collection of statistics into a deeply personal narrative of suffering, loss, and the resilience of the human spirit. Among the most influential of these voices was <strong>Elie Wiesel</strong>, who survived <strong>Auschwitz</strong> and Buchenwald as a teenager and dedicated his life to ensuring that the world would never forget.</p>
+
+                    <h4>The Evidence</h4>
+                    <p class="first-p">In his memoir <em>Night</em>, Wiesel describes the moment of his arrival at <strong>Auschwitz</strong>: "Never shall I forget that night, the first night in camp, which has turned my life into one long night, seven times cursed and seven times sealed. Never shall I forget that smoke. Never shall I forget the little faces of the children, whose bodies I saw turned into wreaths of smoke beneath a silent blue sky." This testimony provides a visceral account of the "selection" process and the psychological trauma of witnessing industrial-scale murder. Other survivors, such as those who lived in the <strong>Ghettos</strong>, described the rare moments of human decency, such as a guard sharing a piece of bread or the <strong>Righteous Among the Nations</strong> who risked everything to provide a hiding place.</p>
+
+                    <h4>The Significance</h4>
+                    <p class="first-p">Survivor testimony was essential in the <strong>War Crimes Trials</strong> and in the creation of a global historical record. Without the voices of those who were there, the physical evidence of the camps might have been dismissed as propaganda. These testimonies also forced the world to engage with the ethical questions of the Holocaust: Why did so many people remain bystanders? How could an educated society participate in such a crime? By sharing their "nightmares," survivors like Wiesel aimed to prevent the "contagion" of hatred from spreading to future generations. Their work ensures that the phrase "Never Again" remains a central pillar of international human rights and a reminder of our shared responsibility to protect the vulnerable.</p>
+
+                    <h3>Perspective Questions</h3>
+                    <div class="question-box" style="margin-bottom: 2rem;">
+                        <p class="first-p" style="color: var(--color-gold); font-weight: bold; margin-bottom: 10px;">Analyze the Imagery:</p>
+                        <p class="first-p" style="margin-bottom: 15px;">Why does Elie Wiesel use the metaphor of "Night" to describe his experience in the camps? How does this imagery contrast with the Nazi propaganda that promised a "thousand-year" era of light and glory for Germany?</p>
+                        <textarea id="pq_1" class="textarea-dark" placeholder="Write your response here..."></textarea>
+                    </div>
+
+                    <div class="question-box" style="margin-bottom: 2rem;">
+                        <p class="first-p" style="color: var(--color-gold); font-weight: bold; margin-bottom: 10px;">Compare Viewpoints:</p>
+                        <p class="first-p" style="margin-bottom: 15px;">Contrast the testimony of a survivor who participated in an armed uprising, like those in the Warsaw Ghetto, with the testimony of a "bystander" who lived near a camp but claimed to know nothing. How do these differing perspectives illustrate the range of human responses to totalitarian terror?</p>
+                        <textarea id="pq_2" class="textarea-dark" placeholder="Write your response here..."></textarea>
+                    </div>
+
+                    <div class="question-box" style="margin-bottom: 2rem;">
+                        <p class="first-p" style="color: var(--color-gold); font-weight: bold; margin-bottom: 10px;">Evaluate Strategy:</p>
+                        <p class="first-p" style="margin-bottom: 15px;">How does the collection of individual primary sources and testimonies strengthen the historical record of the Holocaust compared to relying solely on government documents? Consider the role of emotion and memory in understanding genocide.</p>
+                        <textarea id="pq_3" class="textarea-dark" placeholder="Write your response here..."></textarea>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4', 'sec-4')">&larr; Previous</button>
+                    <button class="action-btn" id="btn-next-sec-5" onclick="switchTab('sec-6', 'nav-sec-6', 'sec-6')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: VOCABULARY ACTIVITY -->
+        <div id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Read the following historical narrative and fill in the numbered blanks using the terms from the Word Bank to complete the story of the chapter.</p>
+                    
+                    <div class="word-bank">
+                        <span class="word-pill">The Holocaust</span>
+                        <span class="word-pill">Anti-Semitism</span>
+                        <span class="word-pill">Nuremberg Laws</span>
+                        <span class="word-pill">Kristallnacht</span>
+                        <span class="word-pill">Final Solution</span>
+                        <span class="word-pill">Ghettos</span>
+                        <span class="word-pill">Concentration Camps</span>
+                        <span class="word-pill">Death Camps</span>
+                        <span class="word-pill">Auschwitz</span>
+                        <span class="word-pill">Genocide</span>
+                        <span class="word-pill">Elie Wiesel</span>
+                        <span class="word-pill">Righteous Among the Nations</span>
+                        <span class="word-pill">War Crimes Trials</span>
+                    </div>
+
+                    <div style="font-size: 1.25rem; line-height: 2.2;">
+                        The catastrophic event known today as <strong>1. <input type="text" class="cloze-input" id="cloze_1"></strong> was driven by the Nazi party's extreme <strong>2. <input type="text" class="cloze-input" id="cloze_2"></strong>, a virulent hatred of the Jewish people. In 1935, the government officially institutionalized this discrimination through the <strong>3. <input type="text" class="cloze-input" id="cloze_3"></strong>, which stripped Jews of their German citizenship. Open violence erupted across the nation in 1938 during the "Night of Broken Glass," or <strong>4. <input type="text" class="cloze-input" id="cloze_4"></strong>, leading to the arrest of 30,000 Jewish men who were sent to early <strong>5. <input type="text" class="cloze-input" id="cloze_5"></strong> like Dachau.<br><br>
+                        
+                        As World War II escalated, Jewish populations were forced into segregated, walled-off city districts called <strong>6. <input type="text" class="cloze-input" id="cloze_6"></strong> before the Nazis implemented their ultimate plan for total annihilation, which they termed the <strong>7. <input type="text" class="cloze-input" id="cloze_7"></strong>. This industrialized machinery of murder relied on specialized <strong>8. <input type="text" class="cloze-input" id="cloze_8"></strong> designed purely as execution factories. The most notorious of these massive complexes was <strong>9. <input type="text" class="cloze-input" id="cloze_9"></strong>, where countless victims were murdered in gas chambers. Through this systematic <strong>10. <input type="text" class="cloze-input" id="cloze_10"></strong>, the state attempted to wipe out an entire group of people.<br><br>
+                        
+                        Despite the overwhelming darkness, some brave non-Jews, honored as the <strong>11. <input type="text" class="cloze-input" id="cloze_11"></strong>, risked their own lives to hide and rescue victims. After the war, the harrowing testimonies of survivors, notably the writer <strong>12. <input type="text" class="cloze-input" id="cloze_12"></strong>, helped expose the undeniable truth to the world. Seeking to establish a precedent for justice, the Allied powers organized the Nuremberg <strong>13. <input type="text" class="cloze-input" id="cloze_13"></strong> to hold Nazi leaders personally accountable for their crimes against humanity.
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5', 'sec-5')">&larr; Previous</button>
+                    <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* Background Management */
+    const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+    let bgIndex = 0;
+    function rotateBackground() {
+        if (bgImages.length === 0) return;
+        const bgEl = document.getElementById('bg-slideshow');
+        if (!bgEl) return;
+        bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+        bgIndex = (bgIndex + 1) % bgImages.length;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        rotateBackground();
+        setInterval(rotateBackground, 10000);
+        initCheckpoints();
+    });
+
+    /* Navigation */
+    function switchTab(id, btnId = null, scrollTarget = null) {
+        document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+        const activeBtnId = btnId || ('nav-' + id);
+        const activeBtn = document.getElementById(activeBtnId);
+        if (activeBtn) {
+            activeBtn.classList.add('active-nav');
+        }
+        if (scrollTarget) {
+            setTimeout(() => {
+                const target = document.getElementById(scrollTarget);
+                if(target) {
+                    const offset = 40;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            }, 50);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        saveProgress();
+    }
+
+    /* Data Collection & Export */
+    function collectAssignmentData(isFinal) {
+        const studentName = document.getElementById('student-name').value || "Unknown_Student";
+        const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+        const now = new Date().toLocaleDateString();
+        
+        const assignmentData = {
+            assignmentTitle: "Interactive Chapter 15.5 - The Holocaust",
+            studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+            responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+        };
+        
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('va_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+            }
+        }
+        
+        for(let i=1; i<=30; i++) {
+            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+            if(inputs.length > 0) {
+                let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+            }
+        }
+        
+        for(let i=1; i<=10; i++) {
+            let el = document.getElementById('pq_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+            }
+        }
+        
+        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+            assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+        });
+        
+        return assignmentData;
+    }
+
+    function triggerDownload(data, filename) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function downloadProgress() {
+        const data = collectAssignmentData(false);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+        triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+    }
+
+    function finishChapter() {
+        const dateField = document.getElementById('completion-date');
+        const now = new Date().toLocaleDateString();
+        if(dateField) dateField.value = now;
+        const data = collectAssignmentData(true);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        triggerDownload(data, `Chapter_Export_${safeName}.json`);
+        alert('Upload JSON file to Canvas');
+        switchTab('sec-1', 'nav-sec-1');
+    }
+
+    /* Loading Progress */
+    function loadProgress(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const loadedData = JSON.parse(e.target.result);
+                
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                
+                if (loadedData.studentInfo) {
+                    if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                        nameInput.value = loadedData.studentInfo.name;
+                        nameInput.setAttribute('readonly', 'true');
+                        nameInput.style.opacity = '0.7'; 
+                    }
+                    if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                        periodInput.value = loadedData.studentInfo.period;
+                        periodInput.setAttribute('disabled', 'true');
+                        periodInput.style.opacity = '0.7'; 
+                    }
+                }
+
+                if (loadedData.responses) {
+                    if (loadedData.responses.visualAnalysis) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('va_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                            }
+                        }
+                    }
+                    
+                    if (loadedData.responses.checkpoints) {
+                        for(let i=1; i<=30; i++) {
+                            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                            if(inputs.length > 0) {
+                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                let savedVal = loadedData.responses.checkpoints[qText];
+                                if (savedVal && savedVal !== "No Answer") {
+                                    let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                    if(radio) radio.checked = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.perspectiveQuestions) {
+                        for(let i=1; i<=10; i++) {
+                            let el = document.getElementById('pq_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.clozeActivity) {
+                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                            if (savedVal) input.value = savedVal;
+                        });
+                    }
+                }
+                
+                initCheckpoints();
+                alert('Progress loaded successfully!');
+                
+            } catch (err) {
+                console.error(err);
+                alert('Error loading progress file. Please make sure it is a valid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    /* Save & Reset Logic */
+    function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+    
+    function resetProgress() {
+        if(confirm('Are you sure you want to reset all progress?')) {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+            
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            nameInput.removeAttribute('readonly');
+            nameInput.style.opacity = '1';
+            periodInput.removeAttribute('disabled');
+            periodInput.style.opacity = '1';
+            
+            document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+            initCheckpoints();
+            switchTab('sec-1', 'nav-sec-1');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    /* Checkpoint Management */
+    const TOTAL_CHECKPOINTS = 8; 
+    
+    function initCheckpoints() {
+        for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+        checkSectionUnlock();
+    }
+
+    function updateCpUI(blockId) {
+        const block = document.getElementById(blockId);
+        if(!block) return;
+        const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        const indicator = block.querySelector('.cp-indicator');
+        const prevBtn = block.querySelector('.cp-prev-btn');
+        const nextBtn = block.querySelector('.cp-next-btn');
+        
+        questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+        if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+        if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+        
+        if(nextBtn) {
+            const currentQ = questions[currentIndex];
+            const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+            if (currentIndex === questions.length - 1) {
+                if (isAnswered) {
+                    nextBtn.innerText = "Checkpoint Completed ✓";
+                    nextBtn.style.borderColor = "var(--color-navy)"; 
+                    nextBtn.style.color = "var(--color-cream)"; 
+                    nextBtn.style.backgroundColor = "var(--color-navy)";
+                    nextBtn.disabled = true; 
+                    nextBtn.style.cursor = 'default'; 
+                    nextBtn.style.opacity = '1';
+                } else {
+                    nextBtn.innerText = "Finish Checkpoint";
+                    nextBtn.disabled = true; 
+                    nextBtn.style.opacity = '0.5'; 
+                    nextBtn.style.cursor = 'not-allowed';
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                    nextBtn.style.color = "var(--color-gold)"; 
+                    nextBtn.style.borderColor = "var(--color-gold)";
+                }
+            } else {
+                nextBtn.innerText = "Next Question \u2192";
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                nextBtn.style.color = "var(--color-gold)"; 
+                nextBtn.style.borderColor = "var(--color-gold)";
+                if (isAnswered) { 
+                    nextBtn.disabled = false; 
+                    nextBtn.style.opacity = '1'; 
+                    nextBtn.style.cursor = 'pointer'; 
+                } else { 
+                    nextBtn.disabled = true; 
+                    nextBtn.style.opacity = '0.5'; 
+                    nextBtn.style.cursor = 'not-allowed'; 
+                }
+            }
+        }
+        checkSectionUnlock();
+    }
+
+    function navigateCp(blockId, dir) {
+        const block = document.getElementById(blockId);
+        let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        currentIndex += dir;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+        block.setAttribute('data-current', currentIndex);
+        updateCpUI(blockId);
+    }
+
+    function handleRadioChange(blockId) { 
+        saveProgress(); 
+        updateCpUI(blockId); 
+    }
+
+    function isAnswered(name) { 
+        return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+    }
+
+    function setNavButtonState(btnId, enabled) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        if (enabled) {
+            btn.removeAttribute('disabled'); 
+            btn.style.opacity = '1'; 
+            btn.style.cursor = 'pointer';
+            btn.innerHTML = 'Next Section →'; 
+            btn.style.borderColor = 'var(--color-gold)';
+        } else {
+            btn.setAttribute('disabled', 'true'); 
+            btn.style.opacity = '0.5'; 
+            btn.style.cursor = 'not-allowed';
+            btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+            btn.style.borderColor = 'var(--color-steel-nib)';
+        }
+    }
+
+    function checkSectionUnlock() {
+        setNavButtonState('btn-next-sec-1', true);
+        setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6'));
+        setNavButtonState('btn-next-sec-3', isAnswered('cp7') && isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+        setNavButtonState('btn-next-sec-4', isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
+        setNavButtonState('btn-next-sec-5', true); 
+    }
+</script>
+</body>
+</html>
