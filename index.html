@@ -5,170 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E Pluribus Unum - The Struggle for Union in a Diverse Republic</title>
     <style>
+        /* Base styles */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #14213D; /* Constitution Blue */
             color: #F8F4E9; /* Parchment White */
             margin: 0;
-            padding: 50px 20px;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Prevents whole-page scrolling, delegates to panels */
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: rgba(0, 0, 0, 0.45);
+            border-right: 2px solid #C9A227; /* Liberty Gold */
+            padding: 30px 20px;
+            overflow-y: auto; /* Allows scrolling if chapters list gets too long */
             display: flex;
             flex-direction: column;
-            align-items: center;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            z-index: 10;
         }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.35); /* Slight darkening for readability */
-            border: 1px solid #C9A227; /* Liberty Gold */
-            border-radius: 8px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
-        h1 {
+
+        .sidebar h2 {
             font-family: 'Times New Roman', serif;
-            color: #C9A227; /* Liberty Gold */
+            color: #C9A227;
+            border-bottom: 1px solid #9B2C2C; /* Federal Red */
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
             text-align: center;
-            border-bottom: 2px solid #9B2C2C; /* Federal Red */
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
         }
-        .subtitle {
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 1.3rem;
-            color: #F8F4E9;
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar { width: 8px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        .sidebar::-webkit-scrollbar-thumb { background-color: #C9A227; border-radius: 4px; }
+
         .chapter-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
+
         .chapter-list li {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
+
         .chapter-link {
             display: block;
             background: rgba(155, 44, 44, 0.25); /* Federal Red tint */
             color: #F8F4E9; /* Parchment White */
             text-decoration: none;
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-radius: 4px;
             border: 1px solid transparent;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
+
         .chapter-link:hover {
             background: rgba(201, 162, 39, 0.15); /* Liberty Gold tint */
             border-color: #C9A227; /* Liberty Gold border */
-            transform: translateX(10px);
+            transform: translateX(8px);
             color: #ffffff;
         }
-        .coming-soon {
-            text-align: center;
-            color: #6B7280; /* Industrial Steel */
-            font-style: italic;
-            margin-top: 40px;
-            font-size: 1.1rem;
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 0; /* Removed padding to make flush */
+            display: flex;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Covers the entire space without distorting aspect ratio */
+        }
+
+        /* Responsive Design for Mobile Devices */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                overflow: auto; /* Restore normal scrolling */
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                min-width: unset;
+                border-right: none;
+                border-bottom: 2px solid #C9A227;
+                padding: 20px;
+                box-sizing: border-box;
+                overflow-y: visible;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            }
+            .main-content {
+                min-height: 60vh; /* Ensures image has plenty of height on mobile devices */
+                overflow-y: visible;
+            }
+            .chapter-link:hover {
+                transform: translateX(4px); /* Smaller shift on mobile */
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>E Pluribus Unum</h1>
-        <div class="subtitle">The Struggle for Union in a Diverse Republic</div>
-        
-         <ul class="chapter-list">
+    <!-- Left Navigation Panel -->
+    <nav class="sidebar">
+        <h2>Table of Contents</h2>
+        <ul class="chapter-list">
             <li>
-                <a href="Chapter-13-1/" class="chapter-link">
-                    <strong>Chapter 13.1:</strong> The Post-War Shock
-                </a>
+                <a href="Chapter-13-1/" class="chapter-link"><strong>Chapter 13.1:</strong> The Post-War Shock</a>
             </li>
-
             <li>
-                <a href="Chapter-14-1/" class="chapter-link">
-                    <strong>Chapter 14.1:</strong> The Big Crash
-                </a>
+                <a href="Chapter-14-1/" class="chapter-link"><strong>Chapter 14.1:</strong> The Big Crash</a>
             </li>
-
             <li>
-                <a href="Chapter-14-2/" class="chapter-link">
-                    <strong>Chapter 14.2:</strong> The Politics of Hope and Despair
-                </a>
+                <a href="Chapter-14-2/" class="chapter-link"><strong>Chapter 14.2:</strong> The Politics of Hope and Despair</a>
             </li>
-
             <li>
-                <a href="Chapter-14-3/" class="chapter-link">
-                    <strong>Chapter 14.3:</strong> The Alphabet Soup
-                </a>
+                <a href="Chapter-14-3/" class="chapter-link"><strong>Chapter 14.3:</strong> The Alphabet Soup</a>
             </li>
-
             <li>
-                <a href="Chapter-14-4/" class="chapter-link">
-                    <strong>Chapter 14.4:</strong> A Changed Republic
-                </a>
+                <a href="Chapter-14-4/" class="chapter-link"><strong>Chapter 14.4:</strong> A Changed Republic</a>
             </li>
-
             <li>
-                <a href="Chapter-15-1/" class="chapter-link">
-                    <strong>Chapter 15.1:</strong> The Rise of Dictators
-                </a>
+                <a href="Chapter-15-1/" class="chapter-link"><strong>Chapter 15.1:</strong> The Rise of Dictators</a>
             </li>
-
             <li>
-                <a href="Chapter-15-2/" class="chapter-link">
-                    <strong>Chapter 15.2:</strong> From Isolation to War
-                </a>
+                <a href="Chapter-15-2/" class="chapter-link"><strong>Chapter 15.2:</strong> From Isolation to War</a>
             </li>
-
             <li>
-                <a href="Chapter-15-3/" class="chapter-link">
-                    <strong>Chapter 15.3:</strong> The European Theater
-                </a>
+                <a href="Chapter-15-3/" class="chapter-link"><strong>Chapter 15.3:</strong> The European Theater</a>
             </li>
-
             <li>
-                <a href="Chapter-15-4/" class="chapter-link">
-                    <strong>Chapter 15.4:</strong> The Pacific Theater
-                </a>
+                <a href="Chapter-15-4/" class="chapter-link"><strong>Chapter 15.4:</strong> The Pacific Theater</a>
             </li>
-
             <li>
-                <a href="Chapter-15-5/" class="chapter-link">
-                    <strong>Chapter 15.5:</strong> The Holocaust
-                </a>
+                <a href="Chapter-15-5/" class="chapter-link"><strong>Chapter 15.5:</strong> The Holocaust</a>
             </li>
-             
             <li>
-                <a href="Chapter-16-1/" class="chapter-link">
-                    <strong>Chapter 16.1:</strong> The Arsenal of Democracy
-                </a>
+                <a href="Chapter-16-1/" class="chapter-link"><strong>Chapter 16.1:</strong> The Arsenal of Democracy</a>
             </li>
-             
-             <li>
-                <a href="Chapter-16-2/" class="chapter-link">
-                    <strong>Chapter 16.2:</strong> Opportunity and Inequality in the Shadow of War
-                </a>
+            <li>
+                <a href="Chapter-16-2/" class="chapter-link"><strong>Chapter 16.2:</strong> Opportunity and Inequality in the Shadow of War</a>
             </li>
-             
-             <li>
-                <a href="Chapter-16-3/" class="chapter-link">
-                    <strong>Chapter 16.3:</strong> Prisoners in Their Own Land
-                </a>
+            <li>
+                <a href="Chapter-16-3/" class="chapter-link"><strong>Chapter 16.3:</strong> Prisoners in Their Own Land</a>
             </li>
-             
-             <li>
-                <a href="Chapter-16-4/" class="chapter-link">
-                    <strong>Chapter 16.4:</strong> The World America Made
-                </a>
+            <li>
+                <a href="Chapter-16-4/" class="chapter-link"><strong>Chapter 16.4:</strong> The World America Made</a>
             </li>    
         </ul>
-      
+    </nav>
 
-        <p class="coming-soon">More chapters are currently in development. Check back later!</p>
-    </div>
+    <!-- Main Content Panel -->
+    <main class="main-content">
+        <!-- Book Cover Image -->
+        <img src="Book-Cover.png" alt="E Pluribus Unum Text Book Cover" class="book-cover">
+    </main>
 
 </body>
 </html>
