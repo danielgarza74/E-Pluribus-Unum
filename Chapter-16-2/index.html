@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter 16.2 - Opportunity and Inequality in the Shadow of War</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #2A2A2A;
+            --color-cream: #EFE6D6;
+            --color-navy: #70775F;
+            --color-steel-nib: #3D5168;
+            --color-gold: #B94A3F;
+            --color-gold-light: #D16B60;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+        
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+        
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+        
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+        
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+        
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <!-- Left Navigation Panel -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1', 'nav-sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2', 'nav-sec-2')">I. Women in the Wartime Workforce and Military</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3', 'nav-sec-3')">II. African Americans and the Struggle for the Double V</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4', 'nav-sec-4')">III. Mexican American Experiences</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5', 'nav-sec-5')">IV. Urban Tensions</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6', 'nav-sec-6')">V. 🖋 Voices in Ink | Theodor Geisel</button>
+            <button id="nav-sec-7" class="nav-btn" onclick="switchTab('sec-7', 'nav-sec-7')">VI. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Section 1: Start Page -->
+        <section id="sec-1" class="chapter-section active-section">
+            <img class="hero-banner-flush" src="assets/Header%20Banner%20Chapter%2016.2.png" alt="Chapter 16.2 Header Banner">
+            
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="First and Last Name">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Core Objectives</h3>
+                    <p class="first-p">
+                        <ul>
+                            <li>Analyze the impact of "Rosie the Riveter" propaganda on women's workforce participation and the subsequent post-war pressure to return to domesticity.</li>
+                            <li>Evaluate the goals and achievements of the "Double V" campaign and A. Philip Randolph's role in securing Executive Order 8802.</li>
+                            <li>Contrast the experiences of Mexican Americans under the Bracero Program with the racial violence of the Zoot Suit Riots in Los Angeles.</li>
+                        </ul>
+                    </p>
+
+                    <h3>Key Terms</h3>
+                    <p class="first-p">Rosie the Riveter | Double V Campaign | A. Philip Randolph | Executive Order 8802 | CORE (Congress of Racial Equality) | Bracero Program | Zoot Suit Riots | Tuskegee Airmen | WAACs (Women’s Army Auxiliary Corps) | FEPC (Fair Employment Practices Committee) | Great Migration (Second) | Detroit Race Riot (1943)</p>
+                    
+                    <h4>Introduction: The Crucible of the Home Front</h4>
+                    <p class="first-p">The onset of World War II created an unprecedented labor vacuum in the United States, forcing the nation to rapidly reconsider traditional gender and racial boundaries to keep the "Arsenal of Democracy" running. As millions of women and minorities stepped into high-paying industrial jobs and military roles, they fundamentally challenged the prevailing social norms of the early 20th century. However, this newfound economic mobility and social participation were frequently met with intense resistance, wage disparities, and violent racial backlash. Ultimately, the wartime home front became a deeply contested battlefield, setting the stage for the major cultural and civil rights conflicts that would define the post-war era.</p>
+
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_1.png" alt="WWII American factory floor">
+                        <p class="caption-text first-p">The massive labor requirements of the "Arsenal of Democracy" shattered long-standing employment barriers, pulling millions of women and minorities into the defense sector and setting the stage for subsequent civil rights battles.</p>
+                        <div class="question-box">
+                            <p><strong>Analysis Question:</strong> How did the physical environment of the wartime factory floor reflect broader societal changes occurring during the 1940s?</p>
+                            <textarea id="va_1" class="textarea-dark" placeholder="Enter your analysis here..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <div></div>
+                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Women in the Wartime Workforce and Military -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Women in the Wartime Workforce and Military</h2>
+                    <p class="first-p">Faced with a systemic crisis in industrial production, the federal government launched a massive propaganda campaign to normalize women performing heavy manufacturing work, effectively pulling millions into the defense sector. While women proved essential to the war effort as welders, shipfitters, and vital military auxiliary personnel, their advancement was meticulously framed as a temporary wartime necessity. Despite taking on double burdens and enduring skepticism, their unprecedented wartime autonomy planted the seeds for post-war cultural friction when they were expected to return to domesticity.</p>
+
+                    <h3>Women and the Defense of the Nation</h3>
+                    <p class="first-p">The onset of World War II created a labor vacuum in the United States that was unlike any the nation had ever experienced in its industrial history. As millions of young men donned uniforms and shipped out to the European and Pacific theaters of combat, the massive industrial machinery of the "Arsenal of Democracy" faced a desperate, mounting shortage of workers. This was not a localized problem; it was a systemic crisis that threatened to stall the very assembly lines required to keep Allied armies in the field. To solve this existential threat to production, the federal government and private industry were forced to turn to a demographic that had previously been largely excluded from heavy industrial labor: American women. This shift was not merely a pragmatic change in the workforce; it represented a fundamental and often jarring challenge to the prevailing gender norms of the early 20th century, which dictated that a woman’s primary and natural sphere was strictly within the domestic home.</p>
+                    <p>To encourage women to leave their kitchens and nurseries and enter the grueling environment of the defense plants, the government launched a sophisticated and massive propaganda campaign. The most iconic and enduring symbol of this effort was <strong>Rosie the Riveter</strong>, a fictional character depicted in posters, magazines, and songs as a strong, capable, and patriotic woman dressed in work overalls and a bandana. Rosie was shown with flexed muscles and a determined expression, often accompanied by the slogan "We Can Do It!" This campaign was designed to normalize the idea of women performing "men's work" by framing it as a vital extension of their maternal and patriotic duties. The campaign worked with staggering effectiveness, appealing to both the deep-seated patriotism of American women and their pressing economic needs following the lean years of the Great Depression. Between 1941 and 1945, the number of women in the workforce surged by more than six million, bringing the total number of working women to nearly 19 million.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_1.png" alt="We Can Do It! Propaganda Poster">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">The "We Can Do It!" poster produced by Westinghouse Electric in 1943 to boost female worker morale in defense plants.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The massive propaganda push to recruit female industrial laborers fundamentally challenged early 20th-century gender norms. It demonstrated how federal necessity during wartime could temporarily override deep-seated societal expectations regarding women's primary sphere in the domestic home.</p>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Spotlight Question:</strong> What does the government's creation of propaganda campaigns targeting female workers reveal about the systemic labor crises facing the "Arsenal of Democracy"?</p>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">For many of these women, the war provided their first real opportunity to work in high-paying industrial positions that had previously been the exclusive domain of men. They became welders, machinists, crane operators, and shipfitters. In the massive aircraft plants of California and the shipyards of the Gulf Coast, women proved that they possessed the manual dexterity and physical stamina required for complex heavy manufacturing. However, this entry into the industrial world was fraught with complications. While women were essential to production, they often faced a "double burden," as they were still expected to manage all household chores, cooking, and childcare after completing ten-hour shifts at the factory. Furthermore, despite doing the same work as their male counterparts, women were frequently paid significantly lower wages, reflecting the persistent belief that a woman’s income was "secondary" to that of a male breadwinner.</p>
+
+                    <!-- Checkpoint 1 -->
+                    <div id="cp-block-1" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the primary goal of the "Rosie the Riveter" propaganda campaign?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To encourage women to enlist in combat roles</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To normalize the idea of women performing heavy industrial labor</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To promote the consumption of luxury goods during the war</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To discourage women from seeking higher education</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. Which challenge did women face in the defense industry despite their essential roles?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) A lack of physical stamina to complete tasks</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) Mandatory retirement immediately after the war started</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) Earning significantly lower wages than male coworkers</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) Total exemption from domestic household responsibilities</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-1', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-1', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h3>Women in Uniform</h3>
+                    <p class="first-p">The military also opened its doors to women in unprecedented ways, leading to the creation of several female auxiliary units. The most prominent of these was the <strong>WAACs (Women’s Army Auxiliary Corps)</strong>, which was later granted full military status as the Women's Army Corps (WAC). Under the leadership of Director Oveta Culp Hobby, women in the WAACs served in a wide array of non-combat roles, including nurses, radio operators, mechanics, and clerical staff. By taking over these essential behind-the-lines duties, women freed up hundreds of thousands of men for direct combat service. Similar programs were established in other branches, such as the Navy’s WAVES and the Coast Guard’s SPARS. Despite the professional and vital nature of their service, these women often faced intense skepticism, ridicule, and even harassment from male soldiers and officers who viewed the military as a sacred masculine space. The performance of these women, however, was exemplary, and their service paved the way for the eventual integration of women into the regular armed forces in the decades to come.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_2.png" alt="WAAC Recruitment Poster">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">A World War II recruiting poster encouraging women to enlist in the Women's Army Auxiliary Corps (WAAC).</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The integration of women into non-combat military roles freed hundreds of thousands of men for direct combat service. This unprecedented military participation paved the way for the eventual permanent integration of women into the regular armed forces, despite the contemporary expectation that such service was strictly a temporary wartime measure.</p>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Spotlight Question:</strong> How did the establishment of female auxiliary units like the WAACs affect the deployment and distribution of male soldiers during the war?</p>
+                            <textarea id="pq_2" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">However, the social progress represented by Rosie and the WAACs was meticulously framed by the government as a temporary measure. Propaganda during the war was careful to emphasize that women were working "for the duration" of the conflict. The underlying message was clear: once the "boys" came home, women were expected to relinquish their tools and uniforms and return to their traditional domestic roles. This created a profound and lasting tension in American culture. While many women enjoyed the economic independence, technical skills, and sense of public purpose that came with wartime work, they were constantly reminded that their status as industrial workers or soldiers was fragile and conditional. This wartime experience effectively set the stage for a major cultural conflict in the post-war era, as many women found themselves reluctant to return to a life of domesticity after having tasted the autonomy of the "Arsenal of Democracy."</p>
+
+                    <!-- Checkpoint 2 -->
+                    <div id="cp-block-2" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the main purpose of female auxiliary units like the WAACs?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) To lead direct infantry charges in the Pacific</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) To perform non-combat roles to free men for combat service</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) To protest against the involvement of the U.S. in the war</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) To serve as high-ranking diplomats in occupied territories</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. How did the U.S. government frame women's participation in the military and industry?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) As a permanent change to the American social structure</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) As a temporary measure that would end when the war was over</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) As a way to replace the male workforce entirely</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) As a mandatory requirement for all women aged 18 to 45</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-2', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-2', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
+                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: African Americans and the Struggle for the Double V -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>African Americans and the Struggle for the Double V</h2>
+                    <p class="first-p">For African Americans, fighting fascism abroad highlighted the painful paradox of enduring systemic, state-sanctioned segregation at home. Utilizing the urgency of the global crisis, Black leaders and labor organizers strategically demanded immediate economic and civil rights, forcing the federal government to issue landmark executive protections against employment discrimination. This era of federal intervention and massive industrial opportunity accelerated demographic shifts and laid the crucial organizational groundwork—both in civilian activism and through the valor of segregated military units—for the future Civil Rights Movement.</p>
+
+                    <h3>African Americans and the "Double V" Campaign</h3>
+                    <p class="first-p">For African Americans, World War II presented a profound and painful paradox that could not be ignored. While the United States was officially engaged in a global crusade to defeat the forces of fascism and racial supremacy in Europe and Asia, the nation continued to practice systemic, state-sanctioned segregation and brutal discrimination within its own borders. This glaring hypocrisy was at the center of the Black wartime experience. In response, African American leaders and the Black press launched the <strong>Double V Campaign</strong>. The "Double V" stood for "Victory over our enemies at home and victory over our enemies on the battlefields abroad." This movement was a sophisticated political strategy that sought to use the urgency of the war effort and the nation’s rhetoric of freedom as leverage to demand immediate civil rights, economic equality, and an end to Jim Crow segregation.</p>
+                    <p>The struggle for economic justice on the home front was spearheaded by the veteran labor leader <strong>A. Philip Randolph</strong>, the influential president of the Brotherhood of Sleeping Car Porters. Randolph recognized that while the defense industry was experiencing an unprecedented boom, Black workers were being systematically excluded from the high-paying jobs in the new aircraft plants and shipyards. Even when they were hired, they were often relegated to the most menial, dangerous, and lowest-paying tasks. In 1941, Randolph took a bold and confrontational stand by threatening to lead a massive march of 100,000 African Americans on Washington, D.C. His demands were clear: an end to discrimination in defense hiring and the desegregation of the armed forces.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_3.png" alt="A. Philip Randolph Portrait">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">Labor leader A. Philip Randolph, president of the Brotherhood of Sleeping Car Porters, who threatened a massive march on Washington in 1941.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The "Double V" strategy brilliantly leveraged the nation's wartime democratic rhetoric to demand immediate action against domestic segregation and economic exclusion. This movement established a sophisticated framework for civil rights activism that directly challenged the paradox of fighting racial supremacy abroad while enforcing it at home.</p>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Spotlight Question:</strong> How did the rhetoric of fighting global fascism abroad shape the political strategies of African American civil rights leaders at home?</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Checkpoint 3 -->
+                    <div id="cp-block-3" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What did the "Double V" campaign represent for African Americans?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) Victory over Japan and victory over Germany</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) Victory over the Great Depression and victory over poverty</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) Victory over fascism abroad and victory over racism at home</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) Victory for the Republican Party and victory for labor unions</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. How did A. Philip Randolph pressure the Roosevelt administration to address discrimination?</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) By organizing a boycott of all Japanese goods</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) By threatening a massive march on Washington, D.C.</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) By running for President of the United States in 1944</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) By calling for a total strike in the agricultural sector</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-3', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-3', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h3>Federal Action, Migration, and Military Service</h3>
+                    <p class="first-p">The prospect of a massive racial protest in the nation's capital during a global crisis was a nightmare for the Roosevelt administration. Roosevelt feared that such a demonstration would not only embarrass the United States on the world stage—providing ammunition for Axis propaganda—but would also lead to racial violence and disrupt vital war production. After intense negotiations, Randolph agreed to cancel the march in exchange for a major federal intervention. On June 25, 1941, Roosevelt issued <strong>Executive Order 8802</strong>, which prohibited "discrimination in the employment of workers in defense industries or government because of race, creed, color, or national origin." This was a landmark moment in American history; it was the first time since the end of Reconstruction that the federal government had taken direct, executive action to protect the economic rights of African Americans.</p>
+                    <p>To ensure compliance with the order, the government established the <strong>FEPC (Fair Employment Practices Committee)</strong>. While the FEPC was often underfunded and faced fierce resistance from Southern politicians and some labor unions, its mere existence was a revolutionary change. The committee held public hearings that exposed the deep-seated racism of major corporations and forced many of them to begin hiring Black workers. This federal protection, combined with the desperate need for labor, contributed to the <strong>Great Migration (Second)</strong>. Between 1940 and 1945, hundreds of thousands of African Americans left the rural South, fleeing the violence of Jim Crow and the poverty of the sharecropping system for industrial hubs in the North and West, such as Detroit, Chicago, Oakland, and Los Angeles. This migration permanently altered the demographic and political landscape of the United States, concentrating Black voting power in key northern cities and creating the urban base for the future Civil Rights Movement.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_4.png" alt="United We Win War Production Poster">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">A 1943 Office of War Information poster titled "United We Win," depicting Black and white mechanics collaborating on an aircraft engine.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The federal dissemination of integrated workplace imagery highlights the immediate cultural impact of Executive Order 8802 and the newly established Fair Employment Practices Committee. Promoting racial cooperation became a strategic government necessity to maintain maximum industrial output, inadvertently providing an institutional foothold for the modern Civil Rights Movement by normalizing desegregated labor.</p>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Spotlight Question:</strong> How did the creation of the Fair Employment Practices Committee and the need to enforce Executive Order 8802 influence the federal government's public messaging regarding national unity?</p>
+                            <textarea id="pq_4" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p class="first-p">The military also remained a central site of both intense discrimination and historic achievement for African Americans. Although the armed forces remained strictly and often violently segregated throughout the war, Black soldiers served in every branch of the military, frequently performing with extraordinary valor under the most difficult conditions. The most famous of these units was the <strong>Tuskegee Airmen</strong>, the first African American military aviators in the U.S. armed forces. Trained at the segregated Tuskegee Army Air Field in Alabama, these pilots overcame intense institutional racism to become one of the most decorated and successful fighter groups in the European theater. Their record of protecting Allied bombers was so legendary that they were highly sought after by white bomber crews. On the home front, new organizations like <strong>CORE (Congress of Racial Equality)</strong> were founded in 1942, applying the principles of non-violent direct action—such as sit-ins at segregated lunch counters—to challenge racial barriers in the North. These wartime developments provided the organizational backbone and the moral momentum for the transformative Civil Rights Movement that would erupt in the 1950s.</p>
+
+                    <!-- Checkpoint 4 -->
+                    <div id="cp-block-4" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the significance of Executive Order 8802?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) It officially desegregated the entire U.S. military</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) It prohibited discrimination in defense industries and government hiring</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) It established the first internment camps for Japanese Americans</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) It granted full voting rights to African Americans in the South</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. Which of the following was a result of the Second Great Migration?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) Most African Americans returned to rural Southern farms</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) Black voting power became concentrated in key Northern cities</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) The defense industry moved primarily to the rural Midwest</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) Segregation in the South was immediately abolished by state laws</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-4', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-4', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
+                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Mexican American Experiences -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Mexican American Experiences</h2>
+                    <p class="first-p">The insatiable demand for labor profoundly disrupted the demographic landscape, drawing Mexican guest workers into American agriculture and fueling massive migrations into overcrowded industrial boomtowns. While marginalized groups found increased economic mobility and forged powerful new cultural identities, these shifts triggered severe, reactionary violence from white residents and military personnel. Devastating clashes in cities like Los Angeles and Detroit exposed the deep, volatile racial fissures within the United States, proving that social progress during the war was met with fierce and deadly opposition.</p>
+
+                    <h3>Labor, Identity, and Conflict</h3>
+                    <p class="first-p">The labor shortages of World War II also had a profound and complex impact on the Mexican American community, particularly in the Southwest and in rapidly growing urban centers. As the "Arsenal of Democracy" drained the rural workforce, the nation's agricultural sector faced a crisis of production. To meet the desperate need for farm labor as American laborers joined the military or moved to high-paying factory jobs, the United States and Mexican governments negotiated a series of agreements known as the <strong>Bracero Program</strong> in 1942. Under this program, thousands of Mexican guest workers, known as <em>braceros</em>, were legally brought into the United States to work on farms and railroads. While the program was essential for maintaining the nation’s food supply during the war, the workers themselves often endured grueling physical conditions, substandard housing, and persistent racial discrimination from the local communities where they were stationed.</p>
+                    <p>In urban centers like Los Angeles, the war created a different set of opportunities and social frictions. Many Mexican Americans found work in the booming defense industries, which led to increased economic mobility and a growing sense of belonging in the American middle class. However, this success was met with a violent and reactionary backlash from some white residents, members of the military, and the local press. The tension often focused on a specific youth subculture that adopted a style of dress known as the "zoot suit." The zoot suit featured an oversized, long coat with wide lapels and heavily padded shoulders, worn with high-waisted, baggy trousers that were tightly tapered at the ankles. For many Mexican American youths (and some African American and Filipino youths), the zoot suit was a powerful symbol of rebellion against a society that marginalized them, as well as an expression of cultural identity and style.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.png" alt="Arrival of Bracero Workers">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">Mexican guest workers arriving by train in the United States to provide agricultural labor under the Bracero Program in 1942.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The Bracero Program highlighted the essential role of Mexican labor in sustaining the American agricultural sector during a severe wartime workforce shortage. It also initiated long-term demographic shifts in the American Southwest, intertwining the economies of the United States and Mexico while exposing guest workers to harsh conditions and discrimination.</p>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> In what ways did the depletion of the domestic agricultural workforce necessitate international agreements like the Bracero Program?</p>
+                                <textarea id="pq_5" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkpoint 5 -->
+                    <div id="cp-block-5" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the primary purpose of the Bracero Program initiated in 1942?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) To provide citizenship to all residents of Mexico</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) To bring Mexican guest workers to the U.S. for agricultural labor</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) To recruit Mexican soldiers to fight in the European theater</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) To build a high-speed railway between Los Angeles and Mexico City</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. For many Mexican American youths, the "zoot suit" served as a symbol of:</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) Submission to traditional American fashion norms</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) Support for the Axis powers' propaganda</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Cultural identity and rebellion against marginalization</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) Compliance with wartime fabric rationing rules</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-5', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-5', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h3>The Zoot Suit Riots</h3>
+                    <p class="first-p">To many white sailors and soldiers stationed in Los Angeles, however, the zoot suit was viewed as a symbol of delinquency and lack of patriotism. Because the suits used an excessive amount of fabric, they were seen as a deliberate violation of wartime wool rationing. This perception was encouraged by local newspapers that characterized "zoot-suiters" as dangerous gang members and draft dodgers. In the summer of 1943, these simmering tensions exploded into the <strong>Zoot Suit Riots</strong>. For several nights, mobs of white sailors, soldiers, and civilians roamed the streets of Los Angeles and surrounding neighborhoods like East L.A., seeking out anyone wearing a zoot suit. The attackers beat the youths, stripped them of their clothes, and in many cases, burned the suits in the street.</p>
+                    <p>The role of law enforcement during the riots was particularly controversial. Rather than arresting the sailors and soldiers who were initiating the violence, the Los Angeles police often stood by or arrested the Mexican American victims of the attacks. The riots only ended when military officials, fearing a total breakdown of order and damage to international relations with Mexico, declared Los Angeles off-limits to all naval personnel. The Zoot Suit Riots were a sobering revelation of the deep racial and cultural fissures that existed within the American home front, proving that the "Arsenal of Democracy" was often a place of profound intolerance for those who did not conform to the traditional, white-centric American identity.</p>
+                    <p>Despite this internal violence, Mexican Americans contributed significantly and courageously to the military effort. More than 300,000 Mexican Americans served in the armed forces, often in integrated units where they earned a higher proportion of medals for bravery, including the Medal of Honor, than any other ethnic group in the war. For many Mexican American veterans, the experience of fighting for democracy on the battlefields of Europe and the Pacific made them even more determined to demand full equality and civil rights at home. The wartime experience for Mexican Americans was a study in contrasts: they were simultaneously essential partners in the nation’s agricultural and industrial success and targets of racial animosity and state-sanctioned neglect.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_6.png" alt="Zoot Suit Subculture">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">A soldier inspecting a pair of oversized, wide-lapelled zoot suits during the early 1940s.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The explosion of violence during the Zoot Suit Riots laid bare the intense racial and cultural fissures existing beneath the veneer of national wartime unity. The targeting of marginalized youth by military personnel and the complicity of local law enforcement demonstrated how easily patriotism could be weaponized into xenophobia.</p>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> How did local media portrayals and wartime rationing policies contribute to the outbreak of violence against Mexican American youths in Los Angeles?</p>
+                                <textarea id="pq_6" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkpoint 6 -->
+                    <div id="cp-block-6" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What triggered the Zoot Suit Riots in Los Angeles in 1943?</p>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) A dispute over the price of agricultural goods in East L.A.</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) Violent clashes between white military personnel and Mexican American youth</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) A strike by braceros demanding higher wages on the railroads</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) The implementation of Executive Order 8802 in California</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. How did local law enforcement typically react during the Zoot Suit Riots?</p>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) They arrested the military personnel who started the violence</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) They actively protected the Mexican American youth from mobs</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) They often arrested the victims of the attacks rather than the attackers</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) They remained strictly neutral and did not make any arrests</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-6', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-6', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
+                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Urban Tensions -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Urban Tensions</h2>
+                    <p class="first-p">As hundreds of thousands of new residents poured into industrial "boomtowns," extreme overcrowding and rigid housing segregation created a volatile "powder keg" atmosphere across the nation. These underlying racial prejudices ignited in deadly conflicts like the 1943 Detroit Race Riot, which required federal troops to suppress and highlighted the government's inadequate response to systemic urban issues. Ultimately, the wartime period forced irreversible social transformations, proving that the path to a more inclusive democracy would be paved with intense struggle.</p>
+
+                    <h3>The Detroit Race Riot of 1943</h3>
+                    <p class="first-p">As the Second Great Migration accelerated, bringing hundreds of thousands of new residents into the nation's industrial "boomtowns," the social and physical infrastructure of these cities began to buckle under the sheer weight of the sudden population surge. The most critical and volatile issue was the lack of adequate housing. In cities like Detroit, which was heralded as the "city of the future" because of its staggering output of tanks and planes, the population grew so rapidly that there were simply not enough homes to accommodate the new arrivals. This led to extreme overcrowding, with many families forced to live in substandard, cramped conditions. Because of rigid housing segregation, Black and white workers were often forced into close proximity in neighborhoods that were not designed for such density. This overcrowding, combined with the stress of long work hours, the heat of the summer, and the underlying racial prejudices of the era, created a "powder keg" atmosphere.</p>
+                    <p>In June 1943, this metaphorical powder keg ignited in the <strong>Detroit Race Riot (1943)</strong>, one of the most violent and destructive racial conflicts in American history. The violence began on a Sunday afternoon at Belle Isle, a popular park on the Detroit River, where a minor dispute between white and Black youths quickly escalated into a city-wide conflagration. Rumors spread rapidly through both communities: white residents heard that a Black man had attacked a white woman, while Black residents heard that a white mob had killed a Black woman and her baby. Neither rumor was true, but they served to fuel a frenzy of retaliatory violence. For three days, mobs roamed the streets of Detroit, attacking individuals, looting stores, and burning property.</p>
+                    <p>The riot was characterized by a complete breakdown of local authority. The Detroit police department, which was almost entirely white, was accused of participating in the violence against Black residents rather than acting as a neutral force for order. The violence was so severe and the local police so ineffective that President Roosevelt was eventually forced to send in federal troops, including units from the U.S. Army, to restore peace. By the time the violence was suppressed, 34 people were dead—25 of whom were African American—and hundreds more were injured. Over $2 million in property had been destroyed, and the city’s vital war production had been significantly interrupted. Similar outbreaks of racial violence occurred during the same summer in other industrial centers like New York’s Harlem and Mobile, Alabama, signaling a national crisis of urban race relations.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_7.png" alt="Sojourner Truth Housing Riot Sign">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">A sign erected by white residents in 1942 Detroit reading "We want white tenants in our white community," illustrating the intense housing segregation that fueled the 1943 race riots.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The extreme overcrowding and rigid housing segregation in industrial boomtowns created a volatile atmosphere. These underlying prejudices directly precipitated violent conflicts like the Detroit Race Riot, demonstrating the severe local resistance to demographic shifts.</p>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> What were the underlying demographic and infrastructural pressures that transformed industrial boomtowns like Detroit into volatile environments prone to racial violence?</p>
+                                <textarea id="pq_7" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkpoint 7 -->
+                    <div id="cp-block-7" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Which factor contributed most to the "powder keg" atmosphere in Detroit in 1943?</p>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) A sudden decrease in the demand for military equipment</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) Extreme overcrowding and rigid housing segregation</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) The relocation of all defense plants to rural Alabama</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) A total lack of jobs for new residents arriving from the South</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. How did the federal government finally resolve the Detroit Race Riot?</p>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) By passing a law that banned all migration to Detroit</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) By sending in federal troops to restore order</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) By providing free housing to all riot participants</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) By closing down all the aircraft plants in the city</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-7', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-7', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h3>The Legacy of Wartime Tensions</h3>
+                    <p class="first-p">The government’s response to these urban tensions was often reactive and inadequate. While the FEPC continued to address discrimination in the workplace, there was almost no federal effort to solve the systemic issues of housing segregation, urban poverty, or police brutality that were the true root causes of the violence. The Detroit Race Riot was a sobering reminder that while the United States was united against external enemies like Hitler and Tojo, it remained deeply and dangerously divided by the internal enemy of racism. For many African Americans, the riots of 1943 were a sign that the promise of the "Double V" was still a distant and difficult reality. The violence underscored the fact that social progress during the war was not an inevitable byproduct of economic growth, but rather a series of hard-won and fragile victories that were met with fierce, often deadly, opposition.</p>
+                    <p>Ultimately, the wartime period was one of profound and irreversible transformation for the American people. The "Arsenal of Democracy" had required a level of social mobilization that broke down old barriers and opened doors that could never be fully closed again. Women had proven their industrial and military capability on a global scale; African Americans had secured the first federal civil rights protections of the 20th century; and Mexican Americans had become indispensable to the nation's economic and military success. However, these changes were not welcomed by everyone. The Zoot Suit Riots and the Detroit Race Riot showed that the path to a more inclusive and equitable democracy would be paved with intense struggle and sacrifice. The home front was not just a place of industrial production; it was a contested battlefield for the very meaning of American equality and citizenship in the modern world.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_8.png" alt="Integrated North American Aviation Plant">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption first-p">Black and white women working side-by-side at a North American Aviation factory in 1942, reflecting the impact of Executive Order 8802 on defense industry hiring.</p>
+                            <p class="spotlight-why first-p"><strong>Why it Matters:</strong> The integration of the industrial workforce, driven by acute wartime labor demands and federal mandates, broke down longstanding employment barriers. This mobilization irrevocably altered the economic expectations of marginalized groups and transformed the home front into a foundational battleground for modern civil rights.</p>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> What does the federal government's issuance of Executive Order 8802 indicate about the relationship between wartime labor necessity and the advancement of civil rights?</p>
+                                <textarea id="pq_8" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkpoint 8 -->
+                    <div id="cp-block-8" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was a major criticism of the government's response to wartime urban tensions?</p>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) It focused too much on solving the root causes of poverty</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) It was reactive and failed to address systemic issues like housing segregation</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) It abolished the Fair Employment Practices Committee too early</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) It favored the demands of African American protesters over white residents</label>
+                        </div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. Which statement best describes the long-term impact of the wartime home front?</p>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) It permanently ended all racial and gender discrimination in the U.S.</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) It reinforced the idea that women belonged exclusively in the home</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) It broke social barriers and set the stage for future civil rights struggles</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) It caused a massive population shift back to the rural South</label>
+                        </div>
+                        
+                        <div style="display:flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-8', -1)" style="display:none; width:auto;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-8', 1)" style="width:auto;" disabled>Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
+                        <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Voices in Ink -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>🖋 Voices in Ink | Theodor Geisel</h2>
+                    
+                    <h3>Dr. Seuss Goes to War</h3>
+                    
+                    <div class="visual-wrapper">
+                        <img class="visual-img" src="assets/Visual_2.png" alt="Two contrasting 1940s editorial cartoons by Dr. Seuss">
+                        <p class="caption-text first-p">The intense psychological pressures of total war often led progressive advocates for domestic equality to simultaneously endorse and propagate virulent, dehumanizing xenophobia against perceived foreign threats.</p>
+                    </div>
+
+                    <h4>The Context</h4>
+                    <p class="first-p">Before he became the world's most beloved author of children's books, Theodor Geisel—widely known as Dr. Seuss—spent the years of World War II as a prolific political cartoonist for the New York newspaper <em>PM</em>. His work during this period provides a fascinating, and at times deeply uncomfortable, window into the American wartime psyche. Geisel was a passionate supporter of the Roosevelt administration and a vocal critic of anyone he believed was hindering the nation’s path to victory. His cartoons utilized his signature whimsical style to convey some of the most serious and controversial political messages of the era.</p>
+
+                    <h4>Competing Visions of Inclusion</h4>
+                    <p class="first-p">In many of his cartoons, Dr. Seuss was a powerful champion of American democratic ideals. He used his unique artistic voice to attack isolationists (whom he often depicted as ostriches with their heads in the sand) and to speak out against the evils of anti-Semitism and Jim Crow laws. Geisel recognized that racial and religious prejudice within the United States was a strategic gift to the Axis powers, as it undermined the national unity required for total war. He famously drew cartoons that urged the nation to "wipe out" racial prejudice to strengthen the home front. In these works, he was a clear voice for the very inclusion and unity that the "Double V" campaign sought to achieve, arguing that democracy must be practiced at home if it were to be defended abroad.</p>
+
+                    <h4>The Darker Side of Propaganda</h4>
+                    <p class="first-p">However, Geisel’s work also reflected the virulent anti-Japanese hysteria and racial prejudice that swept the nation following the attack on Pearl Harbor. He produced numerous cartoons that utilized cruel and stereotypical racial caricatures of Japanese people, depicting them as a treacherous "fifth column" of traitors waiting for a secret signal to attack the American West Coast from within. One of his most infamous drawings showed thousands of Japanese Americans lining up at a "Honorable 5th Column" station to receive packages of TNT. These images completely ignored the reality that Japanese Americans were loyal, law-abiding citizens and instead helped to build the public support and moral justification for the mass internment that would follow Executive Order 9066.</p>
+
+                    <h4 style="margin-top: 3rem;">Analysis Questions</h4>
+                    
+                    <div class="question-box" style="margin-top: 2rem;">
+                        <p><strong>Interpret Motives:</strong> How can we reconcile Geisel's cartoons attacking anti-Semitism and Jim Crow with his cartoons that promoted suspicion and racial hatred toward Japanese Americans? Does the context of "total war" excuse the use of such caricatures?</p>
+                        <textarea id="pq_9" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                    </div>
+
+                    <div class="question-box" style="margin-top: 2rem;">
+                        <p><strong>Compare Viewpoints:</strong> How did the cartoons of Dr. Seuss both support and undermine the goals of the "Double V" campaign? In what ways did his work reflect the internal contradictions of the American home front?</p>
+                        <textarea id="pq_10" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                    </div>
+
+                    <div class="question-box" style="margin-top: 2rem;">
+                        <p><strong>Assess the Impact:</strong> What role does a popular political cartoonist play in shaping public opinion during a time of national crisis, and what are the long-term dangers of using dehumanizing imagery to build national unity against a specific group?</p>
+                        <textarea id="pq_11" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous</button>
+                        <button id="btn-next-sec-6" class="action-btn" onclick="switchTab('sec-7', 'nav-sec-7')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Vocabulary Activity -->
+        <section id="sec-7" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p"><strong>Instructions:</strong> Read the historical narrative below and fill in the numbered blanks using the correct terms from the Word Bank. Each term will be used exactly once to complete the summary of the chapter's events.</p>
+
+                    <div class="word-bank">
+                        <div class="word-pill">Rosie the Riveter</div>
+                        <div class="word-pill">Double V Campaign</div>
+                        <div class="word-pill">A. Philip Randolph</div>
+                        <div class="word-pill">Executive Order 8802</div>
+                        <div class="word-pill">CORE (Congress of Racial Equality)</div>
+                        <div class="word-pill">Bracero Program</div>
+                        <div class="word-pill">Zoot Suit Riots</div>
+                        <div class="word-pill">Tuskegee Airmen</div>
+                        <div class="word-pill">WAACs (Women’s Army Auxiliary Corps)</div>
+                        <div class="word-pill">FEPC (Fair Employment Practices Committee)</div>
+                        <div class="word-pill">Great Migration (Second)</div>
+                        <div class="word-pill">Detroit Race Riot (1943)</div>
+                    </div>
+
+                    <div style="line-height: 2.4; font-size: 1.15rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <p class="first-p">During World War II, the massive need for industrial labor transformed the American home front. To encourage women to take on heavy manufacturing jobs, the government popularized the propaganda icon 1. <input type="text" class="cloze-input" id="cloze-1">. Women also served directly in the military through auxiliary units like the 2. <input type="text" class="cloze-input" id="cloze-2">, freeing up men for combat.</p>
+                        
+                        <p>Meanwhile, African Americans highlighted the hypocrisy of fighting for freedom abroad while facing segregation at home by launching the 3. <input type="text" class="cloze-input" id="cloze-3">. Veteran labor leader 4. <input type="text" class="cloze-input" id="cloze-4"> threatened a march on Washington to demand equal employment in the booming defense industry. In response, President Roosevelt issued <strong>5. <input type="text" class="cloze-input" id="cloze-5"></strong>, which banned discrimination in defense hiring, and established the 6. <input type="text" class="cloze-input" id="cloze-6"> to enforce the mandate. The desperate need for workers also spurred the 7. <input type="text" class="cloze-input" id="cloze-7">, bringing hundreds of thousands of African Americans from the rural South to northern and western industrial cities. Black soldiers also proved their valor in the military, notably the famous fighter pilots known as the 8. <input type="text" class="cloze-input" id="cloze-8">. In the North, civil rights activists founded 9. <input type="text" class="cloze-input" id="cloze-9"> to pioneer non-violent direct action against racial barriers.</p>
+                        
+                        <p>In the agricultural sector, the U.S. government negotiated the 10. <input type="text" class="cloze-input" id="cloze-10"> to legally bring guest workers from Mexico to maintain the nation's food supply. However, racial tensions boiled over in urban centers. In Los Angeles, white servicemen attacked Mexican American youths during the violent 11. <input type="text" class="cloze-input" id="cloze-11">. Similarly, severe overcrowding and underlying racial animosity exploded in the Midwest, culminating in the deadly 12. <input type="text" class="cloze-input" id="cloze-12">, which required federal troops to restore order.</p>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">&larr; Previous</button>
+                        <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finish Assignment ✓</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    /* Background Management */
+    const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+    let bgIndex = 0;
+    function rotateBackground() {
+        if (bgImages.length === 0) return;
+        const bgEl = document.getElementById('bg-slideshow');
+        if (!bgEl) return;
+        bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+        bgIndex = (bgIndex + 1) % bgImages.length;
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        rotateBackground();
+        setInterval(rotateBackground, 10000);
+        initCheckpoints();
+    });
+
+    /* Navigation */
+    function switchTab(id, btnId = null, scrollTarget = null) {
+        document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+        const activeBtnId = btnId || ('nav-' + id);
+        const activeBtn = document.getElementById(activeBtnId);
+        if (activeBtn) {
+            activeBtn.classList.add('active-nav');
+        }
+        if (scrollTarget) {
+            setTimeout(() => {
+                const target = document.getElementById(scrollTarget);
+                if(target) {
+                    const offset = 40;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            }, 50);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        saveProgress();
+    }
+
+    /* Data Collection & Export */
+    function collectAssignmentData(isFinal) {
+        const studentName = document.getElementById('student-name').value || "Unknown_Student";
+        const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+        const now = new Date().toLocaleDateString();
+        
+        const assignmentData = {
+            assignmentTitle: "Interactive Chapter 16.2 - Opportunity and Inequality in the Shadow of War",
+            studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+            responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+        };
+
+        // Gather Visual Analysis Answers
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('va_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+            }
+        }
+
+        // Gather Checkpoint Answers
+        for(let i=1; i<=30; i++) {
+            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+            if(inputs.length > 0) {
+                let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+            }
+        }
+
+        // Gather Perspective Questions
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('pq_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+            }
+        }
+
+        // Gather Cloze Activity Answers
+        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+            assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+        });
+
+        return assignmentData;
+    }
+
+    function triggerDownload(data, filename) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function downloadProgress() {
+        const data = collectAssignmentData(false);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+        triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+    }
+
+    function finishChapter() {
+        const dateField = document.getElementById('completion-date');
+        const now = new Date().toLocaleDateString();
+        if(dateField) dateField.value = now;
+        
+        const data = collectAssignmentData(true);
+        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        triggerDownload(data, `Chapter_Export_${safeName}.json`);
+        alert('Upload JSON file to Canvas');
+        switchTab('sec-1', 'nav-sec-1');
+    }
+
+    /* Loading Progress */
+    function loadProgress(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            try {
+                const loadedData = JSON.parse(e.target.result);
+                
+                // Restore ID Panel and Burn In
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                
+                if (loadedData.studentInfo) {
+                    if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                        nameInput.value = loadedData.studentInfo.name;
+                        nameInput.setAttribute('readonly', 'true');
+                        nameInput.style.opacity = '0.7'; 
+                    }
+                    if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                        periodInput.value = loadedData.studentInfo.period;
+                        periodInput.setAttribute('disabled', 'true');
+                        periodInput.style.opacity = '0.7'; 
+                    }
+                }
+
+                if (loadedData.responses) {
+                    if (loadedData.responses.visualAnalysis) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('va_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                            }
+                        }
+                    }
+                    
+                    if (loadedData.responses.checkpoints) {
+                        for(let i=1; i<=30; i++) {
+                            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                            if(inputs.length > 0) {
+                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                let savedVal = loadedData.responses.checkpoints[qText];
+                                if (savedVal && savedVal !== "No Answer") {
+                                    let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                    if(radio) radio.checked = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.perspectiveQuestions) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('pq_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.clozeActivity) {
+                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                            if (savedVal) input.value = savedVal;
+                        });
+                    }
+                }
+                
+                initCheckpoints();
+                alert('Progress loaded successfully!');
+                
+            } catch (err) {
+                console.error(err);
+                alert('Error loading progress file. Please make sure it is a valid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    /* Save & Reset Logic */
+    function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+    
+    function resetProgress() {
+        if(confirm('Are you sure you want to reset all progress?')) {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+            
+            // Un-burn ID panel fields
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            nameInput.removeAttribute('readonly');
+            nameInput.style.opacity = '1';
+            periodInput.removeAttribute('disabled');
+            periodInput.style.opacity = '1';
+            
+            document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+            initCheckpoints();
+            switchTab('sec-1', 'nav-sec-1');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    /* Checkpoint Management */
+    const TOTAL_CHECKPOINTS = 8; 
+
+    function initCheckpoints() {
+        for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { 
+            updateCpUI(`cp-block-${i}`); 
+        }
+        checkSectionUnlock();
+    }
+
+    function updateCpUI(blockId) {
+        const block = document.getElementById(blockId);
+        if(!block) return;
+        const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        const indicator = block.querySelector('.cp-indicator');
+        const prevBtn = block.querySelector('.cp-prev-btn');
+        const nextBtn = block.querySelector('.cp-next-btn');
+        
+        questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+        if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+        if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+        
+        if(nextBtn) {
+            const currentQ = questions[currentIndex];
+            const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+            if (currentIndex === questions.length - 1) {
+                if (isAnswered) {
+                    nextBtn.innerText = "Checkpoint Completed ✓";
+                    nextBtn.style.borderColor = "var(--color-navy)"; 
+                    nextBtn.style.color = "var(--color-cream)"; 
+                    nextBtn.style.backgroundColor = "var(--color-navy)";
+                    nextBtn.disabled = true; 
+                    nextBtn.style.cursor = 'default'; 
+                    nextBtn.style.opacity = '1';
+                } else {
+                    nextBtn.innerText = "Finish Checkpoint";
+                    nextBtn.disabled = true; 
+                    nextBtn.style.opacity = '0.5'; 
+                    nextBtn.style.cursor = 'not-allowed';
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                    nextBtn.style.color = "var(--color-gold)"; 
+                    nextBtn.style.borderColor = "var(--color-gold)";
+                }
+            } else {
+                nextBtn.innerText = "Next Question \u2192";
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                nextBtn.style.color = "var(--color-gold)"; 
+                nextBtn.style.borderColor = "var(--color-gold)";
+                if (isAnswered) { 
+                    nextBtn.disabled = false; 
+                    nextBtn.style.opacity = '1'; 
+                    nextBtn.style.cursor = 'pointer'; 
+                } else { 
+                    nextBtn.disabled = true; 
+                    nextBtn.style.opacity = '0.5'; 
+                    nextBtn.style.cursor = 'not-allowed'; 
+                }
+            }
+        }
+        checkSectionUnlock();
+    }
+
+    function navigateCp(blockId, dir) {
+        const block = document.getElementById(blockId);
+        let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        currentIndex += dir;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+        block.setAttribute('data-current', currentIndex);
+        updateCpUI(blockId);
+    }
+
+    function handleRadioChange(blockId) { 
+        saveProgress(); 
+        updateCpUI(blockId); 
+    }
+
+    function isAnswered(name) { 
+        return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+    }
+
+    function setNavButtonState(btnId, enabled) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        if (enabled) {
+            btn.removeAttribute('disabled'); 
+            btn.style.opacity = '1'; 
+            btn.style.cursor = 'pointer';
+            btn.innerHTML = 'Next Section →'; 
+            btn.style.borderColor = 'var(--color-gold)';
+        } else {
+            btn.setAttribute('disabled', 'true'); 
+            btn.style.opacity = '0.5'; 
+            btn.style.cursor = 'not-allowed';
+            btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+            btn.style.borderColor = 'var(--color-steel-nib)';
+        }
+    }
+
+    function checkSectionUnlock() {
+        setNavButtonState('btn-next-sec-1', true);
+        setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
+        setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8'));
+        setNavButtonState('btn-next-sec-4', isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+        setNavButtonState('btn-next-sec-5', isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
+        setNavButtonState('btn-next-sec-6', true); // Essays do not strictly gate navigation.
+    }
+</script>
+
+</body>
+</html>

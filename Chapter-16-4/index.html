@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter 16.4 - The World America Made</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #2A2A2A;
+            --color-cream: #EFE6D6;
+            --color-navy: #70775F;
+            --color-steel-nib: #3D5168;
+            --color-gold: #B94A3F;
+            --color-gold-light: #D95C4D;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(185, 74, 63, 0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(185, 74, 63, 0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(185, 74, 63, 0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h5 { font-family: var(--font-heading); color: var(--color-gold-light) !important; font-size: 1.4rem !important; line-height: 1.3; margin-bottom: 0.75rem !important; margin-top: 1.5rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+
+        /* Full Sized Visuals */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(185, 74, 63, 0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(185, 74, 63, 0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(112, 119, 95, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(185, 74, 63, 0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <!-- Navigation Sidebar -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1', 'nav-sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2', 'nav-sec-2')">I. Constructing a Global Peace Framework</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3', 'nav-sec-3')">II. Engineering a Stable Global Economy</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4', 'nav-sec-4')">III. Establishing International Law and Accountability</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5', 'nav-sec-5')">IV. Domestic Transformations</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6', 'nav-sec-6')">V. The Atomic Age</button>
+            <button id="nav-sec-7" class="nav-btn" onclick="switchTab('sec-7', 'nav-sec-7')">VI. Turning Points: The Nuremberg Trial</button>
+            <button id="nav-sec-8" class="nav-btn" onclick="switchTab('sec-8', 'nav-sec-8')">VII. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Start Page -->
+        <section id="sec-1" class="chapter-section active-section">
+            <img src="assets/Header%20Banner%20Chapter%2016.4.png" alt="Chapter 16.4 Header" class="hero-banner-flush">
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="5">Period 5</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on Finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Core Objectives</h3>
+                    <ul class="first-p">
+                        <li>Compare the structure and enforcement powers of the United Nations (Security Council) with the failed League of Nations.</li>
+                        <li>Analyze the legal precedents established by the Nuremberg Trials regarding individual responsibility and "crimes against humanity."</li>
+                        <li>Evaluate the geopolitical implications of the U.S. nuclear monopoly and the economic restructuring of the world (Bretton Woods).</li>
+                    </ul>
+
+                    <h3>Key Terms</h3>
+                    <p class="first-p">United Nations | UN Security Council | General Assembly | Eleanor Roosevelt | Universal Declaration of Human Rights | Nuremberg Trials | Crimes Against Humanity | G.I. Bill of Rights (Servicemen's Readjustment Act) | Bretton Woods System | IMF (International Monetary Fund) | World Bank | Superpower</p>
+
+                    <h3>Introduction: Forging a New World Order from the Ashes of War</h3>
+                    <p class="first-p">As the devastation of World War II came to a close in 1945, the Allied powers faced the monumental task of rebuilding a shattered globe and preventing future global conflicts. Rejecting the isolationism and failed policies of the past, the United States emerged as a preeminent global superpower, taking the lead in designing a new architecture for international peace and economic stability. This era saw the creation of ambitious institutions like the United Nations to mediate disputes and protect human rights, alongside financial systems designed to foster global interdependence. Meanwhile, groundbreaking legal tribunals redefined international justice, and transformative domestic policies reshaped the American middle class. Together, these profound shifts established the foundational structures of the modern world, even as the dawn of the atomic age threatened a fragile new peace.</p>
+
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="Transition from total war to global governance" class="visual-img">
+                        <p class="caption-text">The transition from total war to global governance required unprecedented international cooperation, replacing the failed isolationist policies of the pre-war era with robust institutions designed to mediate conflict and stabilize economies.</p>
+                        <div class="question-box">
+                            <p><strong>Analysis Question:</strong> How did the scale of destruction in World War II alter global attitudes toward political isolationism?</p>
+                            <textarea id="va_1" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <div></div>
+                    <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Constructing a Global Peace Framework</h2>
+                    <p class="first-p">Following the widespread destruction of World War II, international leaders recognized the urgent need for a robust system of cooperation to replace the ineffective League of Nations. The United States spearheaded the creation of the United Nations, a dual-structured organization balancing the democratic voice of the General Assembly with the enforcement power of the Security Council. Beyond preventing war, this new framework sought to codify international moral standards, championing human rights and asserting that individual dignity was a matter of global concern.</p>
+
+                    <h4>The Architecture of International Peace</h4>
+                    <p class="first-p">As the smoke cleared from the battlefields of Europe and the Pacific in 1945, the leaders of the Allied powers found themselves standing amidst a world that had been fundamentally shattered. Tens of millions were dead, entire cities had been reduced to rubble, and the global economy had collapsed. In this moment of profound crisis, there was a shared realization that the "old world" of secret treaties, colonial empires, and isolationism had failed. To prevent a third and potentially final world war, a new system of international cooperation was required. The United States, emerging from the conflict as the world's preeminent <strong>Superpower</strong>, took the leading role in designing this new international framework. This was a radical departure from the post-World War I era, when the U.S. had retreated into isolationism, a move that many now believed had allowed the rise of Hitler and Mussolini.</p>
+                    
+                    <p>The cornerstone of this new architecture was the <strong>United Nations</strong>, an organization officially established in June 1945 during a conference in San Francisco. The UN was not merely a forum for debate; it was intended to be a robust mechanism for maintaining global security and facilitating international law. The planners of the UN were deeply mindful of the failures of the League of Nations, which had lacked both the participation of the United States and the authority to enforce its own resolutions. To correct these weaknesses, the UN was designed with a dual structure that attempted to balance democratic participation with realistic power dynamics. The <strong>General Assembly</strong> served as the democratic heart of the organization, providing every member nation with a voice and a vote. It was here that global issues ranging from poverty to environmental protection would be discussed, and where the organization’s budget and administrative functions would be managed.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_1.png" alt="Site of the United Nations Charter Signing">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The War Memorial Veterans Building in San Francisco, where delegates from fifty nations signed the founding charter of the United Nations in 1945.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The creation of a new international organization signaled a definitive end to American isolationism. It established a framework designed to maintain global security and facilitate international law, reflecting a commitment to prevent the catastrophic diplomatic failures that allowed the rise of totalitarian regimes prior to World War II.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> How did the establishment of the United Nations mark a departure from the foreign policy stance the United States maintained after World War I?</p>
+                                <textarea id="va_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-1" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. Why did the United States take a leading role in creating the United Nations after World War II?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To maintain colonial empires in Africa and Asia</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To return to the isolationist policies of the 1920s</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To prevent a third world war by replacing the failed League of Nations</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To establish secret treaties with the Soviet Union</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What is the primary function of the United Nations General Assembly?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) To authorize the immediate use of military force</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) To serve as a democratic forum where every member nation has a vote</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) To manage the internal laws of the United States</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) To act as the sole authority on nuclear weapons</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-1', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-1', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The Security Council and Human Rights</h4>
+                    <p class="first-p">However, the true "teeth" of the United Nations resided in the <strong>UN Security Council</strong>. This body was granted the unique authority to investigate disputes, impose economic sanctions, and, most significantly, authorize the use of military force to repel aggression. The Security Council was composed of eleven members, five of whom held permanent seats: the United States, the Soviet Union, Great Britain, France, and China. These "Permanent Five" were granted the power of a veto over any substantive resolution. This veto was a pragmatic recognition that for the UN to succeed, the world’s major military powers had to be in agreement. If the U.S. or the USSR were opposed to a UN action, forcing it through would likely lead to a direct conflict between them, destroying the organization in the process. While the veto was often criticized for causing gridlock, it ensured that the UN remained a platform for negotiation among the most powerful states on Earth.</p>
+                    
+                    <p>Beyond the prevention of war, the United Nations sought to establish a universal moral standard for the treatment of all human beings. This mission was driven by <strong>Eleanor Roosevelt</strong>, who served as the first chairperson of the UN Commission on Human Rights. In the wake of the Holocaust, Roosevelt and her colleagues recognized that state sovereignty could no longer be used as a shield for the systematic abuse of citizens. In 1948, the UN adopted the <strong>Universal Declaration of Human Rights</strong>. This landmark document asserted that all people possess inherent rights to life, liberty, and security of person, regardless of their nationality or the laws of their country. Although the declaration was not a legally binding treaty, it provided a powerful moral baseline that would inspire civil rights and independence movements for decades. The UN thus became the architect of a "new world" where the safety and dignity of the individual were, for the first time, matters of international concern.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="Eleanor Roosevelt and the Universal Declaration of Human Rights">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Eleanor Roosevelt holds a poster-sized copy of the Universal Declaration of Human Rights in late 1949.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The adoption of this landmark document represented a historic consensus that individual human dignity was a matter of global concern, transcending the boundaries of state sovereignty. It provided a powerful moral baseline that formally condemned systemic state abuses and inspired subsequent civil rights and independence movements worldwide.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> In what ways did the adoption of the Universal Declaration of Human Rights challenge traditional notions of state sovereignty?</p>
+                                <textarea id="va_3" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-2" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. Which power is uniquely held by the "Permanent Five" members of the UN Security Council?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) The power to appoint the President of the United States</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) The power to veto any substantive resolution</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) The power to dissolve the General Assembly</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) The power to collect taxes from all member nations</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was a major impact of the Universal Declaration of Human Rights?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) It established a global government with total legal authority over all nations</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) It justified the use of the atomic bomb against civilian populations</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) It provided a moral baseline that asserted individual dignity was a matter of international concern</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) It legally required all nations to adopt the American Constitution</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-2', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-2" class="action-btn" disabled onclick="switchTab('sec-3', 'nav-sec-3')">&#128274; Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Engineering a Stable Global Economy</h2>
+                    <p class="first-p">Convinced that the economic desperation of the Great Depression had fueled the rise of fascism, Allied leaders sought to build a cooperative international financial architecture. Meeting in 1944, delegates established a system that pegged global currencies to the gold-backed U.S. dollar, effectively positioning the American economy as the engine of worldwide recovery. To manage this new era of globalization, permanent institutions were created to provide emergency capital and fund long-term reconstruction, fostering an interdependent world heavily influenced by American capitalism.</p>
+
+                    <h4>The Bretton Woods System</h4>
+                    <p class="first-p">Parallel to the political construction of the United Nations was an equally ambitious effort to rebuild and stabilize the global financial system. The Allied leaders believed that the Great Depression of the 1930s had been a primary driver of the war; economic collapse had created the desperation that allowed fascists to seize power through promises of work and national glory. To prevent a return to the "beggar-thy-neighbor" trade policies and currency devaluations that had crippled the pre-war economy, representatives from 44 nations gathered at a resort in New Hampshire in 1944. This meeting, known as the <strong>Bretton Woods System</strong> conference, sought to create a new international financial architecture based on cooperation rather than competition.</p>
+
+                    <p>The centerpiece of the Bretton Woods System was a radical plan to stabilize global currencies. The conference agreed that the value of all member nations' currencies would be pegged to the American dollar, which was in turn backed by gold. This effectively made the U.S. dollar the world's primary reserve currency, a status that reflected the reality that the American economy was the only major industrial engine left standing after the war. This system provided the stability needed for international trade to flourish; merchants and governments could now conduct business across borders with the certainty that the value of their money would not fluctuate wildly overnight. This was the birth of the modern globalized economy, where the financial health of one nation was intricately tied to the stability of the others.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_3.png" alt="The Mount Washington Hotel at Bretton Woods">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The Mount Washington Hotel in New Hampshire served as the gathering place for delegates from forty-four nations during the 1944 monetary conference.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The financial architecture established in New Hampshire pegged global currencies to the gold-backed U.S. dollar, effectively making the United States the anchor of the post-war economy. This system aimed to prevent the competitive currency devaluations and trade wars that exacerbated the Great Depression, laying the groundwork for a deeply interconnected global market.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> What economic conditions from the 1930s prompted the allied nations to create a cooperative financial system pegged to the U.S. dollar?</p>
+                                <textarea id="va_4" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-3" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. Why did Allied leaders meet at Bretton Woods in 1944?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) To plan the final invasion of the Japanese mainland</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) To create an international financial system based on cooperation to prevent another depression</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) To sign a peace treaty ending the war with Italy</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) To establish a system of colonial trade in South America</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the Bretton Woods System stabilize global trade</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) By banning all trade between Europe and Asia</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) By pegging the value of global currencies to the gold-backed U.S. dollar</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) By requiring all nations to use physical gold bars for every transaction</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) By eliminating the need for any international currencies</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-3', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>Global Economic Stabilization</h4>
+                    <p class="first-p">To manage and protect this new system, the conference established two permanent international institutions: the <strong>IMF (International Monetary Fund)</strong> and the <strong>World Bank</strong>. The IMF was designed as a "lender of last resort." Its primary mission was to provide short-term loans to countries experiencing sudden currency crises or trade deficits. By providing this emergency capital, the IMF prevented nations from having to resort to the protective tariffs and trade barriers that had proved so destructive during the 1930s. The World Bank, on the other hand, was focused on long-term reconstruction and development. Its initial priority was providing the massive amounts of capital needed to rebuild the shattered infrastructures of Western Europe and Japan. Later, it shifted its focus toward funding infrastructure projects in developing nations, such as dams, roads, and electrical grids.</p>
+
+                    <p>These institutions represented a "New Deal for the World," applying the principles of managed capitalism and government oversight on a global scale. The goal was to ensure that the post-war world would be one of interdependence rather than isolation. The success of the Bretton Woods System was almost immediate; it facilitated the "economic miracles" of recovery in West Germany and Japan and allowed for an unprecedented era of economic growth in the United States. However, it also cemented American dominance of the global financial order. Because the IMF and World Bank were headquartered in Washington, D.C., and the U.S. provided the lion’s share of their funding, the United States exercised significant influence over global economic policy, ensuring that the "world America made" would be one built on the foundations of American capitalism.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_4.png" alt="The Gold Room at Bretton Woods">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The Gold Room is the small conference space where historic agreements were signed to establish the International Monetary Fund and the World Bank.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The creation of permanent international financial institutions cemented American dominance over the post-war financial order. By acting as a lender of last resort and funding massive international reconstruction projects, these organizations spread the principles of managed capitalism on a global scale.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> How did the primary funding sources of the IMF and World Bank reflect the geopolitical realities of the post-war global economy?</p>
+                                <textarea id="va_5" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-4" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. What is the primary difference between the roles of the IMF and the World Bank?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) The IMF provides short-term emergency loans, while the World Bank funds long-term development</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) The IMF only lends to the U.S., while the World Bank lends to everyone else</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) The IMF manages military spending, while the World Bank manages agriculture</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) The IMF focuses on isolationism, while the World Bank focuses on trade barriers</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Why did the United States exercise significant influence over global economic policy after the war?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) It was the only nation that refused to join the IMF</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) It provided the majority of funding for the IMF and World Bank</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) It controlled all the natural resources in Western Europe</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) It forced all other nations to adopt a communist economic model</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-4', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-3" class="action-btn" disabled onclick="switchTab('sec-4', 'nav-sec-4')">&#128274; Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Establishing International Law and Accountability</h2>
+                    <p class="first-p">The horrific discovery of Holocaust atrocities challenged the traditional boundaries of international law, which had historically shielded the actions of sovereign nations. In a revolutionary legal shift, Allied powers convened military tribunals to hold high-ranking officials personally accountable for their wartime actions, rejecting the defense of merely "following orders". By relying on meticulous documentary evidence, these trials created an irrefutable historical record of systematic genocide and laid the critical groundwork for the modern international justice system.</p>
+
+                    <h4>Individual Responsibility and the Nuremberg Trials</h4>
+                    <p class="first-p">As the war ended and Allied troops entered the liberated concentration camps, the full, horrifying extent of Nazi atrocities became visible to the world. The discovery of millions of victims of the Holocaust presented a profound legal and moral challenge: how could the world hold the leaders of a sovereign state accountable for state-sponsored mass murder? Traditionally, international law focused on the behavior of nations, not individuals. Many of the captured Nazi officials argued that they could not be prosecuted because they were merely "following orders" that were legal under German law at the time. To address this unprecedented crisis of justice, the Allies established the International Military Tribunal to conduct the <strong>Nuremberg Trials</strong>.</p>
+                    
+                    <p>The Nuremberg Trials represented a revolutionary shift in the history of human rights and international law. For the first time, high-ranking government officials and military officers were held personally and criminally responsible for their actions during wartime. The defendants were charged with four primary counts, the most significant being <strong>Crimes Against Humanity</strong>. This new legal category referred to systematic murder, extermination, enslavement, and other inhumane acts committed against any civilian population. The trials established the "Nuremberg Principle": that the defense of "superior orders" was no longer valid if the orders were a clear violation of the fundamental laws of humanity. This principle asserted that an individual’s conscience and their duty to humanity were superior to their duty to an unjust state.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.png" alt="Defendants in the Dock at Nuremberg">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">High-ranking Nazi officials sit under guard in the defendants' dock during the International Military Tribunal in 1945.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> Holding government and military leaders personally accountable for wartime actions fundamentally shifted the focus of international law from nations to individuals. By legally establishing "Crimes Against Humanity" and rejecting the defense of merely following superior orders, the tribunal set new moral and legal standards for global justice.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> Why was the rejection of the "superior orders" defense a revolutionary shift in the application of international law?</p>
+                                <textarea id="va_6" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-5" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. What was the legal significance of the Nuremberg Trials?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) They proved that international law does not apply to individuals</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) They held government and military officials personally accountable for wartime actions</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) They established that "following orders" is a complete defense for any crime</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) They prohibited the use of military tribunals in international law</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What did the "Crimes Against Humanity" charge specifically target?</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) Standard battlefield casualties between soldiers</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) Economic trade violations between nations</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Systematic murder and inhumane acts committed against civilian populations</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) Political disagreements between Allied leaders</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-5', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The Proceedings</h4>
+                    <p class="first-p">The proceedings were not intended to be "victor’s justice," but a rigorous and transparent legal process. The chief American prosecutor, Supreme Court Justice Robert Jackson, insisted on a trial based on evidence rather than revenge. The prosecution relied heavily on the Nazi regime's own meticulous records—mountains of captured documents, photographs, and film footage—to prove that the Holocaust was a coordinated, bureaucratic plan for genocide. This created an irrefutable historical record that prevented future generations from denying the reality of the atrocities. Of the 22 major Nazi leaders tried in the first round, 12 were sentenced to death. Similar trials were conducted in Tokyo for Japanese military and political leaders, reinforcing the idea that the leaders of any nation are subject to the same moral standards as private citizens.</p>
+                    
+                    <p>The legacy of Nuremberg is the foundation of the modern international justice system. It led directly to the UN Genocide Convention and the eventual creation of the International Criminal Court. By stripping away the shield of "state sovereignty," the trials sent a clear and lasting message to future dictators and military commanders: the international community would hold them personally accountable for mass murder and persecution. This legal revolution was essential to the "New World Order," as it established that the rights of human beings were a matter of international law that no government could legally ignore.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_6.png" alt="Chief Prosecutor Robert Jackson at Nuremberg">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">U.S. Supreme Court Justice Robert H. Jackson delivers an opening address at the International Military Tribunal.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The prosecution's strategy of relying heavily on the meticulous bureaucratic records of the Nazi regime, rather than solely on eyewitness testimony, prevented future generations from credibly denying the genocide. This rigorous evidentiary process established an irrefutable historical record of systematic, state-sponsored mass murder.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> What was the long-term historical consequence of the prosecution's decision to rely primarily on captured documents to prove the charges of genocide?</p>
+                                <textarea id="va_7" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-6" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. Why did Justice Robert Jackson rely so heavily on captured Nazi documents during the Nuremberg Trials?</p>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) Because there were no witnesses left alive to testify</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) To create an irrefutable historical record that would prevent future denial of atrocities</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) To protect the privacy of the Nazi officials being tried</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) Because documents were the only form of evidence allowed in Germany</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was a long-term legacy of the Nuremberg Trials?</p>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) The creation of the International Criminal Court and the UN Genocide Convention</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) A return to the belief that sovereign nations have total control over their citizens</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) The abolition of all international law and military courts</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) A requirement that all future wars be settled by financial payments</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-6', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-6', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-4" class="action-btn" disabled onclick="switchTab('sec-5', 'nav-sec-5')">&#128274; Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Domestic Transformations</h2>
+                    <p class="first-p">While the United States was busy designing a new international order abroad, it was equally focused on maintaining social and economic stability at home. To prevent a return to the economic misery of the Great Depression, the government passed sweeping domestic legislation that provided returning veterans with unprecedented access to education and homeownership. This massive investment in human capital fundamentally reshaped the American landscape and built a vast middle class, though its implementation was marred by systemic discrimination that widened the racial wealth gap.</p>
+
+                    <h4>The G.I. Bill of Rights</h4>
+                    <p class="first-p">While the United States was busy designing a new international order abroad, it was equally concerned with maintaining social and economic stability at home. The government faced a daunting task: successfully transitioning 16 million returning veterans back into civilian life. There was a widespread fear that the sudden return of so many men would lead to a massive surge in unemployment and a return to the economic misery of the Great Depression. To prevent this, Congress passed the Servicemen's Readjustment Act of 1944, more popularly known as the <strong>G.I. Bill of Rights</strong>. This legislation was perhaps the most successful and transformative social program in American history, serving as the domestic foundation for the post-war era.</p>
+
+                    <p>The G.I. Bill provided a comprehensive package of benefits designed to ease the transition for veterans. The most impactful provision was tuition assistance for education and vocational training. Millions of young men who would never have been able to afford a college education were suddenly given the opportunity to earn degrees. This created a highly skilled, professional workforce that would fuel the technological and industrial growth of the post-war decades. In addition to education, the G.I. Bill provided low-interest, government-backed mortgages. This sparked a massive, unprecedented construction boom as millions of families moved out of crowded city apartments and into new suburban developments like Levittown. This shift fundamentally altered the American landscape and created a new national culture centered on homeownership and the middle-class family.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_7.png" alt="The Servicemen's Readjustment Act">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The G.I. Bill provided sweeping federal benefits, including tuition assistance, to millions of returning World War II veterans.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> Providing widespread access to higher education transformed the American workforce, fostering rapid technological and industrial growth in the post-war decades. This massive federal investment in human capital successfully transitioned millions of soldiers back into civilian life while laying the foundation for a prosperous, educated middle class.</p>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-7" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. What was a primary fear of the U.S. government regarding the return of millions of veterans?</p>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) That they would immediately start a new civil war</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) That their return would cause massive unemployment and a return to the Great Depression</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) That they would refuse to move back into cities</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) That they would demand a return to isolationism</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did the G.I. Bill of Rights transform the American workforce?</p>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) By requiring all veterans to work in government factories</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) By providing tuition assistance that allowed millions of veterans to earn college degrees</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) By banning veterans from taking jobs in the suburbs</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) By replacing manual labor with nuclear-powered machines</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-7', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-7', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>Economic Impacts and Inequities of the G.I. Bill</h4>
+                    <p class="first-p">The economic impact of the G.I. Bill was profound. By delaying the entry of millions of veterans into the job market and providing them with the purchasing power to buy homes and attend school, the government successfully reoriented the "Arsenal of Democracy" into a consumer-driven peace-time economy. This "spending power" acted as a massive stimulus, driving the growth of new industries and ensuring that the post-war years would be defined by prosperity rather than depression. However, the benefits of the G.I. Bill were not distributed equally. While the law was race-neutral on paper, its implementation was left to local banks and universities, which frequently practiced systemic discrimination. African American veterans often found themselves denied admission to white colleges or rejected for mortgages in the new "whites-only" suburbs, even with their government-backed guarantees. This disparity meant that while the G.I. Bill helped build a vast white middle class, it also contributed to a widening of the racial wealth gap that would persist for generations.</p>
+                    
+                    <p>Despite these failures of equity, the G.I. Bill established a new social contract in America. It proved that a massive investment in human capital could lead to widespread national prosperity and that the federal government had a responsibility to support the social and economic welfare of its citizens. This domestic stability provided the solid ground from which the United States could project its power as a <strong>Superpower</strong> on the world stage. The "World America Made" was sustained not just by its military or its international treaties, but by a healthy, educated, and home-owning public that believed in the promise of the American dream.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_8.png" alt="Aerial View of Levittown">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Suburban developments like Levittown, Pennsylvania, rapidly expanded across the country as veterans utilized government-backed mortgages.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> While federal housing policies stimulated massive middle-class growth, local implementation often relied on systemic discriminatory practices that excluded African American veterans from homeownership. This unequal distribution of government-backed benefits entrenched residential segregation and significantly widened the racial wealth gap for generations.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> How did the delegation of government benefit distribution to local institutions undermine the race-neutral language of federal post-war legislation?</p>
+                                <textarea id="va_8" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-8" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. How did the G.I. Bill impact the post-war American economy?</p>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) It caused a major economic collapse due to overspending on education</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) It acted as a massive stimulus that drove the growth of new industries and suburban developments</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) It led to a decrease in consumer spending as veterans saved their money</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) It forced the U.S. to return to an agricultural economy</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Why was the implementation of the G.I. Bill considered inequitable?</p>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) Because it only allowed veterans from certain states to apply</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) Because systemic discrimination at the local level often denied benefits to African American veterans</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) Because the federal government ran out of money to pay for the program</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) Because it was only available to veterans who fought in the Pacific theater</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-8', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-8', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-5" class="action-btn" disabled onclick="switchTab('sec-6', 'nav-sec-6')">&#128274; Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6 -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Atomic Age</h2>
+                    <p class="first-p">The final and most terrifying element of the new world order was the emergence of the United States as the world's first and only nuclear power. This temporary atomic monopoly fractured the wartime alliance with the Soviet Union, plunging the two superpowers into a Cold War defined by proxy conflicts, economic competition, and a staggering nuclear arms race. Despite the constant shadow of mutual annihilation, the cooperative international institutions born in 1945—including the UN, the IMF, and the Nuremberg precedents—survived this intense rivalry, serving as the enduring foundation of our modern global society.</p>
+
+                    <h4>The Origins of the Cold War</h4>
+                    <p class="first-p">The final and most terrifying element of the new world order was the emergence of the United States as the world's first and only nuclear power. The successful development of the atomic bomb had forced the surrender of Japan, but it also fundamentally and permanently changed the nature of global security. For several years, the U.S. held a nuclear monopoly, giving it an unprecedented level of military leverage. However, this "atomic diplomacy" created deep and immediate tensions with the Soviet Union, which had been a vital ally during the war but was now emerging as a primary rival for global influence. The leaders of the USSR, feeling threatened by the American nuclear advantage, accelerated their own secret research into atomic energy.</p>
+                    
+                    <p>The existence of the atomic bomb made the prospect of a direct war between the two remaining <strong>Superpowers</strong>—the United States and the Soviet Union—unthinkable. A conflict with nuclear weapons would lead not to victory, but to mutual annihilation, a reality that forced the struggle for dominance into the realms of political influence, economic competition, and proxy wars in developing nations. This era of tension, known as the Cold War, would define international relations for the next 45 years. The new world order, while designed to prevent war through organizations like the United Nations, was simultaneously shadowed by the constant possibility of nuclear catastrophe.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_9.png" alt="The Dawn of the Atomic Age">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">A massive mushroom cloud rises over Nagasaki, Japan, following the dropping of the atomic bomb in August 1945.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The deployment of atomic weapons fundamentally altered the nature of global security by making direct military conflict between major powers unimaginably destructive. The brief nuclear monopoly held by the United States sparked immediate geopolitical tensions, accelerating Soviet nuclear research and plunging the world into a prolonged era of proxy conflicts and political rivalry.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> How did the American monopoly on atomic weaponry immediately following World War II alter diplomatic relations with the Soviet Union?</p>
+                                <textarea id="va_9" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-9" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. How did the American nuclear monopoly affect relations with the Soviet Union?</p>
+                            <label class="checklist-item"><input type="radio" name="cp17" value="A" onchange="handleRadioChange('cp-block-9')"> A) It led to a permanent peace treaty between the two nations</label>
+                            <label class="checklist-item"><input type="radio" name="cp17" value="B" onchange="handleRadioChange('cp-block-9')"> B) It created immediate tensions and drove the Soviet Union to accelerate its own nuclear research</label>
+                            <label class="checklist-item"><input type="radio" name="cp17" value="C" onchange="handleRadioChange('cp-block-9')"> C) It convinced the Soviet Union to abandon communism</label>
+                            <label class="checklist-item"><input type="radio" name="cp17" value="D" onchange="handleRadioChange('cp-block-9')"> D) It allowed the U.S. to take over all Soviet territory in Eastern Europe</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Why did the atomic bomb change the nature of direct conflict between superpowers?</p>
+                            <label class="checklist-item"><input type="radio" name="cp18" value="A" onchange="handleRadioChange('cp-block-9')"> A) It made war much cheaper and easier to manage</label>
+                            <label class="checklist-item"><input type="radio" name="cp18" value="B" onchange="handleRadioChange('cp-block-9')"> B) It ensured that any direct war would likely lead to mutual annihilation rather than victory</label>
+                            <label class="checklist-item"><input type="radio" name="cp18" value="C" onchange="handleRadioChange('cp-block-9')"> C) It meant that soldiers were no longer needed in modern warfare</label>
+                            <label class="checklist-item"><input type="radio" name="cp18" value="D" onchange="handleRadioChange('cp-block-9')"> D) It proved that the United Nations could not stop a nuclear attack</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-9', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-9', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The Arms Race and the Architecture of Peace</h4>
+                    <p class="first-p">The U.S. attempt to share control of atomic energy through the UN failed almost immediately, as both the U.S. and the USSR were unwilling to relinquish their security to an international body they did not fully control. This failure led to an arms race of staggering proportions, draining the resources of both nations and keeping the world on the brink of disaster. The "World America Made" was thus a study in deep contradictions: it was a time of unprecedented international cooperation, human rights expansion, and economic growth, yet it was also a time of profound fear and global rivalry that divided the world into two armed camps. The United States, having led the world to victory in a total war, now found itself the guardian of an uneasy and dangerous peace. The institutions and ideas born in 1945—the UN, the Bretton Woods system, and the Nuremberg precedents—remained the primary tools used to navigate this dangerous landscape, proving that even in the atomic age, the world still relied on the architecture of peace designed by the "Arsenal of Democracy."</p>
+
+                    <p>Ultimately, the post-war framework established in 1945 remains the basis for the modern world. The United Nations continues to be the primary forum for international diplomacy; the IMF and World Bank still manage the global financial system; and the precedents of Nuremberg continue to shape our understanding of human rights and international justice. While the world has changed significantly since the 1940s, the institutions and ideas born out of the struggle for union in a diverse republic remain the foundation of our global society.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_10.png" alt="Operation Crossroads Nuclear Test">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The "Baker" explosion detonates underwater during a United States military nuclear weapon test at Bikini Atoll in July 1946.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The failure of international bodies to control atomic energy led to a massive, resource-draining arms race that kept the world on the brink of annihilation. Despite this existential threat, the diplomatic and economic institutions established immediately after the war proved resilient enough to manage the dangerous rivalry between the two superpowers.</p>
+                            <div class="question-box">
+                                <p><strong>Student Question:</strong> How did the accelerating nuclear arms race contrast with the goals of the international cooperative institutions established in 1945?</p>
+                                <textarea id="va_10" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cp-block-10" class="checkpoint-block" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-q" style="display: block;">
+                            <p class="first-p">1. Why did international attempts to control atomic energy through the United Nations fail?</p>
+                            <label class="checklist-item"><input type="radio" name="cp19" value="A" onchange="handleRadioChange('cp-block-10')"> A) The UN lacked a building to house the atomic records</label>
+                            <label class="checklist-item"><input type="radio" name="cp19" value="B" onchange="handleRadioChange('cp-block-10')"> B) Both superpowers were unwilling to give up control of their security to an international body</label>
+                            <label class="checklist-item"><input type="radio" name="cp19" value="C" onchange="handleRadioChange('cp-block-10')"> C) Atomic energy was declared illegal by the General Assembly</label>
+                            <label class="checklist-item"><input type="radio" name="cp19" value="D" onchange="handleRadioChange('cp-block-10')"> D) The U.S. gave all its nuclear secrets to the World Bank instead</label>
+                        </div>
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Which institutions established in 1945 survived the rivalry of the Cold War and remain central today?</p>
+                            <label class="checklist-item"><input type="radio" name="cp20" value="A" onchange="handleRadioChange('cp-block-10')"> A) The League of Nations and the gold standard</label>
+                            <label class="checklist-item"><input type="radio" name="cp20" value="B" onchange="handleRadioChange('cp-block-10')"> B) The United Nations, the IMF, and the Nuremberg legal precedents</label>
+                            <label class="checklist-item"><input type="radio" name="cp20" value="C" onchange="handleRadioChange('cp-block-10')"> C) The colonial empires of Britain and France</label>
+                            <label class="checklist-item"><input type="radio" name="cp20" value="D" onchange="handleRadioChange('cp-block-10')"> D) The isolationist policies of the pre-war era</label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; display: none;" onclick="navigateCp('cp-block-10', -1)">&larr; Previous</button>
+                            <span class="cp-indicator" style="color: var(--color-steel-nib); font-size: 0.9rem;">1 of 2</span>
+                            <button class="action-btn cp-next-btn" style="width: auto;" disabled onclick="navigateCp('cp-block-10', 1)">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-6" class="action-btn" disabled onclick="switchTab('sec-7', 'nav-sec-7')">&#128274; Answer Checkpoints to Continue</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7 -->
+        <section id="sec-7" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Turning Points: The Nuremberg Trial</h2>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_2.png" alt="Verdicts in Nuremberg" class="visual-img">
+                        <p class="caption-text">Formal judicial proceedings against state leaders establish enduring legal precedents, permanently stripping away the defense of sovereign immunity for acts of genocide and systemic human rights abuses.</p>
+                    </div>
+
+                    <h4>Verdicts</h4>
+                    
+                    <h5>The Moment</h5>
+                    <p class="first-p">On October 1, 1946, in a courtroom in the city where the Nazi Party had once held its most triumphant rallies, the International Military Tribunal delivered its final verdicts against 22 high-ranking Nazi officials. This moment marked the end of the first <strong>Nuremberg Trials</strong> and the beginning of a new era in global justice. For nearly a year, the world had watched as the architects of a genocidal regime were forced to answer for their actions in a court of law.</p>
+
+                    <h5>The Strategy</h5>
+                    <p class="first-p">The Allied prosecutors, led by American Justice Robert Jackson, chose a strategy that focused on the documentary evidence of the Nazi regime rather than just eyewitness testimony. They presented thousands of pages of the Nazis' own meticulous records, proving that the Holocaust and the brutal treatment of occupied nations were not "accidents of war" but were the result of a deliberate, coordinated plan. The goal was not just to punish individuals, but to strip away the excuses of the defendants and to ensure that no future leader could claim they were unaware of the atrocities committed in their name.</p>
+
+                    <h5>The Legacy</h5>
+                    <p class="first-p">The verdicts were a mixed result: 12 defendants were sentenced to death, seven received prison sentences, and three were acquitted. However, the legal significance of the verdicts far outweighed the individual punishments. The tribunal formally established the concept of <strong>Crimes Against Humanity</strong>, providing a legal definition for state-sponsored atrocities that had previously been beyond the reach of the law. It also famously rejected the "superior orders" defense, asserting that a soldier's duty to humanity is higher than his duty to a superior officer.</p>
+
+                    <div style="margin-top: 3rem;">
+                        <div class="question-box">
+                            <p class="first-p"><strong>Evaluate Strategy:</strong> Why did the prosecutors choose to rely so heavily on captured German documents rather than eyewitness testimony, and how did this affect the long-term historical record of the war?</p>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Interpret Motives:</strong> How did holding the trials in Nuremberg, the site of the most famous Nazi rallies, serve as a symbolic "turning point" in the destruction of the Nazi ideology?</p>
+                            <textarea id="pq_2" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Compare Viewpoints:</strong> Some critics at the time argued that the trials were merely "victor's justice." How did the inclusion of judges from four different nations and the acquittal of three defendants attempt to counter this criticism?</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-7" class="action-btn" onclick="switchTab('sec-8', 'nav-sec-8')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8 -->
+        <section id="sec-8" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Read the following historical narrative carefully and fill in the numbered blanks with the correct terms from the Word Bank below. Each term is used exactly once.</p>
+
+                    <div class="word-bank">
+                        <span class="word-pill">United Nations</span>
+                        <span class="word-pill">UN Security Council</span>
+                        <span class="word-pill">General Assembly</span>
+                        <span class="word-pill">Eleanor Roosevelt</span>
+                        <span class="word-pill">Universal Declaration of Human Rights</span>
+                        <span class="word-pill">Nuremberg Trials</span>
+                        <span class="word-pill">Crimes Against Humanity</span>
+                        <span class="word-pill">G.I. Bill of Rights (Servicemen's Readjustment Act)</span>
+                        <span class="word-pill">Bretton Woods System</span>
+                        <span class="word-pill">IMF (International Monetary Fund)</span>
+                        <span class="word-pill">World Bank</span>
+                        <span class="word-pill">Superpower</span>
+                    </div>
+
+                    <p>Following World War II, the United States emerged as the world's leading 1.<input type="text" class="cloze-input" data-correct="Superpower">, guiding the creation of a new global framework. To prevent future conflicts, nations convened in San Francisco to establish the 2.<input type="text" class="cloze-input" data-correct="United Nations">. This organization featured a democratic body called the 3.<input type="text" class="cloze-input" data-correct="General Assembly"> where all member nations had a voice, as well as a more powerful organ, the 4.<input type="text" class="cloze-input" data-correct="UN Security Council">, which had the authority to authorize military force. Championing individual liberties, 5.<input type="text" class="cloze-input" data-correct="Eleanor Roosevelt"> led the commission that drafted the 6.<input type="text" class="cloze-input" data-correct="Universal Declaration of Human Rights">, establishing a moral baseline for global human rights.</p>
+                    
+                    <p>Economically, the 7.<input type="text" class="cloze-input" data-correct="Bretton Woods System"> stabilized global currencies by pegging them to the U.S. dollar. This financial architecture was supported by the 8.<input type="text" class="cloze-input" data-correct="IMF (International Monetary Fund)">, which provided emergency, short-term loans to prevent currency crises, and the 9.<input type="text" class="cloze-input" data-correct="World Bank">, which funded long-term reconstruction and infrastructure projects.</p>
+
+                    <p>Meanwhile, in Europe, captured Nazi leaders faced the 10.<input type="text" class="cloze-input" data-correct="Nuremberg Trials">. For the first time, individuals were held legally accountable for systematic atrocities under the new charge of 11.<input type="text" class="cloze-input" data-correct="Crimes Against Humanity">. Back at home, the United States government passed the 12.<input type="text" class="cloze-input" data-correct="G.I. Bill of Rights (Servicemen's Readjustment Act)">, which fueled a massive expansion of the middle class by providing returning veterans with college tuition and low-interest home mortgages.</p>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-7', 'nav-sec-7')">&larr; Previous Section</button>
+                    <button class="action-btn" style="background-color: var(--color-navy); color: var(--color-cream); border-color: var(--color-navy);" onclick="finishChapter()">Finished ✓</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+/* Background Management */
+const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+let bgIndex = 0;
+function rotateBackground() {
+    if (bgImages.length === 0) return;
+    const bgEl = document.getElementById('bg-slideshow');
+    if (!bgEl) return;
+    bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+    bgIndex = (bgIndex + 1) % bgImages.length;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    rotateBackground();
+    setInterval(rotateBackground, 10000);
+});
+
+/* Navigation */
+function switchTab(id, btnId = null, scrollTarget = null) {
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+    const activeBtnId = btnId || ('nav-' + id);
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) {
+        activeBtn.classList.add('active-nav');
+    }
+    
+    if (scrollTarget) {
+        setTimeout(() => {
+            const target = document.getElementById(scrollTarget);
+            if(target) {
+                const offset = 40;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = target.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }, 50);
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    saveProgress();
+}
+
+/* Data Collection & Export */
+function collectAssignmentData(isFinal) {
+    const studentName = document.getElementById('student-name').value || "Unknown_Student";
+    const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+    const now = new Date().toLocaleDateString();
+    
+    const assignmentData = {
+        assignmentTitle: "Interactive Chapter 16.4 - The World America Made",
+        studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+        responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+    };
+    
+    // Gather Visual Analysis Answers
+    for(let i=1; i<=20; i++) {
+        let el = document.getElementById('va_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Student Question:', '').trim() : 'Visual ' + i;
+            assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+        }
+    }
+    
+    // Gather Checkpoint Answers
+    for(let i=1; i<=30; i++) {
+        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+        if(inputs.length > 0) {
+            let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+            assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+        }
+    }
+    
+    // Gather Perspective Questions
+    for(let i=1; i<=10; i++) {
+        let el = document.getElementById('pq_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+            assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+        }
+    }
+    
+    // Gather Cloze Activity Answers
+    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+        assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+    });
+    
+    return assignmentData;
+}
+
+function triggerDownload(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadProgress() {
+    const data = collectAssignmentData(false);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+    triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+}
+
+function finishChapter() {
+    const dateField = document.getElementById('completion-date');
+    const now = new Date().toLocaleDateString();
+    if(dateField) dateField.value = now;
+    
+    const data = collectAssignmentData(true);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    triggerDownload(data, `Chapter_Export_${safeName}.json`);
+    alert('Upload JSON file to Canvas');
+    switchTab('sec-1', 'nav-sec-1');
+}
+
+/* Loading Progress */
+function loadProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedData = JSON.parse(e.target.result);
+            
+            // Restore ID Panel and Burn In
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            
+            if (loadedData.studentInfo) {
+                if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                    nameInput.value = loadedData.studentInfo.name;
+                    nameInput.setAttribute('readonly', 'true');
+                    nameInput.style.opacity = '0.7'; 
+                }
+                if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                    periodInput.value = loadedData.studentInfo.period;
+                    periodInput.setAttribute('disabled', 'true');
+                    periodInput.style.opacity = '0.7'; 
+                }
+            }
+
+            if (loadedData.responses) {
+                if (loadedData.responses.visualAnalysis) {
+                    for(let i=1; i<=20; i++) {
+                        let el = document.getElementById('va_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Student Question:', '').trim() : 'Visual ' + i;
+                            if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                        }
+                    }
+                }
+                
+                if (loadedData.responses.checkpoints) {
+                    for(let i=1; i<=30; i++) {
+                        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                        if(inputs.length > 0) {
+                            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                            let savedVal = loadedData.responses.checkpoints[qText];
+                            if (savedVal && savedVal !== "No Answer") {
+                                let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                if(radio) radio.checked = true;
+                            }
+                        }
+                    }
+                }
+
+                if (loadedData.responses.perspectiveQuestions) {
+                    for(let i=1; i<=10; i++) {
+                        let el = document.getElementById('pq_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                            if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                        }
+                    }
+                }
+
+                if (loadedData.responses.clozeActivity) {
+                    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                        let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                        if (savedVal) input.value = savedVal;
+                    });
+                }
+            }
+            
+            initCheckpoints();
+            alert('Progress loaded successfully!');
+            
+        } catch (err) {
+            console.error(err);
+            alert('Error loading progress file. Please make sure it is a valid JSON file.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* Save & Reset Logic */
+function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+function resetProgress() {
+    if(confirm('Are you sure you want to reset all progress?')) {
+        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        
+        // Un-burn ID panel fields
+        const nameInput = document.getElementById('student-name');
+        const periodInput = document.getElementById('student-period');
+        nameInput.removeAttribute('readonly');
+        nameInput.style.opacity = '1';
+        periodInput.removeAttribute('disabled');
+        periodInput.style.opacity = '1';
+        
+        document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+        initCheckpoints();
+        switchTab('sec-1', 'nav-sec-1');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* Checkpoint Management */
+const TOTAL_CHECKPOINTS = 10; 
+
+function initCheckpoints() {
+    for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+    checkSectionUnlock();
+}
+
+function updateCpUI(blockId) {
+    const block = document.getElementById(blockId);
+    if(!block) return;
+    
+    const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    const indicator = block.querySelector('.cp-indicator');
+    const prevBtn = block.querySelector('.cp-prev-btn');
+    const nextBtn = block.querySelector('.cp-next-btn');
+    
+    questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+    
+    if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+    if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+    
+    if(nextBtn) {
+        const currentQ = questions[currentIndex];
+        const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+        
+        if (currentIndex === questions.length - 1) {
+            if (isAnswered) {
+                nextBtn.innerText = "Checkpoint Completed ✓";
+                nextBtn.style.borderColor = "var(--color-navy)"; 
+                nextBtn.style.color = "var(--color-cream)"; 
+                nextBtn.style.backgroundColor = "var(--color-navy)";
+                nextBtn.disabled = true; 
+                nextBtn.style.cursor = 'default'; 
+                nextBtn.style.opacity = '1';
+            } else {
+                nextBtn.innerText = "Finish Checkpoint";
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed';
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                nextBtn.style.color = "var(--color-gold)"; 
+                nextBtn.style.borderColor = "var(--color-gold)";
+            }
+        } else {
+            nextBtn.innerText = "Next Question \u2192";
+            nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+            nextBtn.style.color = "var(--color-gold)"; 
+            nextBtn.style.borderColor = "var(--color-gold)";
+            
+            if (isAnswered) { 
+                nextBtn.disabled = false; 
+                nextBtn.style.opacity = '1'; 
+                nextBtn.style.cursor = 'pointer'; 
+            } else { 
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed'; 
+            }
+        }
+    }
+    checkSectionUnlock();
+}
+
+function navigateCp(blockId, dir) {
+    const block = document.getElementById(blockId);
+    let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+    
+    block.setAttribute('data-current', currentIndex);
+    updateCpUI(blockId);
+}
+
+function handleRadioChange(blockId) { 
+    saveProgress(); 
+    updateCpUI(blockId); 
+}
+
+function isAnswered(name) { 
+    return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+}
+
+function setNavButtonState(btnId, enabled) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    
+    if (enabled) {
+        btn.removeAttribute('disabled'); 
+        btn.style.opacity = '1'; 
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = 'Next Section &rarr;'; 
+        btn.style.borderColor = 'var(--color-gold)';
+    } else {
+        btn.setAttribute('disabled', 'true'); 
+        btn.style.opacity = '0.5'; 
+        btn.style.cursor = 'not-allowed';
+        btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+        btn.style.borderColor = 'var(--color-steel-nib)';
+    }
+}
+
+function checkSectionUnlock() {
+    setNavButtonState('btn-next-sec-1', true);
+    setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
+    setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8'));
+    setNavButtonState('btn-next-sec-4', isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+    setNavButtonState('btn-next-sec-5', isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
+    setNavButtonState('btn-next-sec-6', isAnswered('cp17') && isAnswered('cp18') && isAnswered('cp19') && isAnswered('cp20'));
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initCheckpoints);
+</script>
+</body>
+</html>

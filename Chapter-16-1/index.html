@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter 16.1 - The Arsenal of Democracy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #2A2A2A;
+            --color-cream: #EFE6D6;
+            --color-navy: #70775F;
+            --color-steel-nib: #3D5168;
+            --color-gold: #B94A3F;
+            --color-gold-light: #B94A3F;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+        
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        
+        @media (max-width: 1024px) {
+        .side-nav { display: none; }
+        .main-content { margin-left: 0; }
+        .content-wrapper { padding: 30px 20px; }
+        .content-block { padding: 2rem; }
+        }
+        
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+        
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+        
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        
+        @media (max-width: 768px) {
+        .id-panel { grid-template-columns: 1fr; }
+        .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+        .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+        
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <!-- Navigation Panel -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1', 'nav-sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2', 'nav-sec-2')">I. Mobilizing Industry and Innovation</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3', 'nav-sec-3')">II. The Home Front</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4', 'nav-sec-4')">III. The Economic and Social Legacy</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5', 'nav-sec-5')">IV. Data and Debate: The Miracle of Production</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6', 'nav-sec-6')">V. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- SECTION 1: START PAGE -->
+        <section id="sec-1" class="chapter-section active-section">
+            <img src="assets/Header%20Banner%20Chapter%2016.1.png" alt="Chapter 16.1 Banner" class="hero-banner-flush">
+            <div class="content-wrapper">
+                
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="5">Period 5</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3 style="margin-top: 0 !important;">Core Objectives</h3>
+                    <ul>
+                        <li>Analyze the effectiveness of the War Production Board (WPB) in converting peace-time industries to war manufacturing and its impact on the Great Depression.</li>
+                        <li>Evaluate the role of scientific research (OSRD) in the development of the atomic bomb (Manhattan Project), radar, and medical advancements like penicillin.</li>
+                        <li>Trace the impact of the war on daily civilian life, including rationing, victory gardens, and the purchase of war bonds.</li>
+                    </ul>
+
+                    <h3>Key Terms</h3>
+                    <p>War Production Board (WPB) | Office of Price Administration (OPA) | Rationing | Manhattan Project | J. Robert Oppenheimer | General Leslie Groves | Radar | Penicillin | Victory Gardens | Liberty Ships | Office of Scientific Research and Development (OSRD) | Deficit Spending | Gross National Product (GNP)</p>
+
+                    <h3>Introduction | Forging the Tools of Victory</h3>
+                    <p class="first-p">In the chilling winter of 1940, President Franklin D. Roosevelt warned the American people that they could no longer remain isolated from the world's chaos, calling upon the nation to become the "great arsenal of democracy". At that time, the U.S. military was relatively small, and the economy was still entangled in the Great Depression. However, through unprecedented government investment and total economic mobilization, the nation transformed into a global industrial powerhouse. This chapter explores how American factories, scientific laboratories, and civilian households united in a culture of shared sacrifice to overwhelm the Axis powers and secure an Allied victory.</p>
+
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="Visual 1" class="visual-img">
+                        <p class="caption-text"><strong>Caption:</strong> The transition from the Great Depression to wartime prosperity required an unprecedented injection of federal capital and the total restructuring of domestic industry toward military objectives.</p>
+                        <div class="question-box">
+                            <p><strong>Analysis Question:</strong> How did government intervention fundamentally alter the trajectory of the American economy between 1940 and 1945?</p>
+                            <textarea id="va_1" class="textarea-dark" placeholder="Enter your analysis here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <div></div>
+                    <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Mobilizing Industry and Innovation -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Mobilizing Industry and Innovation</h2>
+                    <p class="first-p">To meet the demands of global warfare, the United States had to completely overhaul its stagnant economy and leverage its brightest minds. The federal government utilized massive deficit spending to stimulate industrial growth, effectively ending the Great Depression while establishing the War Production Board to oversee the rapid shift from civilian goods to military hardware. Simultaneously, the Office of Scientific Research and Development was created to give Allied forces a critical technological advantage, leading to groundbreaking developments like advanced radar systems, mass-produced penicillin, and the highly classified atomic bomb.</p>
+
+                    <h3>The Industrial Giant Awakens</h3>
+                    <p class="first-p">In the chilling winter of 1940, as Nazi Germany consolidated its grip on Europe and the Empire of Japan expanded its reach across Asia, President Franklin D. Roosevelt delivered one of the most consequential fireside chats of his presidency. He warned the American people that the United States could not remain an island of tranquility in a world of chaos. He famously declared that the nation must become the "great arsenal of democracy." At that moment, however, the "arsenal" was largely a theoretical concept. The United States military was ranked eighteenth in the world, smaller than that of several minor European powers, and the economy was still entangled in the lingering web of the Great Depression. Millions remained unemployed, and the massive industrial infrastructure of the nation was geared toward the production of vacuum cleaners, refrigerators, and passenger cars rather than the tools of modern warfare.</p>
+
+                    <p>The transformation from a stagnant, depressed economy to a global industrial powerhouse was the result of a deliberate and massive shift toward <strong>deficit spending</strong>. For a decade, New Deal programs had utilized government funds to create jobs, but the scale of wartime spending dwarfed those earlier efforts. The federal government began pouring billions of dollars into military contracts, effectively acting as a massive engine for industrial growth. This flood of capital provided the stimulus that finally broke the back of the Great Depression. As factories reopened and expanded to meet government orders, unemployment virtually disappeared. The <strong>Gross National Product (GNP)</strong>, which measures the total value of all goods and services produced by a nation, began a climb that was nothing short of miraculous. Between 1940 and 1945, the GNP nearly doubled, and the average national income saw a similar surge, fundamentally altering the economic status of the American middle class.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_1.png" alt="Franklin D. Roosevelt Delivering a Fireside Chat">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: President Franklin D. Roosevelt addresses the American public via radio to urge preparation for global conflict.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> President Roosevelt used national radio broadcasts, such as his fireside chats, to persuade an isolationist public that the United States needed to become the "arsenal of democracy." This direct communication was essential for building the political support required to initiate massive federal deficit spending and mobilize the stagnant economy for war.</div>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Student Analysis Question:</strong> How did President Roosevelt's radio addresses help shift American public opinion and economic policy away from the Great Depression toward massive industrial mobilization?</p>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the primary effect of massive wartime deficit spending on the American domestic economy?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) It caused the national debt to collapse the banking system</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) It provided the necessary stimulus to end the Great Depression</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) It forced the government to reduce the Gross National Product</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) It led to a permanent increase in unemployment rates</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. In 1940, how did the United States' military rank compared to other world powers?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) It was the largest and most technologically advanced</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) It was ranked eighteenth, smaller than several minor European nations</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) It was second only to Nazi Germany in industrial output</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) It was primarily focused on nuclear research rather than traditional arms</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-1', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-1', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>The War Production Board and Mass Production</h3>
+                    <p class="first-p">The sheer scale of this economic reorientation required a centralized management system. To coordinate this Herculean effort, Roosevelt established the <strong>War Production Board (WPB)</strong>. The WPB was granted sweeping authority over the American economy, acting as the primary architect of the nation's industrial output. Its primary task was to oversee the conversion of existing peace-time industries into war-manufacturing centers. The board decided which materials—such as steel, aluminum, and rubber—would be prioritized for military use and which civilian industries would be forced to shut down or adapt. The most visible example of this conversion was the American automobile industry. In February 1942, the production of private passenger cars was halted entirely. Within months, the factories that had once produced civilian vehicles were churning out B-24 Liberator bombers, tanks, and armored scout cars. At the massive Willow Run plant in Michigan, Henry Ford applied his revolutionary assembly-line techniques to aviation, eventually producing one bomber every sixty-three minutes.</p>
+
+                    <p>The "miracle of production" was not just about changing what factories made; it was about reimagining how they operated. Industrialist Henry J. Kaiser became the face of this new efficiency in the shipbuilding industry. Recognizing that the war in both the Atlantic and Pacific depended on the ability to move vast amounts of troops and supplies, Kaiser applied mass-production principles to the creation of <strong>Liberty Ships</strong>. These standardized cargo vessels were designed for durability and ease of construction. Before the war, it often took nearly a year to build a single merchant ship. By 1942, Kaiser’s shipyards had reduced that time to an average of forty-five days. In one legendary demonstration of American industrial might, a Kaiser shipyard assembled a Liberty Ship in just four days. These vessels became the vital arteries of the Allied war effort, ensuring that the "Arsenal of Democracy" could project its power across thousands of miles of ocean despite the constant threat of enemy submarines.</p>
+
+                    <p>Beyond shipbuilding and aviation, the WPB managed the distribution of raw materials to ensure no bottleneck could stall the front lines. This meant the government had to intervene in the very fabric of private enterprise, setting quotas and allocating resources like copper and rubber that were once freely traded. This intervention was the ultimate expression of "Total War," where every resource of the state was harnessed for a single military objective. The result was an industrial output that the world had never seen. By 1944, American factories were producing more than twice as much war material as all the Axis nations—Germany, Italy, and Japan—combined. This massive disparity ensured that Allied commanders always had a surplus of equipment, allowing for the massive, material-heavy offensives that characterized the latter years of the war.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="B-24 Liberator Assembly Line at Willow Run">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: Workers assemble B-24 Liberator bombers using mass-production techniques at the Ford Motor Company's Willow Run plant in Michigan.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The conversion of civilian automobile factories into military manufacturing centers demonstrated the sweeping authority of the War Production Board. By applying automotive assembly-line efficiency to aviation, facilities like Willow Run achieved an unprecedented scale of production, eventually producing one bomber every sixty-three minutes.</div>
+                            <div class="question-box">
+                                <p><strong>Student Analysis Question:</strong> How did the War Production Board's mandate to halt civilian automobile manufacturing directly impact the production capabilities of military aviation facilities like Willow Run?</p>
+                                <textarea id="pq_2" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the primary function of the War Production Board (WPB) during the mobilization effort?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) To recruit soldiers for the front lines in Europe</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) To manage the transition of peace-time industries into war-manufacturing centers</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) To negotiate trade agreements with the Axis powers</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) To encourage the production of luxury consumer goods</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. How did Henry J. Kaiser contribute to the "miracle of production" in the shipbuilding industry?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) He invented a new type of fuel-efficient engine for submarines</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) He applied mass-production principles to build Liberty Ships in record time</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) He led the first naval offensive against the Japanese fleet</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) He convinced the government to stop using steel in ship construction</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-2', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>The OSRD and Medical Miracles</h3>
+                    <p class="first-p">While the assembly lines of the Midwest produced the steel and muscle of the war effort, the laboratories of American universities and secret government sites produced its "brain." In 1941, Roosevelt created the <strong>Office of Scientific Research and Development (OSRD)</strong> to mobilize the nation's scientific community. The OSRD was tasked with a singular goal: to ensure that American forces possessed a technological edge over the Axis powers. This collaboration between the military, private industry, and academia created advancements that would reshape the 20th century, ranging from life-saving medicines to the most destructive weapon in human history.</p>
+
+                    <p>One of the OSRD's most immediate and humanitarian successes was in the field of medicine. Historically, more soldiers died from infection and disease than from actual combat wounds. The OSRD coordinated the mass production of <strong>penicillin</strong>, the world's first "miracle drug." Before the war, penicillin was a laboratory curiosity discovered by Alexander Fleming, but it was difficult to produce in large quantities. Under the pressure of wartime necessity, American scientists and chemical companies developed new deep-tank fermentation techniques that allowed for the production of millions of doses. By the time of the D-Day invasion in 1944, enough penicillin was available to treat every wounded soldier in the Allied forces. This medical breakthrough saved hundreds of thousands of lives and marked the beginning of the antibiotic era in modern medicine, fundamentally changing how humanity treated bacterial illness.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_3.png" alt="Mass Production of Penicillin">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: Scientists and technicians oversee the deep-tank fermentation process used to mass-produce penicillin for Allied troops.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The Office of Scientific Research and Development coordinated with private industry to turn penicillin from a laboratory curiosity into a widely available medication. This unprecedented mass production of antibiotics drastically reduced combat fatalities from bacterial infections and revolutionized modern medicine by ushering in the antibiotic era.</div>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Student Analysis Question:</strong> Why was the mass production of penicillin considered a critical medical breakthrough for the Allied forces leading up to the invasion of Europe?</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. What was the central mission of the Office of Scientific Research and Development (OSRD)?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) To find new agricultural methods for Victory Gardens</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) To ensure American forces maintained a technological advantage through scientific mobilization</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) To study the economic impact of the War Production Board</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) To manage the distribution of war bonds to the public</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. Why was the mass production of penicillin considered a major wartime breakthrough?</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It was used as a high-energy fuel for B-24 bombers</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It effectively treated bacterial infections that had historically killed more soldiers than combat</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It was a key component in the development of radar systems</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It allowed soldiers to survive in extreme cold without heavy gear</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-3', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Radar and the Atomic Threat</h3>
+                    <p class="first-p">Technological innovations also revolutionized the way the war was fought in the air and at sea. The development and refinement of <strong>radar</strong> (Radio Detection and Ranging) allowed the Allies to "see" enemy aircraft and ships from great distances, regardless of weather conditions or time of day. Radar was instrumental in the Battle of Britain, allowing the Royal Air Force to intercept German bombers, and it later became a standard feature on American naval vessels. It helped hunt down Japanese carriers in the Pacific and German U-boats in the Atlantic. Similarly, sonar technology was improved to track submerged submarines using sound waves. These tools stripped the Axis of the element of surprise, turning the tide in the grueling Battle of the Atlantic and protecting the vital Liberty Ships that carried the nation's industrial output. Without these "invisible" eyes, the Allied supply lines would have been severed by the German "wolf pack" submarine tactics.</p>
+
+                    <p>However, the most significant and secret undertaking managed by the government was the <strong>Manhattan Project</strong>. Triggered by a 1939 letter from physicist Albert Einstein—who warned that Nazi Germany was investigating the possibility of a weapon utilizing nuclear fission—the United States launched a top-secret program to develop an atomic bomb. The project was a massive, decentralized operation involving tens of thousands of workers and research facilities in Tennessee, Washington, and New Mexico. The Manhattan Project was led by two men of starkly different temperaments: <strong>General Leslie Groves</strong>, a pragmatic and disciplined military officer who oversaw the construction and logistics, and <strong>J. Robert Oppenheimer</strong>, a brilliant and visionary physicist who directed the scientific work at the Los Alamos laboratory.</p>
+
+                    <p>The challenges facing Oppenheimer and his team were immense. They had to solve complex problems in theoretical physics while simultaneously designing the precision engineering required to trigger a nuclear explosion. This required the refinement of uranium and the production of plutonium on an industrial scale at sites like Oak Ridge and Hanford. The project operated under a cloak of total secrecy; even Vice President Harry Truman was unaware of its existence until he assumed the presidency. The success of the Manhattan Project was confirmed in July 1945, when the first atomic bomb was successfully detonated in the New Mexico desert. This achievement not only provided the weapon that would eventually force Japan's surrender but also ushered in the nuclear age, fundamentally changing global diplomacy and the nature of warfare forever. The project represented the ultimate marriage of American scientific genius and industrial capacity.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_4.png" alt="World War II Radar Operator">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: A radar operator tracks incoming aircraft on a cathode-ray tube display at a military early-warning station.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The development and refinement of radar technology provided the Allies with a critical advantage by allowing them to detect enemy aircraft and ships from great distances, regardless of weather conditions. By effectively stripping Axis forces of the element of surprise, radar systems were instrumental in defending against aerial bombings and hunting down submarines in the grueling Battle of the Atlantic.</div>
+                            <div class="question-box">
+                                <p><strong>Student Analysis Question:</strong> How did the Allies' use of newly developed radar technology alter the strategic dynamics of the air and naval wars against Axis forces?</p>
+                                <textarea id="pq_4" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did radar and sonar technology impact the Allied war effort at sea?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) They allowed Allied ships to move faster than German U-boats</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) They removed the element of surprise by allowing the Allies to detect enemy planes and submarines</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) They were used to jam enemy radio broadcasts across the Atlantic</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) They automated the firing systems of heavy artillery on tanks</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was the primary goal of the Manhattan Project led by Groves and Oppenheimer?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) To develop a vaccine for the influenza virus</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) To create the world's first long-range ballistic missile</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) To develop a functional atomic bomb before Nazi Germany</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) To design more aerodynamic assembly lines for aircraft production</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-4', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: The Home Front -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Home Front</h2>
+                    <p class="first-p">The scale of World War II meant that the battle was fought just as fiercely in American kitchens and backyards as it was overseas. To sustain the immense industrial output required for victory, the federal government had to manage domestic consumption and call upon citizens to fund the war effort. This section examines the profound daily impact of the war on civilians, detailing the nationwide culture of shared sacrifice, the implementation of rationing, and the enthusiastic public participation in conservation and agricultural drives.</p>
+
+                    <h3>Shared Sacrifice and Daily Life</h3>
+                    <p class="first-p">The mobilization of the "Arsenal of Democracy" was not confined to factories and laboratories; it reached into every American kitchen, backyard, and wallet. For the civilian population, the war meant a complete departure from the "rugged individualism" of the past and a move toward a culture of shared sacrifice. Because the government was redirecting vast quantities of metal, fuel, and food to the military, the domestic market faced severe shortages. To manage this scarcity and prevent the economy from overheating, the federal government took unprecedented control over the daily lives of its citizens, essentially regulating what people could eat, where they could drive, and what they could wear.</p>
+
+                    <p>The <strong>Office of Price Administration (OPA)</strong> was established with the critical task of fighting inflation. With the GNP rising and millions of workers finally earning steady wages after years of poverty, the demand for limited goods threatened to drive prices beyond the reach of the average family. The OPA responded by freezing prices on thousands of consumer items and implementing a strict system of <strong>rationing</strong>. Every American household was issued ration books containing stamps or coupons that were required for the purchase of essential items such as meat, sugar, coffee, butter, gasoline, and shoes. Money alone was no longer enough to buy these goods; without a coupon, the purchase was illegal. This system was designed to ensure that no one—regardless of wealth—could hoard supplies at the expense of others, making "fair share" the law of the land.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.png" alt="World War II Civilian Ration Books">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: The Office of Price Administration issued ration books containing mandatory stamps to regulate civilian purchases of essential goods like meat, sugar, and gasoline.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> To ensure that the military had sufficient resources and to prevent inflation caused by rising wages, the federal government exerted unprecedented control over the domestic economy. The mandatory rationing system fostered a culture of shared sacrifice, legally requiring all citizens to adapt their daily consumption habits to a "fair share" model.</div>
+                            <div class="question-box">
+                                <p><strong>Student Analysis Question:</strong> What specific domestic economic conditions prompted the federal government to establish the Office of Price Administration and mandate the rationing of consumer goods?</p>
+                                <textarea id="pq_5" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Why did the federal government implement a strict system of rationing during the war?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) To discourage people from working in high-paying industrial jobs</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) To ensure that scarce resources were shared fairly and inflation was controlled</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) To raise money directly for the Manhattan Project</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) To force citizens to move from cities to rural farming communities</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What role did the Office of Price Administration (OPA) play on the home front?</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) It managed the recruitment of women into factory roles</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) It fought inflation by freezing prices on thousands of consumer items</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) It oversaw the training of scientists for the OSRD</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) It was responsible for designing the posters for Victory Gardens</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-5', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Victory Gardens, Bonds, and Conservation</h3>
+                    <p class="first-p">To supplement the limited food supplies provided through rationing, the government launched a massive propaganda campaign encouraging citizens to plant <strong>Victory Gardens</strong>. Americans were urged to transform their lawns, flower beds, and even vacant city lots into small vegetable farms. The response was overwhelming and immediate. By 1943, there were more than 20 million Victory Gardens across the country, producing nearly 40 percent of the vegetables consumed in the United States. This movement did more than provide food; it gave civilians a sense of direct participation in the war effort. Every tomato grown at home was seen as a contribution to the soldier's mess kit on the front lines, fostering a powerful sense of national unity and purpose. Schools, civic groups, and local governments all competed to see who could produce the most food, turning gardening into a patriotic competition.</p>
+
+                    <p>The war also required a massive financial commitment from the public to sustain the deficit spending required for mobilization. While the government increased taxes significantly, it also relied heavily on the sale of war bonds. These bonds were essentially loans from the people to the government, to be paid back with interest after the war. Bond drives became major cultural events, often featuring Hollywood celebrities, musicians, and returning war heroes who traveled the country to rally public support. Buying a war bond was presented as a patriotic duty, allowing those who could not fight in the military to "invest" in the victory. Over the course of the war, the government raised billions of dollars through these drives, which not only funded the "Arsenal of Democracy" but also helped control inflation by removing excess cash from the hands of consumers.</p>
+
+                    <p>Finally, the home front was characterized by an intensive effort to recycle materials vital to the war effort. Scrap drives were organized to collect rubber, tin, aluminum, and even waste fats from cooking. The fats were particularly valuable because they could be used to produce glycerin, a key ingredient in explosives. Children were particularly active in these drives, scouring their neighborhoods for old tires or discarded metal that could be melted down and forged into tanks or shells. Schools often held "scrap metal days" where students would bring in everything from old toys to bedsprings. This culture of conservation and shared responsibility created a domestic environment where every action—from saving a tin can to skipping a Sunday drive to save gasoline—was framed as a vital step toward defeating the Axis powers. The war had effectively mobilized not just the industry, but the very habits of the American people.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_6.png" alt="Civilian Victory Garden">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: Civilians tend to a neighborhood Victory Garden planted to supplement domestic food supplies during wartime rationing.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The federal government actively encouraged citizens to plant their own food to relieve pressure on the national agricultural supply chain. This widespread movement provided nearly 40 percent of the vegetables consumed in the United States by 1943, fostering a powerful sense of national unity and direct civilian participation in the war effort.</div>
+                        </div>
+                        <div class="question-box">
+                            <p><strong>Student Analysis Question:</strong> In what ways did the cultivation of Victory Gardens serve both a practical economic purpose and a psychological purpose for the American home front?</p>
+                            <textarea id="pq_6" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did Victory Gardens contribute to the American war effort?</p>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) They provided the military with all of its industrial rubber</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) They produced nearly 40 percent of the vegetables consumed in the U.S.</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) They were used as secret training grounds for new recruits</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) They were the primary source of glycerin for high explosives</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was a primary purpose of selling war bonds to the American public?</p>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) To replace the need for the War Production Board</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) To fund the government's massive wartime spending and help control inflation</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) To allow citizens to purchase extra ration coupons for gasoline</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) To pay for the construction of private fallout shelters</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-6', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-6', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: The Economic and Social Legacy -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Economic and Social Legacy</h2>
+                    <p class="first-p">The total mobilization of the American economy did more than just win the war; it permanently altered the nation's social fabric and its future economic trajectory. The desperate need for wartime labor forced a re-evaluation of traditional roles, opening unprecedented opportunities for women and minorities on the factory floor. This section analyzes these dramatic demographic shifts, the rise of the military-industrial complex, and how America emerged from the conflict not just victorious, but as a dominant global economic superpower.</p>
+
+                    <h3>The Military-Industrial Complex and the Changing Workforce</h3>
+                    <p class="first-p">The total mobilization of the American economy for World War II did more than just win the war; it permanently transformed the relationship between the federal government and private industry. This era saw the emergence of what would later be called the "military-industrial complex," a partnership where the government became the primary customer for the nation's largest corporations. Because the need for war material was so urgent, the government favored companies that already possessed the infrastructure to scale up production rapidly. As a result, the top 100 American corporations received approximately two-thirds of all war contracts, leading to a significant consolidation of economic power that would persist in the post-war era. This concentration of wealth helped birth a new era of corporate dominance in American life.</p>
+
+                    <p>This industrial expansion also triggered a dramatic shift in the American labor force. With more than 16 million men joining the military, the nation faced a desperate labor shortage at the very moment it needed to increase production. This crisis forced a re-evaluation of long-standing social and racial hierarchies in the workplace. For the first time, millions of women, African Americans, and other minority groups were recruited into high-paying industrial jobs that had previously been the exclusive domain of white men. This demographic shift not only fueled the "Arsenal of Democracy" but also sowed the seeds for future social movements as these groups gained economic independence and a new sense of their own importance to the nation's success. The factory floor became a laboratory for social change that would boil over in the decades following 1945.</p>
+
+                    <p>Labor unions also played a pivotal role in maintaining the flow of production. To ensure that the war effort was never interrupted by industrial disputes, major unions signed "no-strike" pledges for the duration of the conflict. In exchange, the government helped mediate disputes and encouraged companies to improve safety and working conditions. This cooperation was essential; any delay on the assembly line was viewed as a threat to the lives of soldiers in combat. While there were occasional "wildcat" strikes, the overwhelming majority of American workers remained at their posts, out-producing the Axis powers to an extent that made their defeat inevitable. The war years were a high-water mark for union influence and government-labor cooperation.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_7.png" alt="Women Assembling Military Aircraft">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: Female industrial workers manufacture military aircraft, filling critical labor shortages caused by the deployment of men to the armed forces.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> The urgent demand for wartime labor forced factories to re-evaluate traditional hiring hierarchies, opening high-paying manufacturing roles to millions of women and minorities. This massive demographic shift not only sustained the "Arsenal of Democracy" but also laid the economic groundwork for future social movements as these groups gained newfound independence.</div>
+                            <div class="question-box">
+                                <p><strong>Student Analysis Question:</strong> How did the demographic composition of the American industrial workforce during World War II compare to the traditional labor hierarchies of the pre-war era?</p>
+                                <textarea id="pq_7" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. How did the labor shortage during the war affect social hierarchies in the workplace?</p>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) It led to the permanent exclusion of women from industrial work</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) It forced the recruitment of women and minorities into high-paying industrial jobs</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) It resulted in the government banning all labor unions</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) It caused a return to the agricultural economy of the 19th century</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What long-term economic trend was established by the distribution of wartime contracts?</p>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) The total collapse of large corporations in favor of small businesses</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) A consolidation of economic power within the top 100 American corporations</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) The end of government involvement in private industry</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) A shift toward a purely socialist economic system</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-7', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-7', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Industrial Dominance and the Post-War Legacy</h3>
+                    <p class="first-p">By 1944, the United States was producing more than double the war material of all the Axis nations combined. This industrial dominance ensured that Allied commanders always had the equipment, fuel, and ammunition necessary to launch massive offensives like the invasion of Normandy. The sheer volume of material—from millions of rounds of ammunition to tens of thousands of trucks—overwhelmed the German and Japanese economies, which simply could not keep pace. When the war finally ended in 1945, the United States had transformed from a struggling, depressed nation into a global economic and military superpower. The "Arsenal of Democracy" had not only secured a victory over tyranny but had also laid the foundation for decades of American prosperity and global leadership in the second half of the 20th century. The mobilization had proved that American democracy, when pushed, possessed an industrial engine that no other system could match.</p>
+
+                    <p>The legacy of this period was the creation of a "warfare state" that remained partially mobilized even after the fighting stopped. The technologies developed by the OSRD—like radar and penicillin—became the foundation of new civilian industries, from commercial aviation to modern medicine. The massive investments in infrastructure, from shipyards to research labs, ensured that the United States would lead the world in innovation for the next fifty years. Most importantly, the war had taught the nation that the federal government could successfully manage the economy on a massive scale to achieve a national goal, a lesson that would influence policy from the G.I. Bill to the Space Race.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_8.png" alt="Jeeps and Trucks Awaiting Deployment">
+                        <div class="spotlight-content">
+                            <div class="spotlight-caption">Caption: A massive fleet of American-manufactured jeeps and larger transport trucks is staged at a British port to be loaded onto landing craft in preparation for the invasion of Europe.</div>
+                            <div class="spotlight-why"><strong>Why it Matters:</strong> By the end of the war, the United States possessed an industrial capacity that produced more than double the war material of all Axis nations combined. This unprecedented manufacturing infrastructure not only secured military victory by overwhelming the enemy with a sheer volume of vehicles and supplies, but also transformed the United States into a dominant global economic superpower.</div>
+                            <div class="question-box">
+                                <p><strong>Student Analysis Question:</strong> How did the sheer volume of American industrial output directly contribute to the Allied military strategy and the ultimate defeat of the Axis powers?</p>
+                                <textarea id="pq_8" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-block" id="cp-block-8" data-current="0">
+                        <h3>Checkpoint</h3>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. By 1944, how did American industrial production compare to that of the Axis powers?</p>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) It was roughly half of what Germany and Japan produced combined</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) It was more than double the war material of all Axis nations combined</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) It was focused entirely on defensive weapons rather than offensive tools</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) It had been surpassed by the Soviet Union's industrial output</label>
+                        </div>
+                        
+                        <div class="checkpoint-q" style="display: none;">
+                            <p class="first-p">2. What was a major long-term consequence of the technologies developed by the OSRD?</p>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) They were classified forever and never used by civilians</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) They became the foundation for new civilian industries like commercial aviation and modern medicine</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) They were sold to the Axis powers to pay off the national debt</label>
+                            <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) They led to the immediate decommissioning of all American research laboratories</label>
+                        </div>
+
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span class="cp-indicator" style="font-family:var(--font-ui); font-size:0.9rem; color:var(--color-steel-nib);"></span>
+                            <div>
+                                <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-8', -1)">Previous</button>
+                                <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-8', 1)">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Data and Debate -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Data and Debate: The Miracle of Production</h2>
+                    
+                    <h3>The War was Won on the Assembly Line</h3>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_2.png" alt="Visual 2" class="visual-img">
+                        <p class="caption-text"><strong>Caption:</strong> Victory in modern total war relied less on the tactical superiority of individual weapons and more on the aggregate industrial capacity to manufacture, deploy, and rapidly replace military assets on a global scale.</p>
+                    </div>
+
+                    <h4>The Evidence</h4>
+                    <p class="first-p">The following data compares the total production of major war machinery between the Allied powers (led by the United States) and the Axis powers (led by Germany and Japan) between 1941 and 1945.</p>
+                    
+                    <div style="overflow-x: auto; margin-bottom: 2rem;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid rgba(255,255,255,0.1);">
+                            <thead>
+                                <tr style="background-color: rgba(0,0,0,0.3); border-bottom: 2px solid var(--color-gold);">
+                                    <th style="padding: 12px; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-gold);">Weapon Type</th>
+                                    <th style="padding: 12px; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-gold);">Allies (United States & UK)</th>
+                                    <th style="padding: 12px; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-gold);">Axis (Germany & Japan)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background-color: rgba(0,0,0,0.2);">
+                                    <td style="padding: 12px;">Military Aircraft</td>
+                                    <td style="padding: 12px;">~350,000</td>
+                                    <td style="padding: 12px;">~180,000</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background-color: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px;">Tanks & Armored Vehicles</td>
+                                    <td style="padding: 12px;">~220,000</td>
+                                    <td style="padding: 12px;">~70,000</td>
+                                </tr>
+                                <tr style="background-color: rgba(0,0,0,0.2);">
+                                    <td style="padding: 12px;">Merchant Ships (Tons)</td>
+                                    <td style="padding: 12px;">~53 Million</td>
+                                    <td style="padding: 12px;">~2 Million</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>What the Data Reveals</h4>
+                    <p class="first-p">The statistics highlight a staggering industrial gap that defined the global conflict. The United States and its closest allies produced nearly double the number of aircraft and more than three times the number of tanks and armored vehicles as their enemies. The most dramatic difference is found in merchant shipping tonnage. Allied production was more than 25 times greater than that of the Axis. This massive lead in shipping meant that the Allies could not only build weapons but also maintain a global supply chain that kept their armies fed and fueled across two oceans, while the Axis powers struggled to move resources even between their own controlled territories.</p>
+
+                    <h4>The Historical Debate</h4>
+                    <p class="first-p">Historians frequently debate the true "deciding factor" in World War II. Some scholars argue that early in the war, German and Japanese forces often possessed superior individual weapons, such as the German Tiger tank or the Japanese Zero fighter plane. They suggest that military strategy and the bravery of individual soldiers were the most important elements of victory. However, the prevailing view—often called the "industrialist interpretation"—is that the war was won on the assembly line. These historians argue that the sheer volume of American production made tactical brilliance or superior individual weapons irrelevant. If the Allies could lose two tanks for every one German tank but build ten new ones in the same time, the outcome was mathematically certain. The war was essentially an industrial race that the Axis could never win.</p>
+
+                    <h4>Why It Matters</h4>
+                    <p class="first-p">This data illustrates the modern concept of "Total War," where victory depends on the entire economic and social strength of a nation, not just its army. The U.S. advantage in <strong>Gross National Product (GNP)</strong> was not just a number on a ledger; it was the foundation of military dominance. The ability to out-produce the enemy allowed the Allies to absorb massive losses and continue fighting, ultimately forcing a surrender through industrial exhaustion. This shift toward industrial-scale warfare established the model for global power that would define the Cold War era and cemented the United States as the world's preeminent economic force.</p>
+
+                    <h4 style="margin-top: 3rem !important;">Quantitative Analysis Questions</h4>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Question 1:</strong> Analyze the Imagery: Given the merchant ship data, how did the Allied ability to replace sunken ships faster than they were lost undermine the primary naval strategy of the German U-boat "wolf packs" in the Atlantic?</p>
+                        <textarea id="pq_9" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Question 2:</strong> Compare Viewpoints: Some critics argued that the War Production Board (WPB) unfairly favored large corporations. Based on the production data, can you make an argument that this concentration of contracts was a military necessity to achieve these massive numbers?</p>
+                        <textarea id="pq_10" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Question 3:</strong> Evaluate Strategy: If Japan and Germany had successfully sabotaged American industrial centers early in the war, how might the production gap shown in the table have changed, and what would that mean for the Allied strategy of "Victory through Volume"?</p>
+                        <textarea id="pq_11" class="textarea-dark" placeholder="Enter your response..."></textarea>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous Section</button>
+                    <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: Vocabulary Activity -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Read the historical narrative below and fill in the numbered blanks using the correct terms from the Word Bank to complete the story of America's wartime mobilization.</p>
+                    
+                    <div class="word-bank">
+                        <span class="word-pill">War Production Board (WPB)</span>
+                        <span class="word-pill">Office of Price Administration (OPA)</span>
+                        <span class="word-pill">Rationing</span>
+                        <span class="word-pill">Manhattan Project</span>
+                        <span class="word-pill">J. Robert Oppenheimer</span>
+                        <span class="word-pill">General Leslie Groves</span>
+                        <span class="word-pill">Radar</span>
+                        <span class="word-pill">Penicillin</span>
+                        <span class="word-pill">Victory Gardens</span>
+                        <span class="word-pill">Liberty Ships</span>
+                        <span class="word-pill">Office of Scientific Research and Development (OSRD)</span>
+                        <span class="word-pill">Deficit Spending</span>
+                        <span class="word-pill">Gross National Product (GNP)</span>
+                    </div>
+
+                    <div style="font-size: 1.25rem; line-height: 2.2;">
+                        <p class="first-p">When the United States entered World War II, it relied on massive government borrowing, known as 1. <input type="text" class="cloze-input" id="cloze_1">, to kickstart the economy. This staggering financial investment caused the nation's total economic output, or 2. <input type="text" class="cloze-input" id="cloze_2">, to skyrocket and effectively ended the Great Depression. To manage the conversion of peacetime factories to wartime industries, the government established the 3. <input type="text" class="cloze-input" id="cloze_3">. This agency oversaw incredible feats of manufacturing, such as Henry J. Kaiser's rapid construction of standardized cargo vessels known as 4. <input type="text" class="cloze-input" id="cloze_4">.</p>
+                        
+                        <p>On the technological front, the government created the 5. <input type="text" class="cloze-input" id="cloze_5"> to coordinate scientific advancements and give the military an edge. This collaboration led to life-saving medical breakthroughs, like the mass production of the antibiotic 6. <input type="text" class="cloze-input" id="cloze_6">, and new detection technologies like 7. <input type="text" class="cloze-input" id="cloze_7">, which allowed Allied forces to "see" enemy aircraft and ships from afar. The most secretive scientific endeavor of the era was the 8. <input type="text" class="cloze-input" id="cloze_8">, a massive decentralized program to build the atomic bomb. This operation was managed with strict military discipline by 9. <input type="text" class="cloze-input" id="cloze_9">, while the brilliant physicist 10. <input type="text" class="cloze-input" id="cloze_10"> directed the theoretical scientific research at the Los Alamos laboratory.</p>
+
+                        <p>Back at home, the domestic economy required strict management to prevent massive inflation. The 11. <input type="text" class="cloze-input" id="cloze_11"> was tasked with freezing prices and implementing 12. <input type="text" class="cloze-input" id="cloze_12">, a system that limited the purchase of essential goods like meat, gas, and sugar using coupon books. To supplement their limited food supply and support the troops, millions of Americans patriotically planted 13. <input type="text" class="cloze-input" id="cloze_13"> in their backyards, uniting the home front in a vital culture of shared sacrifice.</p>
+                    </div>
+
+                </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous Section</button>
+                    <button class="action-btn" onclick="finishChapter()" style="background-color: var(--color-gold); color: var(--color-cream);">Finished ✓</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+/* Background Management */
+const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+let bgIndex = 0;
+function rotateBackground() {
+    if (bgImages.length === 0) return;
+    const bgEl = document.getElementById('bg-slideshow');
+    if (!bgEl) return;
+    bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+    bgIndex = (bgIndex + 1) % bgImages.length;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    rotateBackground();
+    setInterval(rotateBackground, 10000);
+});
+
+/* Navigation */
+function switchTab(id, btnId = null, scrollTarget = null) {
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+    const activeBtnId = btnId || ('nav-' + id);
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) {
+        activeBtn.classList.add('active-nav');
+    }
+    if (scrollTarget) {
+        setTimeout(() => {
+            const target = document.getElementById(scrollTarget);
+            if(target) {
+                const offset = 40;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = target.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }, 50);
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    saveProgress();
+}
+
+/* Data Collection & Export */
+function collectAssignmentData(isFinal) {
+    const studentName = document.getElementById('student-name').value || "Unknown_Student";
+    const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+    const now = new Date().toLocaleDateString();
+    
+    // GENERATOR: Update assignmentTitle dynamically based on the Chapter
+    const assignmentData = {
+        assignmentTitle: "Interactive Chapter 16.1 - The Arsenal of Democracy",
+        studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+        responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+    };
+    
+    // Gather Visual Analysis Answers
+    for(let i=1; i<=20; i++) {
+        let el = document.getElementById('va_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+            assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+        }
+    }
+    
+    // Gather Checkpoint Answers
+    for(let i=1; i<=30; i++) {
+        let inputs = document.querySelectorAll(`input[name="cp${i}"]`);
+        if(inputs.length > 0) {
+            let checked = document.querySelector(`input[name="cp${i}"]:checked`);
+            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+            assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+        }
+    }
+    
+    // Gather Perspective Questions
+    for(let i=1; i<=20; i++) {
+        let el = document.getElementById('pq_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+            assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+        }
+    }
+    
+    // Gather Cloze Activity Answers
+    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+        assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+    });
+    
+    return assignmentData;
+}
+
+function triggerDownload(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadProgress() {
+    const data = collectAssignmentData(false);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+    triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+}
+
+function finishChapter() {
+    const dateField = document.getElementById('completion-date');
+    const now = new Date().toLocaleDateString();
+    if(dateField) dateField.value = now;
+    const data = collectAssignmentData(true);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    triggerDownload(data, `Chapter_Export_${safeName}.json`);
+    alert('Upload JSON file to Canvas');
+    switchTab('sec-1', 'nav-sec-1');
+}
+
+/* Loading Progress */
+function loadProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedData = JSON.parse(e.target.result);
+            
+            // Restore ID Panel and Burn In
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            
+            if (loadedData.studentInfo) {
+                if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                    nameInput.value = loadedData.studentInfo.name;
+                    nameInput.setAttribute('readonly', 'true');
+                    nameInput.style.opacity = '0.7'; 
+                }
+                if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                    periodInput.value = loadedData.studentInfo.period;
+                    periodInput.setAttribute('disabled', 'true');
+                    periodInput.style.opacity = '0.7'; 
+                }
+            }
+
+            if (loadedData.responses) {
+                if (loadedData.responses.visualAnalysis) {
+                    for(let i=1; i<=20; i++) {
+                        let el = document.getElementById('va_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                            if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                        }
+                    }
+                }
+                
+                if (loadedData.responses.checkpoints) {
+                    for(let i=1; i<=30; i++) {
+                        let inputs = document.querySelectorAll(`input[name="cp${i}"]`);
+                        if(inputs.length > 0) {
+                            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                            let savedVal = loadedData.responses.checkpoints[qText];
+                            if (savedVal && savedVal !== "No Answer") {
+                                let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                if(radio) radio.checked = true;
+                            }
+                        }
+                    }
+                }
+
+                if (loadedData.responses.perspectiveQuestions) {
+                    for(let i=1; i<=20; i++) {
+                        let el = document.getElementById('pq_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                            if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                        }
+                    }
+                }
+
+                if (loadedData.responses.clozeActivity) {
+                    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                        let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                        if (savedVal) input.value = savedVal;
+                    });
+                }
+            }
+            
+            initCheckpoints();
+            alert('Progress loaded successfully!');
+            
+        } catch (err) {
+            console.error(err);
+            alert('Error loading progress file. Please make sure it is a valid JSON file.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* Save & Reset Logic */
+function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+function resetProgress() {
+    if(confirm('Are you sure you want to reset all progress?')) {
+        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        
+        // Un-burn ID panel fields
+        const nameInput = document.getElementById('student-name');
+        const periodInput = document.getElementById('student-period');
+        nameInput.removeAttribute('readonly');
+        nameInput.style.opacity = '1';
+        periodInput.removeAttribute('disabled');
+        periodInput.style.opacity = '1';
+        
+        document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+        initCheckpoints();
+        switchTab('sec-1', 'nav-sec-1');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* Checkpoint Management */
+const TOTAL_CHECKPOINTS = 8; 
+
+function initCheckpoints() {
+    for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+    checkSectionUnlock();
+}
+
+function updateCpUI(blockId) {
+    const block = document.getElementById(blockId);
+    if(!block) return;
+    const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    const indicator = block.querySelector('.cp-indicator');
+    const prevBtn = block.querySelector('.cp-prev-btn');
+    const nextBtn = block.querySelector('.cp-next-btn');
+    
+    questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+    
+    if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+    if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+    
+    if(nextBtn) {
+        const currentQ = questions[currentIndex];
+        const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+        
+        if (currentIndex === questions.length - 1) {
+            if (isAnswered) {
+                nextBtn.innerText = "Checkpoint Completed ✓";
+                nextBtn.style.borderColor = "var(--color-navy)"; 
+                nextBtn.style.color = "var(--color-cream)"; 
+                nextBtn.style.backgroundColor = "var(--color-navy)";
+                nextBtn.disabled = true; 
+                nextBtn.style.cursor = 'default'; 
+                nextBtn.style.opacity = '1';
+            } else {
+                nextBtn.innerText = "Finish Checkpoint";
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed';
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                nextBtn.style.color = "var(--color-gold)"; 
+                nextBtn.style.borderColor = "var(--color-gold)";
+            }
+        } else {
+            nextBtn.innerText = "Next Question \u2192";
+            nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+            nextBtn.style.color = "var(--color-gold)"; 
+            nextBtn.style.borderColor = "var(--color-gold)";
+            
+            if (isAnswered) { 
+                nextBtn.disabled = false; 
+                nextBtn.style.opacity = '1'; 
+                nextBtn.style.cursor = 'pointer'; 
+            } else { 
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed'; 
+            }
+        }
+    }
+    checkSectionUnlock();
+}
+
+function navigateCp(blockId, dir) {
+    const block = document.getElementById(blockId);
+    let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+    
+    block.setAttribute('data-current', currentIndex);
+    updateCpUI(blockId);
+}
+
+function handleRadioChange(blockId) { 
+    saveProgress(); 
+    updateCpUI(blockId); 
+}
+
+function isAnswered(name) { 
+    return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+}
+
+function setNavButtonState(btnId, enabled) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (enabled) {
+        btn.removeAttribute('disabled'); 
+        btn.style.opacity = '1'; 
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = 'Next Section →'; 
+        btn.style.borderColor = 'var(--color-gold)';
+    } else {
+        btn.setAttribute('disabled', 'true'); 
+        btn.style.opacity = '0.5'; 
+        btn.style.cursor = 'not-allowed';
+        btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+        btn.style.borderColor = 'var(--color-steel-nib)';
+    }
+}
+
+function checkSectionUnlock() {
+    setNavButtonState('btn-next-sec-1', true);
+    setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8'));
+    setNavButtonState('btn-next-sec-3', isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+    setNavButtonState('btn-next-sec-4', isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
+    setNavButtonState('btn-next-sec-5', true); // No checkpoints in section 5 Data & Debate
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    initCheckpoints();
+});
+</script>
+
+</body>
+</html>
