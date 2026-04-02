@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1.3: The First Experiment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #0B162A;
+            --color-cream: #F5F1E6;
+            --color-navy: #1E3A5F;
+            --color-steel-nib: #6C7A89;
+            --color-gold: #C5A009;
+            --color-gold-light: #D4B237;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+        
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(197,160,9,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(197,160,9,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(197,160,9,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+        
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+        
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0 !important; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+        
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+        
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+        
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(197,160,9,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(197,160,9,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(30, 58, 95, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(197,160,9,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="bg-slideshow"></div>
+
+    <div class="app-container">
+        <!-- Navigation Panel -->
+        <nav class="side-nav">
+            <div class="nav-title">Table of Contents</div>
+            <div class="nav-links">
+                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. Architecture of a Weak Union</button>
+                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. Growth and Grassroots Rebellion</button>
+                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. MAPPING HISTORY | The Geometry of Expansion</button>
+                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. Vocabulary Activity</button>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                    Load Progress
+                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+                </label>
+                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: START PAGE -->
+            <section id="sec-1" class="chapter-section active-section">
+                <img src="assets/Header%20Banner%20Chapter%201.3.png" alt="Chapter Banner" class="hero-banner-flush">
+                
+                <div class="content-wrapper">
+                    <div class="id-panel">
+                        <div>
+                            <label for="student-name">Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter your full name" onchange="saveProgress()">
+                        </div>
+                        <div>
+                            <label for="student-period">Class Period</label>
+                            <select id="student-period" onchange="saveProgress()">
+                                <option value="" disabled selected>Select...</option>
+                                <option value="1">Period 1</option>
+                                <option value="2">Period 2</option>
+                                <option value="3">Period 3</option>
+                                <option value="4">Period 4</option>
+                                <option value="6">Period 6</option>
+                                <option value="7">Period 7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="completion-date">Date</label>
+                            <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>Core Objectives</h3>
+                        <ul class="first-p">
+                            <li><strong>Assess</strong> the structural weaknesses of the Articles of Confederation, specifically the lack of executive and judicial authority.</li>
+                            <li><strong>Explain</strong> why the Founding Fathers intentionally designed a weak central government based on their experience with British tyranny.</li>
+                            <li><strong>Analyze</strong> the economic and diplomatic paralysis caused by the government's inability to tax or regulate commerce.</li>
+                            <li><strong>Evaluate</strong> the significance of the Northwest Ordinance as the sole major legislative success of the Confederation.</li>
+                            <li><strong>Trace</strong> the events of Shays’ Rebellion and explain how it convinced the American elite that the Articles had to be replaced.</li>
+                        </ul>
+
+                        <h3>Key Terms</h3>
+                        <p><strong>Articles of Confederation</strong> | <strong>Sovereignty</strong> | <strong>Unicameral Legislature</strong> | <strong>Republicanism</strong> | <strong>Land Ordinance of 1785</strong> | <strong>Northwest Ordinance</strong> | <strong>Shays’ Rebellion</strong> | <strong>Daniel Shays</strong> | <strong>Mobocracy</strong> | <strong>Annapolis Convention</strong> | <strong>Constitutional Convention</strong></p>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>Introduction | The Fragile Bonds of Liberty</h3>
+                        <p class="first-p">After securing a hard-won victory over the British Empire, the fledgling United States faced an even more daunting challenge: governing itself without becoming the very thing it had just overthrown. Fearful of centralized power and the ghost of King George III, the revolutionary generation crafted a "firm league of friendship" that prioritized state independence above all else. This period, known as the Critical Period, tested whether a collection of thirteen sovereign states could survive economic paralysis and internal rebellion. As the country teetered on the edge of collapse, it became clear that the spirit of '76—defined by a fear of tyranny—would have to evolve into a new framework capable of preventing total anarchy.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_1.png" alt="British Tyranny vs Articles of Confederation" class="visual-img">
+                            <p class="caption-text">The transition from a centralized British monarchy to the Articles of Confederation represented a radical shift in political philosophy, moving from a system of concentrated imperial power to one of decentralized state sovereignty where the national government lacked the authority to enforce its will.</p>
+                            <div class="question-box">
+                                <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">Analysis Question: How does the decentralized arrangement of the states under the Articles reflect the Founding Fathers' specific fears regarding the executive branch?</p>
+                                <textarea class="textarea-dark" id="va_1" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <div></div>
+                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Architecture of a Weak Union -->
+            <section id="sec-2" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>Architecture of a Weak Union</h2>
+                    
+                    <div class="content-block">
+                        <p class="first-p">In the wake of independence, the Second Continental Congress sought to balance the necessity of a national government with an intense distrust of centralized authority. The resulting Articles of Confederation were intentionally designed to be toothless, creating a system where the states held the ultimate power and the central government lacked even the basic tools to enforce its own laws. This section explores the structural philosophy behind this first constitution and the specific limitations that ensured the new republic would remain a loose collection of entities rather than a unified nation.</p>
+
+                        <h4>The Fear of Power</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_1.png" alt="Original Broadside of the Articles of Confederation">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A printed copy of the Articles of Confederation, adopted by the Continental Congress.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The drafting of a written constitution formalized the loose alliance of thirteen independent states. This framework prioritized state sovereignty over national authority to prevent the rise of a centralized, tyrannical power. It established the legal foundation for the national government during the Critical Period.</div>
+                            </div>
+                            <div class="question-box">
+                                <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">How does the intentional weakness of the central government designed in the Articles of Confederation reflect the revolutionary generation's recent experiences with the British monarchy?</p>
+                                <textarea class="textarea-dark" id="va_2" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">When the Second Continental Congress declared independence in 1776, it faced a contradictory task: it had to tear down a government and build one at the same time. The result was the <strong>Articles of Confederation</strong>, the first written constitution of the United States. Ratified in 1781, the Articles were not designed to create a powerful nation-state in the modern sense. Instead, they were a reaction against the perceived tyranny of King George III and Parliament.</p>
+                        <p>The revolutionaries believed that power was dangerous. They had just fought a war to escape a strong, centralized executive (the King) and a distant, omnipotent legislature (Parliament) that taxed them without consent. Therefore, when they designed their own government, they swung the pendulum to the opposite extreme. They created a government that was intentionally weak.</p>
+                        <p>Under the Articles, the United States was not a single nation, but a "firm league of friendship" among thirteen independent states. The text explicitly stated: "Each state retains its <strong>sovereignty</strong>, freedom, and independence." The central government was essentially a diplomatic council where ambassadors from the states met to coordinate defense, but it had no authority to compel the states to do anything.</p>
+                        <p>The structure reflected this fear of centralized power. There was no President (executive branch) to enforce laws, lest he become a new Caesar. There was no Supreme Court (judicial branch) to settle disputes, lest it overrule local courts. There was only a <strong>unicameral legislature</strong> (one-house Congress). In this Congress, equality was the rule: every state, regardless of size, had exactly one vote. Rhode Island, with a tiny population, had the same political power as Virginia, the largest and wealthiest state. Furthermore, passing any significant law required a "supermajority" of 9 out of 13 states, and amending the Articles required unanimous consent—a nearly impossible hurdle that doomed the system to rigidity.</p>
+
+                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-1', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-1', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did the Founding Fathers intentionally design a weak central government under the Articles of Confederation?</p>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) They wanted to model the new government after the British Parliament.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) They feared a strong executive would become a tyrant like King George III.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) They believed the states were too large to be governed by a single system.</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) They hoped to eventually rejoin the British Empire under better terms.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Which structural feature was a characteristic of the national government under the Articles of Confederation?</p>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) A powerful President with the authority to veto state laws.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) A Supreme Court tasked with resolving all interstate land disputes.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) A unicameral legislature where each state received exactly one vote.</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) A bicameral system that gave more power to the most populous states.</label>
+                            </div>
+                        </div>
+
+                        <h4>The Paralysis of Government</h4>
+                        <p class="first-p">Once the euphoria of victory over Britain faded in 1783, the structural flaws of the Articles became painfully apparent. The new nation entered a period historians call the "Critical Period," where it seemed the Union might dissolve entirely. The central failure was economic.</p>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_2.png" alt="Continental Currency">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A paper dollar issued by the Continental Congress during the era of the American Revolution.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The inability of the national government to levy taxes left it completely dependent on voluntary state contributions, which were rarely paid in full. This financial system led to severe inflation and a nearly worthless national currency. Economic instability subsequently fueled widespread domestic hardship and international diplomatic humiliation.</div>
+                                <div class="question-box">
+                                    <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">What were the economic and diplomatic consequences of a national government lacking the constitutional authority to collect taxes or regulate interstate commerce?</p>
+                                    <textarea class="textarea-dark" id="va_3" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">The most crippling weakness was that the Confederation Congress had no power to tax. It could only "requisition" funds—essentially asking the states for donations. Unsurprisingly, the states rarely paid in full. During the 1780s, the government received only about one-sixth of the money it requested.</p>
+                        <p>Without revenue, the United States was a deadbeat nation. It could not pay the interest on the massive debts incurred during the Revolutionary War. It could not pay the soldiers who had fought for independence, leading to mutinies and unrest. Robert Morris, the superintendent of finance, proposed a modest 5% tariff on imports to fund the government, but Rhode Island vetoed it. Because amendments required unanimity, the measure died, and the government remained bankrupt.</p>
+                        <p>The Articles also lacked the power to regulate interstate commerce. This led to economic warfare between the states. New York, acting like an independent country, placed tariffs on firewood imported from Connecticut and cabbages from New Jersey. New Jersey retaliated by taxing the lighthouse on Sandy Hook, which guided ships into New York Harbor.</p>
+                        <p>Internationally, the situation was humiliating. Britain refused to vacate its forts in the Northwest Territory (modern-day Ohio and Michigan), violating the Treaty of Paris. The British argued that since the U.S. had not paid its pre-war debts to British merchants, Britain did not have to leave. Spain, sensing American weakness, closed the Mississippi River to American trade in 1784, threatening to strangle the economy of the western settlers. The Confederation Congress was powerless to retaliate. It could not draft an army to force the British out, nor could it impose trade sanctions on Spain, because each state set its own trade policies.</p>
+
+                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-2', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-2', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary reason the Confederation government remained bankrupt during the 1780s?</p>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) The government spent all its revenue on a massive standing army.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) Congress was prohibited from requesting any funds from the states.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) High import tariffs prevented foreign nations from trading with America.</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) Congress lacked the power to tax and could only ask states for donations.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did the lack of federal authority over commerce impact relationships between the states?</p>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) It forced states to share a single, unified currency.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) It led to trade wars where states placed tariffs on each other's goods.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) It encouraged states to form regional alliances against foreign powers.</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) It resulted in a surplus of manufactured goods in the rural West.</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
+                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Growth and Grassroots Rebellion -->
+            <section id="sec-3" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>Growth and Grassroots Rebellion</h2>
+                    
+                    <div class="content-block">
+                        <p class="first-p">While the Confederation struggled with bankruptcy and diplomatic humiliation, it managed to establish a lasting legacy through the orderly expansion of the American West. By transforming the "national domain" into organized townships and banning slavery in the Old Northwest, the government provided a blueprint for future growth. However, this legislative success was soon overshadowed by domestic turmoil. In the subsequent sections, the focus shifts to how the government's inability to maintain order during Shays’ Rebellion served as the ultimate proof that the Articles of Confederation were a failed experiment.</p>
+
+                        <h4>The Success in the West</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_3.png" alt="The Northwest Ordinance of 1787">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">The original printed document of the Northwest Ordinance, which established the process for admitting new states.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The successful organization of the national domain provided a peaceful and structured process for territorial expansion. Resolving competing state land claims prevented military conflict between states over western borders. Establishing a clear path to statehood ensured that new territories would become equal members of the republic rather than subservient colonies.</div>
+                            </div>
+                            <div class="question-box">
+                                <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">Why was the peaceful transfer of western land claims to the national government critical for the long-term survival and expansion of the United States?</p>
+                                <textarea class="textarea-dark" id="va_4" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">Despite its failures, the Confederation Congress achieved one monumental success: the organization of the western lands. The states had engaged in bitter disputes over who owned the vast territory between the Appalachians and the Mississippi River. Eventually, the states agreed to cede their land claims to the central government, creating a "national domain."</p>
+                        <p>To manage this land, Congress passed two visionary laws. The <strong>Land Ordinance of 1785</strong> established a scientific system for surveying and selling land. It divided the west into square townships of six miles by six miles, which were further divided into 36 sections of 640 acres each. Notably, the income from the sale of the 16th section of each township was reserved to support public schools—the first federal commitment to public education.</p>
+                        <p>Two years later, Congress passed the <strong>Northwest Ordinance</strong> of 1787. This law created a process for admitting new states to the Union on equal footing with the original thirteen. It rejected the model of colonialism; the West would not be a colony of the East, but an extension of the republic. Most radically, the Northwest Ordinance prohibited slavery in the territory. This established a precedent that the federal government could regulate the spread of slavery, a power that would become the central flashpoint of the 19th century.</p>
+
+                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-3', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-3', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was a major long-term impact of the Land Ordinance of 1785?</p>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) It allowed the government to confiscate all private land in the East.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) It established a grid system for surveying land and funded public schools.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) It required all western settlers to pay taxes directly to the British Crown.</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) It prohibited any movement of settlers across the Appalachian Mountains.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did the Northwest Ordinance of 1787 differ from traditional colonial models?</p>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It kept the West as a permanent, subservient colony of the original states.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It allowed new territories to enter the Union as states with equal status.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It mandated that the central government appoint all local town officials.</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It required new states to pay higher federal taxes than the original thirteen.</label>
+                            </div>
+                        </div>
+
+                        <h4>Shays’ Rebellion: The Turning Point</h4>
+                        <p class="first-p">By 1786, the combination of debt, lack of currency, and high state taxes created a crisis in rural America. Nowhere was this more acute than in western Massachusetts. Farmers there, many of them veterans of the Revolutionary War, were losing their farms to foreclosure because they could not pay their debts in hard currency (gold or silver), which was scarce.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_4.png" alt="Daniel Shays and Job Shattuck">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A 1787 woodcut portraying Daniel Shays and Job Shattuck, key leaders of the rural uprising in Massachusetts.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The armed uprising of Revolutionary War veterans highlighted the severe economic distress facing rural farmers who were crushed by debt and high state taxes. The rebellion demonstrated the desperate measures citizens would take when they felt their government no longer protected their property or liberties. This rural unrest directly challenged the stability of the new republic.</div>
+                                <div class="question-box">
+                                    <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">How did the scarcity of hard currency and aggressive foreclosure policies in western Massachusetts trigger an armed rebellion against the state government?</p>
+                                    <textarea class="textarea-dark" id="va_5" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">These farmers felt betrayed. They had fought against British taxes only to be crushed by taxes from Boston. When the state legislature adjourned without providing relief, the farmers took action. Led by <strong>Daniel Shays</strong>, a former captain in the Continental Army, crowds of armed farmers surrounded courthouses in Northampton and Worcester, refusing to let the judges enter. If the courts could not sit, they reasoned, farms could not be foreclosed.</p>
+                        <p>The protests escalated into an armed uprising known as <strong>Shays’ Rebellion</strong>. The rebels, wearing hemlock sprigs in their hats as a symbol of liberty, marched on the federal armory at Springfield in January 1787, attempting to seize weapons to overthrow the state government.</p>
+
+                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-4', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-4', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary motivation for the farmers who participated in Shays’ Rebellion?</p>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) They wanted to restore British rule and the authority of the King.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) They were protesting foreclosures caused by debt and high state taxes.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) They were attempting to expand the practice of slavery into Massachusetts.</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) They were demanding the right to form their own independent country.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Why did the rebels under Daniel Shays specifically target local courthouses?</p>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) To steal the gold and silver stored in the basements of the buildings.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) To prevent judges from legally processing farm foreclosures.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) To demand that the courts grant them free land in the West.</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) To destroy the records of their service in the Revolutionary War.</label>
+                            </div>
+                        </div>
+
+                        <h4>The Crisis of Authority</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_5.png" alt="Boston Selectmen Address on Shays' Rebellion">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">A 1786 printed address from Boston selectmen expressing alarm over the rural uprisings in Massachusetts.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The inability of the Confederation Congress to raise an army to suppress domestic rebellion terrified the nation's political elite. The specter of mob rule convinced national leaders that the current framework was too weak to protect private property or maintain order. This realization fundamentally shifted political momentum away from state sovereignty and toward the creation of a stronger central government.</div>
+                            </div>
+                            <div class="question-box">
+                                <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">What does the reliance on a privately funded mercenary army to suppress Shays' Rebellion reveal about the structural failures of the Articles of Confederation?</p>
+                                <textarea class="textarea-dark" id="va_6" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">To the wealthy elite of the United States, Shays’ Rebellion was the realization of their deepest fears. It looked like <strong>"Mobocracy"</strong>—rule by the mob. It seemed to prove that the people had too much liberty and not enough virtue. If a captain of the Revolution like Daniel Shays could turn against the government, was the republic doomed to descend into anarchy?</p>
+                        <p>The response of the Confederation government highlighted its impotence. The Secretary of War, Henry Knox, asked Congress to raise troops to suppress the rebellion, but Congress had no money and no authority to draft soldiers. In the end, the rebellion was put down not by the national government, but by a private mercenary army hired by wealthy Boston merchants.</p>
+                        <p>The shock of Shays’ Rebellion reverberated across the states. George Washington, living in retirement at Mount Vernon, was horrified. He wrote to James Madison, asking, "What is to be done?" The rebellion convinced Washington and other nationalists that the Articles of Confederation could not be fixed; they had to be replaced. The "spirit of '76"—the fear of tyranny—was replaced by the "spirit of '87"—the fear of anarchy.</p>
+
+                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-5', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-5', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why was the Confederation Congress unable to suppress Shays’ Rebellion?</p>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) The Articles of Confederation gave the President too much power.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) Most members of Congress secretly supported the goals of the rebels.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) It lacked the financial resources and legal authority to raise an army.</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) The British military intervened to protect the farmers in Massachusetts.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did the "spirit of '87" differ from the "spirit of '76"?</p>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) It focused on the fear of anarchy rather than the fear of tyranny.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) It advocated for the total abolition of all state-level governments.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) It promoted the idea that every citizen should have absolute liberty.</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) It encouraged the use of armed rebellion to solve economic problems.</label>
+                            </div>
+                        </div>
+
+                        <h4>The Road to Philadelphia</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_6.png" alt="Independence Hall Exterior">
+                            <div class="spotlight-content">
+                                <div class="spotlight-caption">The exterior of Independence Hall in Philadelphia, where delegates gathered in May 1787.</div>
+                                <div class="spotlight-why"><strong>Why it Matters:</strong> The Constitutional Convention represented a critical turning point where political leaders abandoned the requirement of unanimous consent under the Articles. Gathering in Philadelphia signaled a willingness to completely redesign the republic's foundation rather than merely revise an unworkable system. The resulting assembly ultimately produced a new framework of government that balanced national authority with state representation.</div>
+                            </div>
+                            <div class="question-box">
+                                <p style="font-weight: bold; margin-bottom: 10px; color: var(--color-gold);">How did the failure of the Annapolis Convention and the subsequent shock of Shays’ Rebellion create the political mandate necessary to convene the Constitutional Convention?</p>
+                                <textarea class="textarea-dark" id="va_7" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">By the mid-1780s, the "firm league of friendship" was fraying at every seam, yet the path to reform remained blocked by the Articles’ requirement for unanimous consent—a hurdle that had already killed vital attempts to fund the government. The first organized attempt to bypass this paralysis occurred in 1786 at the <strong>Annapolis Convention</strong>, where figures like Alexander Hamilton and James Madison hoped to address the trade wars erupting between states. Although the meeting was a statistical failure with only five states appearing, it served as a critical staging ground. Hamilton used the gathering to issue a formal plea for a broader meeting in Philadelphia, arguing that the nation’s problems were not merely commercial but structural.</p>
+                        <p>The political inertia that usually stalled such calls vanished instantly when news of the uprising in Massachusetts spread. Following the events of <strong>Shays’ Rebellion</strong>, the theoretical debates about state <strong>sovereignty</strong> were eclipsed by a visceral fear that the republic was tilting toward <strong>Mobocracy</strong>. Driven by the realization that the central government could neither raise an army nor protect private property, twelve states abandoned their reservations and appointed delegates to the <strong>Constitutional Convention</strong>. Rhode Island alone remained absent, but the momentum for change had become irreversible. As the delegates traveled to Philadelphia in May 1787, they carried a mandate to "revise" the existing system, yet many arrived convinced that a second founding was the only way to save the American experiment from total collapse.</p>
+
+                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p class="cp-indicator" style="color: var(--color-gold); font-family: var(--font-ui); font-weight: bold;">1 of 2</p>
+                                <div>
+                                    <button class="cp-prev-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-6', -1)">Previous</button>
+                                    <button class="cp-next-btn action-btn" style="padding: 5px 10px; font-size: 0.8rem; width: auto;" onclick="navigateCp('cp-block-6', 1)">Next Question &rarr;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary significance of the Annapolis Convention?</p>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) It successfully amended the Articles to allow for a national tax.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) It served as a staging ground for the call to a broader convention in Philadelphia.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) It settled the trade disputes between New York and New Jersey permanently.</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) It resulted in a unanimous agreement to abolish state sovereignty.</label>
+                            </div>
+                            
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did Shays’ Rebellion affect the movement toward a new constitution?</p>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) It convinced many states that the central government was already too powerful.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) It led to the immediate arrest of Alexander Hamilton and James Madison.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) It created a sense of urgency that persuaded twelve states to attend a convention.</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) It proved that the Articles of Confederation were working exactly as intended.</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
+                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: MAPPING HISTORY | The Geometry of Expansion -->
+            <section id="sec-4" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>MAPPING HISTORY | The Geometry of Expansion</h2>
+                    
+                    <div class="content-block">
+                        <h4>The Northwest Ordinances</h4>
+                        <p class="first-p">While the Confederation Congress was paralyzed by debt and rebellion in the East, it managed to pass two laws that permanently altered the physical and political landscape of the American West. These ordinances applied to the "Old Northwest"—the territory that would become Ohio, Indiana, Illinois, Michigan, and Wisconsin.</p>
+                        
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" alt="Map of the Northwest Territory" class="visual-img">
+                            <p class="caption-text">The Northwest Ordinance of 1787 rejected the colonial model of governance by providing a path for new territories to enter the Union as equal states, while simultaneously creating a significant geographic and cultural divide over the institution of slavery.</p>
+                        </div>
+
+                        <h5>Location and Landscape</h5>
+                        <p class="first-p">Before 1785, land ownership in the colonies was often defined by "metes and bounds"—using natural markers like trees, rocks, and winding creeks. This led to irregularly shaped plots and constant boundary disputes. The Northwest Territory was a vast, unmapped wilderness that the cash-strapped Congress needed to sell to pay off War of Independence debts. To make the land marketable, they needed to make it measurable.</p>
+
+                        <h5>Geography and Events</h5>
+                        <p class="first-p">The <strong>Land Ordinance of 1785</strong> imposed a mathematical grid upon the American landscape, reflecting the Enlightenment belief in order and reason. Government surveyors divided the land into square <strong>townships</strong>, each six miles on a side.</p>
+                        <ul>
+                            <li>Each township was divided into 36 <strong>sections</strong> of 1 square mile (640 acres).</li>
+                            <li>The government sold these sections to settlers and speculators.</li>
+                            <li><strong>Section 16</strong> in every township was reserved to fund public education, establishing a precedent that public schools were essential to a republic.</li>
+                        </ul>
+
+                        <h5>Regional Impact</h5>
+                        <p class="first-p">Two years later, the <strong>Northwest Ordinance of 1787</strong> established the rules for governance. Unlike the British Empire, which treated colonies as subservient, the United States decided that new territories would enter the Union as <strong>equals</strong>. Once a territory reached 60,000 free inhabitants, it could draft a constitution and apply for statehood. Crucially, the Ordinance banned slavery in the territory, creating a geographic divide at the Ohio River between slave and free states that would shape American politics until the Civil War.</p>
+
+                        <h5>Broader Implications</h5>
+                        <p class="first-p">This legislation was the Articles of Confederation's greatest legacy. If you fly over the Midwest today, the landscape below looks like a giant checkerboard. The square fields, straight roads, and county lines are the direct physical result of the 1785 grid system. It turned the "wild" frontier into an organized, saleable commodity, fueling the rapid westward expansion of the next century.</p>
+
+                        <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 8px;">
+                            <h3 style="margin-top: 0 !important;">Spatial Reasoning Questions</h3>
+                            
+                            <p style="font-weight: bold; margin-top: 15px; color: var(--color-gold);">Analyze the Imagery</p>
+                            <p>Observe the description of the "giant checkerboard" visible from the air today; how did the shift from "metes and bounds" to a mathematical grid system fundamentally change how Americans perceived and interacted with the natural environment?</p>
+                            <textarea class="textarea-dark" id="pq_1" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+
+                            <p style="font-weight: bold; margin-top: 25px; color: var(--color-gold);">Compare Models</p>
+                            <p>Contrast the American "statehood" model established in 1787 with the traditional British colonial system; in what ways did granting equal status to new territories prevent the type of revolutionary friction the colonies had recently experienced?</p>
+                            <textarea class="textarea-dark" id="pq_2" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+
+                            <p style="font-weight: bold; margin-top: 25px; color: var(--color-gold);">Evaluate the Legacy</p>
+                            <p>Given that the Northwest Ordinance banned slavery while the Land Ordinance prioritized public education, how did these two mandates combine to create a distinct regional identity for the Old Northwest compared to the states south of the Ohio River?</p>
+                            <textarea class="textarea-dark" id="pq_3" placeholder="Type your answer here..." onchange="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
+                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: Vocabulary Activity -->
+            <section id="sec-5" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>Vocabulary Activity</h2>
+                    
+                    <div class="content-block">
+                        <p class="first-p">Review the key terms from this chapter. Select the correct term from the word bank to complete the historical summary below.</p>
+                        
+                        <div class="word-bank">
+                            <span class="word-pill">Annapolis Convention</span>
+                            <span class="word-pill">Articles of Confederation</span>
+                            <span class="word-pill">Constitutional Convention</span>
+                            <span class="word-pill">Daniel Shays</span>
+                            <span class="word-pill">Land Ordinance of 1785</span>
+                            <span class="word-pill">Mobocracy</span>
+                            <span class="word-pill">Northwest Ordinance</span>
+                            <span class="word-pill">Republicanism</span>
+                            <span class="word-pill">Shays' Rebellion</span>
+                            <span class="word-pill">Sovereignty</span>
+                            <span class="word-pill">Unicameral Legislature</span>
+                        </div>
+
+                        <div style="line-height: 2.5; font-size: 1.15rem;">
+                            After the Revolution, the United States established its first government under the <input type="text" class="cloze-input" onchange="saveProgress()">. To protect against tyranny, each state retained its own independence and <input type="text" class="cloze-input" onchange="saveProgress()">. The national government consisted of a <input type="text" class="cloze-input" onchange="saveProgress()"> where each state had one vote, reflecting a deep commitment to <input type="text" class="cloze-input" onchange="saveProgress()"> but resulting in a weak central power. Despite its flaws, the government achieved success in the West by passing the <input type="text" class="cloze-input" onchange="saveProgress()"> to survey the land into a grid, and the <input type="text" class="cloze-input" onchange="saveProgress()"> to provide a path to statehood and ban slavery in the territory. However, economic crisis in Massachusetts led to an armed uprising known as <input type="text" class="cloze-input" onchange="saveProgress()">, led by <input type="text" class="cloze-input" onchange="saveProgress()">. This event terrified the elite, who feared a descent into total <input type="text" class="cloze-input" onchange="saveProgress()">. An initial attempt to fix trade issues at the <input type="text" class="cloze-input" onchange="saveProgress()"> failed but set the stage for a broader meeting. Ultimately, delegates gathered at the <input type="text" class="cloze-input" onchange="saveProgress()"> in Philadelphia to completely redesign the republic's framework.
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
+                        <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished &rarr;</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /* Background Management */
+        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+        let bgIndex = 0;
+        
+        function rotateBackground() {
+            if (bgImages.length === 0) return;
+            const bgEl = document.getElementById('bg-slideshow');
+            if (!bgEl) return;
+            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+            bgIndex = (bgIndex + 1) % bgImages.length;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateBackground();
+            setInterval(rotateBackground, 10000);
+            initCheckpoints();
+        });
+
+        /* Navigation */
+        function switchTab(id, btnId = null, scrollTarget = null) {
+            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            
+            const activeBtnId = btnId || ('nav-' + id);
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+            
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if(target) {
+                        const offset = 40;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            saveProgress();
+        }
+
+        /* Data Collection & Export */
+        function collectAssignmentData(isFinal) {
+            const studentName = document.getElementById('student-name').value || "Unknown_Student";
+            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+            const now = new Date().toLocaleDateString();
+            
+            const assignmentData = {
+                assignmentTitle: "Interactive Chapter 1.3 - The First Experiment - A Firm League of Friendship",
+                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+            };
+
+            // Gather Visual Analysis Answers (Visuals + Spotlights mapped to va_)
+            for(let i=1; i<=20; i++) {
+                let el = document.getElementById('va_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+                }
+            }
+
+            // Gather Checkpoint Answers
+            for(let i=1; i<=30; i++) {
+                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                if(inputs.length > 0) {
+                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+                }
+            }
+
+            // Gather Perspective/Spatial Questions
+            for(let i=1; i<=10; i++) {
+                let el = document.getElementById('pq_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+                }
+            }
+
+            // Gather Cloze Activity Answers
+            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+            });
+
+            return assignmentData;
+        }
+
+        function triggerDownload(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadProgress() {
+            const data = collectAssignmentData(false);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+        }
+
+        function finishChapter() {
+            const dateField = document.getElementById('completion-date');
+            const now = new Date().toLocaleDateString();
+            if(dateField) dateField.value = now;
+            
+            const data = collectAssignmentData(true);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Export_${safeName}.json`);
+            alert('Progress downloaded! Please upload your JSON file to your teacher or Canvas.');
+            switchTab('sec-1', 'nav-sec-1');
+        }
+
+        /* Loading Progress */
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    
+                    const nameInput = document.getElementById('student-name');
+                    const periodInput = document.getElementById('student-period');
+                    
+                    if (loadedData.studentInfo) {
+                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                            nameInput.value = loadedData.studentInfo.name;
+                            nameInput.setAttribute('readonly', 'true');
+                            nameInput.style.opacity = '0.7'; 
+                        }
+                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                            periodInput.value = loadedData.studentInfo.period;
+                            periodInput.setAttribute('disabled', 'true');
+                            periodInput.style.opacity = '0.7'; 
+                        }
+                    }
+                    
+                    if (loadedData.responses) {
+                        if (loadedData.responses.visualAnalysis) {
+                            for(let i=1; i<=20; i++) {
+                                let el = document.getElementById('va_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                    if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                                }
+                            }
+                        }
+                        
+                        if (loadedData.responses.checkpoints) {
+                            for(let i=1; i<=30; i++) {
+                                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                                if(inputs.length > 0) {
+                                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                    let savedVal = loadedData.responses.checkpoints[qText];
+                                    if (savedVal && savedVal !== "No Answer") {
+                                        let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                        if(radio) radio.checked = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (loadedData.responses.perspectiveQuestions) {
+                            for(let i=1; i<=10; i++) {
+                                let el = document.getElementById('pq_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                    if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                                }
+                            }
+                        }
+                        
+                        if (loadedData.responses.clozeActivity) {
+                            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                                let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                                if (savedVal) input.value = savedVal;
+                            });
+                        }
+                    }
+                    
+                    initCheckpoints();
+                    alert('Progress loaded successfully!');
+                } catch (err) {
+                    console.error(err);
+                    alert('Error loading progress file. Please make sure it is a valid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        /* Save & Reset Logic */
+        function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+        
+        function resetProgress() {
+            if(confirm('Are you sure you want to reset all progress?')) {
+                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+                
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                nameInput.removeAttribute('readonly');
+                nameInput.style.opacity = '1';
+                periodInput.removeAttribute('disabled');
+                periodInput.style.opacity = '1';
+                
+                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+                initCheckpoints();
+                switchTab('sec-1', 'nav-sec-1');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /* Checkpoint Management */
+        const TOTAL_CHECKPOINTS = 6; 
+        
+        function initCheckpoints() {
+            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { 
+                updateCpUI(`cp-block-${i}`); 
+            }
+            checkSectionUnlock();
+        }
+        
+        function updateCpUI(blockId) {
+            const block = document.getElementById(blockId);
+            if(!block) return;
+            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            const indicator = block.querySelector('.cp-indicator');
+            const prevBtn = block.querySelector('.cp-prev-btn');
+            const nextBtn = block.querySelector('.cp-next-btn');
+            
+            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+            
+            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+            
+            if(nextBtn) {
+                const currentQ = questions[currentIndex];
+                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+                
+                if (currentIndex === questions.length - 1) {
+                    if (isAnswered) {
+                        nextBtn.innerText = "Checkpoint Completed \u2713";
+                        nextBtn.style.borderColor = "var(--color-navy)"; 
+                        nextBtn.style.color = "var(--color-cream)"; 
+                        nextBtn.style.backgroundColor = "var(--color-navy)";
+                        nextBtn.disabled = true; 
+                        nextBtn.style.cursor = 'default'; 
+                        nextBtn.style.opacity = '1';
+                    } else {
+                        nextBtn.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true; 
+                        nextBtn.style.opacity = '0.5'; 
+                        nextBtn.style.cursor = 'not-allowed';
+                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                        nextBtn.style.color = "var(--color-gold)"; 
+                        nextBtn.style.borderColor = "var(--color-gold)";
+                    }
+                } else {
+                    nextBtn.innerText = "Next Question \u2192";
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                    nextBtn.style.color = "var(--color-gold)"; 
+                    nextBtn.style.borderColor = "var(--color-gold)";
+                    
+                    if (isAnswered) { 
+                        nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; 
+                    } else { 
+                        nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; 
+                    }
+                }
+            }
+            checkSectionUnlock();
+        }
+        
+        function navigateCp(blockId, dir) {
+            const block = document.getElementById(blockId);
+            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            
+            currentIndex += dir;
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+            
+            block.setAttribute('data-current', currentIndex);
+            updateCpUI(blockId);
+        }
+        
+        function handleRadioChange(blockId) { 
+            saveProgress(); 
+            updateCpUI(blockId); 
+        }
+        
+        function isAnswered(name) { 
+            return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+        }
+        
+        function setNavButtonState(btnId, enabled) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (enabled) {
+                btn.removeAttribute('disabled'); 
+                btn.style.opacity = '1'; 
+                btn.style.cursor = 'pointer';
+                btn.innerHTML = 'Next Section &rarr;'; 
+                btn.style.borderColor = 'var(--color-gold)';
+            } else {
+                btn.setAttribute('disabled', 'true'); 
+                btn.style.opacity = '0.5'; 
+                btn.style.cursor = 'not-allowed';
+                btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+                btn.style.borderColor = 'var(--color-steel-nib)';
+            }
+        }
+        
+        function checkSectionUnlock() {
+            setNavButtonState('btn-next-sec-1', true);
+            
+            // Section 2 unlocks Section 3
+            setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
+            
+            // Section 3 unlocks Section 4
+            setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12'));
+            
+            // Section 4 unlocks Section 5 (No checkpoints in 4)
+            setNavButtonState('btn-next-sec-4', true);
+        }
+    </script>
+</body>
+</html>

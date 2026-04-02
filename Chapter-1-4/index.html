@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter | The Constitutional Convention</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #0B162A;
+            --color-cream: #F5F1E6;
+            --color-navy: #1E3A5F;
+            --color-steel-nib: #6C7A89;
+            --color-gold: #C5A009;
+            --color-gold-light: #D4B844;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(11, 22, 42, 0.85) 0%, rgba(11, 22, 42, 0.65) 50%, rgba(11, 22, 42, 0.9) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(197,160,9,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(197,160,9,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(197,160,9,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); display: flow-root; }
+        
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; margin-top: 10px; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
+        .spotlight-why strong { color: var(--color-gold); }
+
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+
+        /* Full Sized Visuals (Restored) */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(197,160,9,0.4); border-radius: 8px; background: rgba(0,0,0,0.3); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(197,160,9,0.5); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.4); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(30, 58, 95, 0.5); border: 1px solid var(--color-gold); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.6); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.9); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(197,160,9,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="bg-slideshow"></div>
+
+    <div class="app-container">
+        <!-- Navigation Panel -->
+        <nav class="side-nav">
+            <div class="nav-title">Table of Contents</div>
+            <div class="nav-links">
+                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Crisis and the Assembly</button>
+                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. Forging Compromise</button>
+                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The Battle for Ratification</button>
+                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. DECISION MAKERS | The Electoral College</button>
+                <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Vocabulary Activity</button>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                    Load Progress
+                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+                </label>
+                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: START PAGE -->
+            <section id="sec-1" class="chapter-section active-section">
+                <img src="assets/Header%20Banner%20Chapter%201.4.png" alt="Chapter Header" class="hero-banner-flush">
+                <div class="content-wrapper">
+                    <div class="id-panel">
+                        <div>
+                            <label>Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter your full name">
+                        </div>
+                        <div>
+                            <label>Period</label>
+                            <select id="student-period">
+                                <option value="">Select...</option>
+                                <option value="1">Period 1</option>
+                                <option value="2">Period 2</option>
+                                <option value="3">Period 3</option>
+                                <option value="4">Period 4</option>
+                                <option value="5">Period 5</option>
+                                <option value="6">Period 6</option>
+                                <option value="7">Period 7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Date Completed</label>
+                            <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>Core Objectives</h3>
+                        <ul>
+                            <li><strong>Contrast</strong> the Virginia Plan and the New Jersey Plan to explain the conflict between large and small states.</li>
+                            <li><strong>Analyze</strong> the "Great Compromise" and how it established the structure of the legislative branch.</li>
+                            <li><strong>Evaluate</strong> the role of slavery in the Constitutional Convention, specifically the "Dirty Compromise," the Three-Fifths clause, and the Fugitive Slave clause.</li>
+                            <li><strong>Explain</strong> the debate over the Executive Branch and the creation of the Electoral College as a safeguard against "mobocracy."</li>
+                            <li><strong>Compare</strong> the arguments of the Federalists and Anti-Federalists regarding the necessity of a Bill of Rights and the nature of republican government.</li>
+                        </ul>
+
+                        <h3>Key Terms</h3>
+                        <p class="first-p"><strong>Constitutional Convention</strong> | <strong>James Madison</strong> | <strong>Alexander Hamilton</strong> | <strong>Virginia Plan</strong> | <strong>New Jersey Plan</strong> | <strong>Great Compromise</strong> | <strong>Bicameral Legislature</strong> | <strong>Three-Fifths Compromise</strong> | <strong>Slave Trade Clause</strong> | <strong>Fugitive Slave Clause</strong> | <strong>Separation of Powers</strong> | <strong>Checks and Balances</strong> | <strong>Electoral College</strong> | <strong>Federalists</strong> | <strong>Anti-Federalists</strong> | <strong>The Federalist Papers</strong> | <strong>Bill of Rights</strong></p>
+
+                        <h4>Introduction: Forging a New Republic</h4>
+                        
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_1.png" alt="Visual 1" class="visual-img">
+                            <div class="caption-text">Caption: The creation of a new national framework required unprecedented secrecy and debate among the nation's elite, fundamentally shifting the United States away from a loose confederation and toward a consolidated republic.</div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How might the strict secrecy of the Constitutional Convention have influenced the final design of the new government?</p>
+                                <textarea id="va_1" class="textarea-dark" placeholder="Type your analysis here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">In May 1787, fifty-five delegates converged in Philadelphia to address the failing Articles of Confederation and the looming threat of instability highlighted by Shays' Rebellion. Though initially tasked with simply revising the existing government, visionary leaders instead embarked on a radical mission to build an entirely new framework from scratch. Throughout a sweltering, secretive summer, these elite Framers debated fiercely over representation, the deep moral and political divide over slavery, and the proper balance of executive power. The resulting Constitution was a complex web of compromises designed to prevent tyranny through a separation of powers while establishing a government strong enough to rule a vast continent. Ultimately, the intense battle over ratification forced the inclusion of a Bill of Rights, cementing a hybrid system that continues to define the American experiment today.</p>
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <div></div>
+                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', null, 'sec-2')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2 -->
+            <section id="sec-2" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>The Crisis and the Assembly</h2>
+                        <p class="first-p">The summer of 1787 brought together America's wealthy aristocracy, including lawyers, planters, and revolutionary veterans, all united by a shared fear of "excessive democracy" and domestic unrest. Operating under a strict rule of secrecy in a sweltering Philadelphia room, they abandoned their mandate to merely revise the Articles of Confederation and instead set out to design a powerful new national government. This insulated environment allowed the delegates to speak freely, but it also ensured that the foundational document was crafted by the elite without the direct input of the common people.</p>
+
+                        <h4>The Gathering at Philadelphia</h4>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_1.png" alt="Independence Hall Exterior">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: The exterior of the Pennsylvania State House, where delegates met in strict secrecy during the summer of 1787.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The physical setting of the convention mirrored the incredible tension of the delegates' task to overhaul the government. The isolated, sweltering environment, combined with a strict rule of secrecy, allowed the elite framers to speak freely and forge compromises without fear of public backlash. This insulated setting ultimately enabled the peaceful overthrow of the existing framework to build an entirely new national structure from scratch.</p>
+                                <div class="question-box">
+                                    <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How did the strict rule of secrecy at the Pennsylvania State House influence the delegates' ability to design a new national government?</p>
+                                    <textarea id="va_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">In May 1787, the future of the United States hung by a thread. The Articles of Confederation were rapidly failing; the individual states were hopelessly bickering over trade and boundaries, and the terrifying specter of Shays’ Rebellion still haunted the minds of the nation's elite. In this atmosphere of profound crisis, fifty-five delegates gathered in the Pennsylvania State House in Philadelphia. They were officially sent by twelve of the thirteen states—Rhode Island, deeply fearful of centralized power and fiercely protective of its paper money policies, outright refused to attend—with a strict mandate to "revise" the existing Articles.</p>
+                        <p>However, the vanguard of the convention had no intention of mere revision. Leaders like the intense, bookish Virginian James Madison and the ambitious, brilliant New Yorker Alexander Hamilton recognized that the current government was fundamentally broken. They shared a common diagnosis: the United States was suffering from "excessive democracy," with state legislatures too responsive to the whims of debtor classes. Together, they intended to peacefully overthrow the existing government framework and build an entirely new, vastly stronger national structure from scratch.</p>
+                        <p>The physical setting of the convention mirrored the incredible tension of their task. The summer of 1787 was sweltering, yet to ensure the absolute freedom of debate, the delegates voted for a strict Rule of Secrecy. Guards were posted at the heavy doors, and the windows were nailed shut to prevent eavesdroppers, leaving the delegates to debate in a hot, airless room while wearing wool coats and powdered wigs. Outside, thick layers of dirt and straw were laid on the cobblestones to dampen the sound of passing carriages. This absolute secrecy allowed them to speak their minds and forge compromises without fear of public backlash, but it also meant that the resulting document was essentially a conspiracy of the elite, designed entirely without the direct input of the common people.</p>
+
+                        <!-- CHECKPOINT 1 -->
+                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 1 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did the delegates at the Constitutional Convention implement a strict "Rule of Secrecy"?</p>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To hide the fact that they were skipping the meetings</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To allow for free debate and compromise without fear of public backlash</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To prevent the British from discovering their plans for a new war</label>
+                                <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To ensure that only the common people could influence the proceedings</label>
+                            </div>
+                            
+                            <!-- Question 2 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What was the original, official mandate given to the fifty-five delegates who met in Philadelphia?</p>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) To write an entirely new Constitution from scratch</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) To elect George Washington as the first President</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) To revise the existing Articles of Confederation</label>
+                                <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) To declare independence from Great Britain</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-1', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-1', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <h4>The Architects of a New Republic</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_2.png" alt="George Washington’s Rising Sun Chair">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: The high-backed mahogany chair used by George Washington as he presided over the Constitutional Convention.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> George Washington, a universally revered hero of the Revolution, lent an aura of unquestionable legitimacy to the elite gathering in Philadelphia. His presence in the presiding chair signaled to the American public that the convention was a serious, patriotic endeavor rather than a rogue assembly. This public trust was crucial for the architects of the new republic, who were proposing an elite-designed system without the direct input of the common people.</p>
+                            </div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> Why was George Washington's role as the presiding officer critical to the public perception of the Constitutional Convention?</p>
+                                <textarea id="va_3" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">These fifty-five men represented the unquestionable aristocracy of America. They were highly educated lawyers, prosperous merchants, and wealthy planters who had much to lose if the young nation collapsed. They were a remarkably experienced group: more than half had served as officers in the Continental Army during the Revolution, and seven had previously signed the Declaration of Independence. They sought a system that would secure their property and maintain economic order, while simultaneously preserving the hard-won republican liberty they had fought for.</p>
+                        <p>Among this elite group, the presence of two legendary figures lent the gathering an aura of unquestionable legitimacy. George Washington, the universally revered hero of the Revolution, was unanimously elected as the presiding officer of the convention. Though he spoke very little during the proceedings, his mere presence in the president's chair signaled to the American public that the convention was a serious and patriotic endeavor. Joining him was Benjamin Franklin of Pennsylvania, the internationally famous scientist and diplomat. At eighty-one years old, Franklin was the eldest delegate, and his witty, pragmatic interventions frequently helped soothe flaring tempers when the convention threatened to break apart over regional differences.</p>
+                        <p>While Washington and Franklin provided the necessary gravity, younger delegates provided the intellectual fire, even as some of the most famous revolutionary giants were noticeably absent. James Madison emerged as the chief architect of the new government, taking exhaustive notes and arriving with a comprehensive blueprint for a powerful national state. Alexander Hamilton pushed the boundaries of the debate by passionately advocating for a near-monarchical executive branch. Meanwhile, Thomas Jefferson and John Adams could not influence the debates, as they were serving as diplomats in Paris and London, respectively. Furthermore, fiery patriot Patrick Henry "smelt a rat" and boycotted the convention entirely, foreshadowing the fierce resistance these architects would soon face when they presented their new Constitution to the American people.</p>
+
+                        <!-- CHECKPOINT 2 -->
+                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 3 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Which delegate is known as the "chief architect" of the new government due to his comprehensive blueprint and exhaustive note-taking?</p>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) Alexander Hamilton</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) George Washington</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) James Madison</label>
+                                <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) Benjamin Franklin</label>
+                            </div>
+                            
+                            <!-- Question 4 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Why was George Washington's presence at the convention considered vital to its success?</p>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) He wrote the majority of the Virginia Plan</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) His reputation lent the gathering legitimacy and patriotic authority</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) He was the only delegate who supported a bill of rights</label>
+                                <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) He was an expert on international trade law</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-2', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-2', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-1')">&larr; Previous</button>
+                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', null, 'sec-3')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3 -->
+            <section id="sec-3" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Forging Compromise</h2>
+                        <p class="first-p">The most explosive conflicts at the convention centered around how power would be distributed and how the new government would be structured. The delegates clashed over competing visions for the legislative branch, ultimately forging a system that balanced population-based representation with strict state equality. Simultaneously, cynical deals were struck regarding the enslaved population to keep the South in the union. Having settled the legislative disputes, the Framers then faced the daunting task of designing an executive branch capable of enforcing laws without degenerating into the monarchy they had just fought a war to escape.</p>
+
+                        <h4>The Struggle for Representation</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_3.png" alt="The Virginia Plan Draft">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: A historical draft of the Virginia Plan, which proposed a radical restructuring of the national government into a bicameral legislature.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Virginia Plan sparked the most dangerous divide at the convention by proposing a powerful national government with a legislature based entirely on population. This blueprint threatened small states, leading directly to the bitter deadlock and eventual Great Compromise that shaped the modern Congress. The conflict over this proposal embedded a permanent tension between democratic principles and federalism within the American political system.</p>
+                            </div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How did the legislative structure proposed in the Virginia Plan differ from the system ultimately established by the Great Compromise?</p>
+                                <textarea id="va_4" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">The first and most dangerous divide was between the large states (like Virginia, Pennsylvania, and Massachusetts) and the small states (like Delaware, New Jersey, and Connecticut). The central question was simple but explosive: How should the states be represented in the new national government?</p>
+                        <p>James Madison arrived in Philadelphia with a comprehensive blueprint known as the <strong>Virginia Plan</strong>. Presented by Edmund Randolph, it proposed a radical restructuring of the government. Madison did not want a "league of friendship"; he wanted a <strong>national government</strong> with the power to act directly on citizens, not just on states.</p>
+                        <p>The Virginia Plan proposed a <strong>bicameral legislature</strong> (two houses). Crucially, representation in <em>both</em> houses would be based on population. This meant that Virginia, with its large population, would have vastly more power than Delaware. Furthermore, the national legislature would have the power to veto <em>any</em> state law it deemed unconstitutional or dangerous. To the small states, this looked like tyranny. They feared they would be swallowed up by the "large state monster," their interests ignored by a Congress dominated by Virginia and Pennsylvania.</p>
+                        <p>The small states counterattacked. William Paterson of New Jersey introduced the <strong>New Jersey Plan</strong>. This plan essentially retained the structure of the Articles of Confederation: a <strong>unicameral legislature</strong> with equal representation for each state (one state, one vote). While it gave Congress new powers to tax and regulate commerce, it preserved the core principle of state sovereignty.</p>
+                        <p>For weeks, the convention was deadlocked. The debate grew bitter. Gunning Bedford of Delaware threatened that if the large states tried to crush the small ones, "the small ones will find some foreign ally of more honor and good faith, who will take them by the hand and do them justice." The convention seemed on the verge of dissolving and plunging the nation into civil war.</p>
+                        <p>Finally, in July, a committee led by Roger Sherman of Connecticut proposed a solution that blended the two plans. Known as the <strong>Great Compromise</strong> (or Connecticut Compromise), it created a bicameral Congress with a split personality, designed to balance the competing principles of democracy and federalism:</p>
+                        <ul>
+                            <li><strong>The House of Representatives:</strong> Representation would be based on population (satisfying the large states/Virginia Plan) and elected directly by the people. This was the "democratic" house, holding the power of the purse.</li>
+                            <li><strong>The Senate:</strong> Representation would be equal, with two senators per state regardless of size (satisfying the small states/New Jersey Plan). Originally, senators were elected by state legislatures, not the people, making this the "aristocratic" or "federal" house meant to check the passions of the mob.</li>
+                        </ul>
+                        <p>This compromise saved the convention, but it came at a cost. It embedded a permanent tension in the American political system. A voter in Wyoming today has significantly more influence on the Senate than a voter in California, a disparity rooted in the deal struck in the heat of 1787.</p>
+
+                        <!-- CHECKPOINT 3 -->
+                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 5 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary difference between the Virginia Plan and the New Jersey Plan?</p>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) The Virginia Plan wanted equal representation, while the New Jersey Plan wanted population-based representation</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) The Virginia Plan proposed a single executive, while the New Jersey Plan proposed a three-person council</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) The Virginia Plan favored large states through population-based representation, while the New Jersey Plan favored small states through equal representation</label>
+                                <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) The Virginia Plan wanted to keep the Articles of Confederation, while the New Jersey Plan wanted to abolish them</label>
+                            </div>
+                            
+                            <!-- Question 6 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did the Great Compromise (Connecticut Compromise) resolve the conflict between large and small states?</p>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It created a unicameral legislature where every state had two votes</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It established a bicameral legislature with one house based on population and one house with equal representation</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It allowed large states to tax small states in exchange for more representation</label>
+                                <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It abolished state governments and moved all power to the national capital</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-3', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-3', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <h4>The "Ghost at the Banquet"</h4>
+                        
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_4.png" alt="The Brookes Slave Ship Diagram">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: An 1788 abolitionist diagram showing the horrific conditions aboard the slave ship Brookes, highlighting the brutal reality of the international slave trade.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Northern delegates viewed the international slave trade as a moral abomination, while Southern states demanded its protection to maintain their labor system. To save the convention, the Framers struck a pragmatically cynical deal, forbidding Congress from banning the importation of enslaved people for twenty years. This decision wove the horrific realities of slavery into the foundation of the new republic.</p>
+                                <div class="question-box">
+                                    <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How does the brutal reality of the international slave trade clarify the deep moral and economic divisions that led to the "Dirty Compromise"?</p>
+                                    <textarea id="va_5" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="first-p">If representation was the most public fight, slavery was the most dangerous silence. The word "slave" does not appear in the Constitution—the Framers used euphemisms like "other persons" or "persons held to service"—but the institution of slavery shaped the document profoundly. The southern states, particularly South Carolina and Georgia, made it clear that they would not join a Union that threatened their labor system.</p>
+                        <p>The debate over representation collided with the reality of slavery. Southern states wanted enslaved people to count as "people" for the purpose of determining representation in the House. This was purely a grab for political power; these states had no intention of giving slaves the right to vote or any legal rights. Conversely, they wanted slaves to count as "property" for the purpose of taxation. Northern states exposed the hypocrisy. Elbridge Gerry of Massachusetts asked, "Why should the blacks, who were property in the South, be in the rule of representation more than the cattle and horses of the North?"</p>
+                        <p>The result was the cynical <strong>Three-Fifths Compromise</strong>. The delegates agreed that for both representation and taxation, each enslaved person would count as three-fifths of a free person. This clause had devastating long-term consequences. It gave the South disproportionate political power. For the next seventy years, Southern slaveholders would dominate the presidency, the Speakership of the House, and the Supreme Court, largely because of the "bonus" representation provided by their enslaved population. Thomas Jefferson would win the election of 1800 largely due to the extra electoral votes granted by the Three-Fifths clause.</p>
+                        <p>The Deep South also demanded protection for the international slave trade. Many Northern delegates viewed the trade as a moral abomination. Gouverneur Morris of Pennsylvania delivered a fiery speech, calling slavery a "nefarious institution" and the "curse of heaven."</p>
+                        <p>However, pragmatism defeated morality. The New England states wanted the national government to have the power to regulate commerce (to protect their shipping), while the South feared such power would be used to ban the slave trade. In late August, the two regions struck a deal that historian John Murrin calls the <strong>"Dirty Compromise."</strong></p>
+                        <ul>
+                            <li>The South agreed to let Congress regulate commerce with a simple majority vote (helping New England shipping).</li>
+                            <li>The North agreed to the <strong>Slave Trade Clause</strong>, which forbade Congress from banning the importation of slaves for twenty years (until 1808).</li>
+                            <li>The North also agreed to the <strong>Fugitive Slave Clause</strong>, requiring that a "person held to service" who fled to another state must be "delivered up" to their owner.</li>
+                        </ul>
+                        <p>With these compromises, the Constitution wove slavery into the fabric of the new republic. The Framers chose Union over abolition, kicking the can down the road to a future generation that would have to solve the issue with blood.</p>
+
+                        <!-- CHECKPOINT 4 -->
+                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 7 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the primary political goal of Southern states in supporting the Three-Fifths Compromise?</p>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) To grant enslaved individuals the right to vote in national elections</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) To increase their state's representation and power in the House of Representatives</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) To ensure that enslaved people were taxed as heavily as Northern property</label>
+                                <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) To gradually phase out the institution of slavery through taxation</label>
+                            </div>
+                            
+                            <!-- Question 8 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What were the components of the "Dirty Compromise" reached between Northern and Southern delegates?</p>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) The North got a Bill of Rights, and the South got the Electoral College</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) The South agreed to commerce regulation in exchange for a 20-year protection of the slave trade and a fugitive slave clause</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) The North agreed to allow the President to serve for life in exchange for the abolition of the slave trade</label>
+                                <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) The South agreed to move the capital to Washington D.C. in exchange for the Three-Fifths clause</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-4', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-4', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <h4>The Executive and the Fear of Monarchy</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_5.png" alt="Portrait of King George III">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: A royal portrait of King George III of Great Britain, the monarch whose absolute authority the American revolutionaries had just fought a war to escape.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Framers were terrified of creating an executive branch that would degenerate into the kind of monarchy they had recently overthrown. The memory of King George III's abuses drove the delegates to strictly limit presidential power. Consequently, they checked the single executive with a four-year term, the threat of impeachment, and a rigorous separation of powers.</p>
+                            </div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How did the historical memory of King George III's rule influence the specific constitutional limitations placed on the American presidency?</p>
+                                <textarea id="va_6" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">Having settled who would rule (representation), the Framers turned to <em>how</em> they would rule. The most difficult design challenge was the Executive Branch. The Articles of Confederation had failed because there was no executive to enforce the laws. But the Framers were terrified of creating a "fetus of monarchy." They remembered the abuses of King George III.</p>
+                        <p>Some delegates, like Edmund Randolph, argued for a three-person executive council, fearing that a single man would inevitably become a tyrant. Others, like Alexander Hamilton, argued for a single executive elected for life—essentially an elected monarch. The convention eventually settled on a single President, but checked his power with a four-year term and the threat of impeachment.</p>
+                        <p>The next question was: Who chooses the President? James Wilson of Pennsylvania proposed a direct popular vote, but he was voted down. The Framers did not trust the general public. As George Mason argued, allowing the people to elect the President would be as unnatural as "referring a trial of colors to a blind man." They feared a demagogue could manipulate the uneducated masses.</p>
+                        <p>Instead, they created the <strong>Electoral College</strong>. This was a buffer system where states chose "electors"—presumably wise and experienced men—who would then cast the actual votes for President. It was a republican, not a democratic, solution, designed to ensure that the choice of leader was insulated from the "heat and ferment" of the populace.</p>
+                        <p>To further prevent tyranny, they adopted the philosophy of Montesquieu: <strong>Separation of Powers</strong>.</p>
+                        <ol style="margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8;">
+                            <li><strong>Legislative Branch (Congress):</strong> Makes the laws. It was designed to be the most powerful branch, holding the "power of the purse" and the power to declare war.</li>
+                            <li><strong>Executive Branch (President):</strong> Enforces the laws. The President is Commander-in-Chief but cannot declare war or fund the army.</li>
+                            <li><strong>Judicial Branch (Supreme Court):</strong> Interprets the laws. Though its power of "judicial review" (the ability to strike down laws) was not explicitly detailed in the text, it was implied.</li>
+                        </ol>
+                        <p>These branches were tied together by <strong>Checks and Balances</strong>: The President can veto Congress; Congress can override the veto with a 2/3 vote; the Senate must confirm presidential appointments; and the Courts can judge the acts of both. It was a machine designed for friction, ensuring that change would be slow, deliberate, and broad-based.</p>
+
+                        <!-- CHECKPOINT 5 -->
+                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 9 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. Why did the Framers establish the Electoral College rather than a direct popular vote for the President?</p>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) They wanted to make sure the President was always from a large state</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) They feared a direct vote would lead to "mobocracy" and the rise of a demagogue</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) They believed the common people were the most informed members of society</label>
+                                <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) They wanted the President to be selected directly by the Supreme Court</label>
+                            </div>
+                            
+                            <!-- Question 10 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. Which system was designed to ensure that no single branch of government would become too powerful?</p>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) The Three-Fifths Compromise</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) The New Jersey Plan</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Checks and Balances</label>
+                                <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) The Bill of Rights</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-5', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-5', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-2')">&larr; Previous</button>
+                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', null, 'sec-4')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4 -->
+            <section id="sec-4" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>The Battle for Ratification</h2>
+                        <p class="first-p">Once the framework of the new government was signed, it ignited a ferocious public debate between supporters of a strong central government and those who demanded explicit protections against federal overreach. This political war tested the very fabric of the new nation. Ultimately, the intense battle over ratification forced a crucial compromise, giving birth to the foundational rights of American citizens and cementing a hybrid system that continues to define the American experiment today.</p>
+
+                        <h4>Federalists vs. Anti-Federalists</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_6.png" alt="Portrait of Patrick Henry">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: A portrait of Patrick Henry, the fiery Virginia patriot who refused to attend the convention and became a leading voice of the Anti-Federalists.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Anti-Federalist leaders represented the "Spirit of '76" and a deep suspicion of centralized power. They forcefully argued that the newly proposed government was too distant and elite, warning that it would inevitably become tyrannical without explicit protections for citizens. Their fierce opposition sparked a nationwide political war that forced the Federalists to defend and explain the Constitution.</p>
+                            </div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> Why was Patrick Henry's fierce opposition as an Anti-Federalist significant to the national debate over the power of the new central government?</p>
+                                <textarea id="va_7" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">On September 17, 1787, thirty-nine delegates signed the Constitution. Benjamin Franklin, elderly and weeping, pointed to the sun carved on the back of George Washington’s chair. He noted that artists often found it difficult to distinguish a rising sun from a setting sun. "I have often... looked at that behind the President without being able to tell whether it was rising or setting," Franklin said. "But now at length I have the happiness to know that it is a rising and not a setting sun."</p>
+                        <p>However, the battle was just beginning. The Constitution required ratification by nine states to take effect. This triggered a ferocious political war between two camps: the <strong>Federalists</strong> (who supported the new government) and the <strong>Anti-Federalists</strong> (who opposed it).</p>
+                        <p>Led by Alexander Hamilton, James Madison, and John Jay, the Federalists argued that the Articles were a failure and that a strong central government was essential to protect the nation from foreign powers and domestic insurrections like Shays’ Rebellion.</p>
+                        <p>To convince the skeptical public, specifically in New York, they wrote a series of 85 essays known as <strong>The Federalist Papers</strong>. These essays remain the most profound explanation of American government ever written.</p>
+                        <ul>
+                            <li>In <strong>Federalist No. 10</strong>, Madison turned political theory on its head. Conventional wisdom held that republics could only survive in small territories (like city-states) where everyone shared the same interests. Madison argued that a <em>large</em> republic was actually safer. In a large nation, there would be so many different factions (interest groups)—farmers, merchants, rich, poor, religious sects—that no single group could ever dominate the others. "Ambition must be made to counteract ambition."</li>
+                            <li>In <strong>Federalist No. 51</strong>, Madison explained the check-and-balance system: "If men were angels, no government would be necessary... In framing a government which is to be administered by men over men... you must first enable the government to control the governed; and in the next place oblige it to control itself."</li>
+                        </ul>
+                        <p>The Anti-Federalists (including Patrick Henry, George Mason, and Samuel Adams) were not merely obstructionists. They represented the "Spirit of '76"—the deep suspicion of centralized power. Writing under names like "Brutus" and "Cato," they argued that the new Constitution created a distant, elite government that would inevitably become tyrannical. They feared the President would become a King, a standing army would oppress the people, and Congress would tax the states into oblivion. Most importantly, they argued that the Constitution lacked a <strong>Bill of Rights</strong>. Because the document listed what the government <em>could</em> do but not what it <em>could not</em> do, they warned that fundamental liberties like freedom of speech, religion, and the press would be lost without a written guarantee.</p>
+
+                        <!-- CHECKPOINT 6 -->
+                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 11 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What was the main argument presented by James Madison in <em>Federalist No. 10</em>?</p>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) A small republic is the only way to protect individual liberty</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) A large republic is safer because many different factions will prevent any single group from dominating</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) The states should have more power than the national government to prevent tyranny</label>
+                                <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) The President should be elected for life to ensure national stability</label>
+                            </div>
+                            
+                            <!-- Question 12 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. What was the most significant objection the Anti-Federalists had regarding the new Constitution?</p>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) It did not allow for a standing army</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) It lacked a Bill of Rights to protect individual liberties</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) It gave too much power to the House of Representatives</label>
+                                <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) It did not include the Three-Fifths Compromise</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-6', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-6', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                        <h4>A Narrow Victory</h4>
+                        
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_7.png" alt="Portrait of James Madison">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Caption: A portrait of James Madison, a leading Federalist who helped secure ratification by promising to immediately draft a Bill of Rights.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Federalists faced agonizingly close ratification votes and intense opposition from those fearing a tyrannical central government. To secure the necessary votes in divided states, leaders made a crucial concession, pledging that the first Congress would immediately fix the document. This promise to legally restrain the government ultimately tipped the balance of power and saved the Constitution.</p>
+                            </div>
+                            <div class="question-box">
+                                <p style="margin-bottom: 5px;"><strong>Analysis Question:</strong> How did the Federalist promise to amend the Constitution directly influence the razor-thin ratification votes in divided states?</p>
+                                <textarea id="va_8" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">The ratification vote was agonizingly close across the nation, proving just how deeply divided the country remained over the new government structure. In Massachusetts, the Constitution survived by a narrow margin, passing 187 to 168. In Virginia, the fiery Anti-Federalist Patrick Henry roared against the document, and the Federalists managed to squeeze by with only 10 votes (89 to 79). The margins were even thinner in New York, where the new government was approved by a mere 3 votes.</p>
+                        <p>The Federalists secured these razor-thin victories only because they made a crucial concession: they promised to fix the document. To secure the votes of wavering delegates, the Federalists pledged that the very first Congress would immediately add a Bill of Rights to the Constitution. This solemn promise tipped the balance of power. By June 1788, the necessary nine states had ratified the document, officially making the Constitution the supreme law of the land.</p>
+                        <p>Ultimately, the irony of the founding era is that the Constitution was saved by its fiercest critics. While the Federalists successfully built the machine—the strong structural framework of the government—it was the Anti-Federalists who supplied the vital brakes by demanding the Bill of Rights. The resulting government was a uniquely American hybrid: it was strong enough to rule an entire continent, yet legally restrained from violating the liberties of its citizens.</p>
+
+                        <!-- CHECKPOINT 7 -->
+                        <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); color: var(--color-steel-nib); font-size: 0.9rem;"></span>
+                            </div>
+                            
+                            <!-- Question 13 -->
+                            <div class="checkpoint-q">
+                                <p class="first-p">1. What crucial concession did the Federalists make to secure the ratification of the Constitution?</p>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) They agreed to abolish the Electoral College</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) They promised to add a Bill of Rights to the document</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) They agreed to let Patrick Henry become the first President</label>
+                                <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) They promised to return to the Articles of Confederation after ten years</label>
+                            </div>
+                            
+                            <!-- Question 14 -->
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">2. How did the Anti-Federalists ultimately influence the structure of the American government?</p>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) They successfully prevented the Constitution from ever being ratified</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) They ensured that the President would have absolute power</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) They forced the inclusion of protections for individual liberties through the Bill of Rights</label>
+                                <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) They convinced the Framers to adopt the New Jersey Plan instead of the Great Compromise</label>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-7', -1)" style="display: none; width: auto;">&larr; Previous</button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-7', 1)" style="width: auto;">Next Question &rarr;</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-3')">&larr; Previous</button>
+                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', null, 'sec-5')" disabled>🔒 Answer Checkpoints to Continue</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: DECISION MAKERS -->
+            <section id="sec-5" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>DECISION MAKERS | The Electoral College</h2>
+                        
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" alt="Visual 2" class="visual-img">
+                            <div class="caption-text">Caption: A system originally engineered to filter public passion and incorporate the Three-Fifths Compromise continues to profoundly shape political strategy and electoral outcomes centuries later.</div>
+                        </div>
+
+                        <h4>Safeguard or Anachronism?</h4>
+                        <p class="first-p">When the delegates at the Constitutional Convention reached Article II—the creation of the Presidency—they faced a dilemma that stumped them for weeks. They knew they needed a strong executive to enforce the laws (unlike the weak Articles of Confederation), but they were terrified of creating an American King. The hardest question was not <em>what</em> powers the President should have, but <em>how</em> to choose him.</p>
+
+                        <h5>The Options</h5>
+                        <p class="first-p">The delegates debated three main methods, each with fatal flaws in their eyes:</p>
+                        <ol style="margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8;">
+                            <li><strong>Election by Congress:</strong> This was the initial favorite. However, delegates realized this would make the President a puppet of the legislature, violating the separation of powers.</li>
+                            <li><strong>Election by State Legislatures:</strong> This would make the President too indebted to the states, preventing the growth of a national consciousness.</li>
+                            <li><strong>Direct Election by the People:</strong> This was proposed but soundly rejected. The delegates feared "mobocracy." They believed the average farmer in Georgia would never know enough about a candidate in Massachusetts to make an informed choice. As George Mason put it, letting the people choose the President would be like engaging a blind man to choose colors.</li>
+                        </ol>
+
+                        <h5>The Decision | A Buffer System</h5>
+                        <p class="first-p">The solution was the <strong>Electoral College</strong>, a complex compromise proposed by the Committee on Eleven.</p>
+                        <ul>
+                            <li>Instead of voting for a President, citizens would vote for "electors"—a group of elite, educated men chosen by each state.</li>
+                            <li>These electors, presumably wise and detached from passion, would then convene to select the best man for the job.</li>
+                            <li>This system served as a <strong>buffer</strong> against the "excesses of democracy," ensuring that a demagogue could not sweep into power by manipulating public emotion.</li>
+                        </ul>
+
+                        <h5>The Impact</h5>
+                        <p class="first-p">The Electoral College also settled a quiet but powerful tension between the North and South. If the President were elected by popular vote, the North (with more free citizens) would dominate. But the Electoral College was based on Congressional representation, which included the <strong>Three-Fifths Compromise</strong>. This gave the South extra power in selecting the President by counting their enslaved population, who could not vote, toward their electoral total.</p>
+
+                        <h5>Why It Matters</h5>
+                        <p class="first-p">The Framers designed the system to filter the will of the people, not necessarily to reflect it perfectly. While the "electors" today are largely rubber stamps for the popular vote, the structure remains. It ensures that candidates must build a broad geographic coalition to win, rather than just racking up votes in diverse population centers, but it also creates the possibility—realized five times in U.S. history—that the winner of the popular vote does not become President.</p>
+
+                        <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 8px; border-left: 4px solid var(--color-gold);">
+                            <h4 style="margin-top: 0 !important; border-bottom: none; margin-bottom: 1rem !important;">Leadership Evaluation Questions</h4>
+                            
+                            <p style="margin-bottom: 5px;"><strong>1. Analyze the Logic:</strong> Compare the delegates' fears of "mobocracy" with their fears of an "American King." How did the Electoral College attempt to solve both problems simultaneously?</p>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            
+                            <p style="margin-bottom: 5px; margin-top: 1.5rem;"><strong>2. Assess the Legacy:</strong> How did the inclusion of the Three-Fifths Compromise in the Electoral College's design shift the balance of political power toward the South during the early years of the Republic?</p>
+                            <textarea id="pq_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            
+                            <p style="margin-bottom: 5px; margin-top: 1.5rem;"><strong>3. Evaluate Strategy:</strong> Given the modern availability of information and the 24-hour news cycle, does the original justification for a "buffer" between the voters and the presidency still serve its intended purpose, or has it become an obstacle to democratic expression?</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-4')">&larr; Previous</button>
+                        <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6', null, 'sec-6')">Next Section &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: VOCABULARY ACTIVITY -->
+            <section id="sec-6" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Vocabulary Activity</h2>
+                        <p class="first-p">Read the following historical narrative and fill in the numbered blanks using the correct terms from the Word Bank. Each term should be used exactly once.</p>
+
+                        <div class="word-bank">
+                            <span class="word-pill">Constitutional Convention</span>
+                            <span class="word-pill">James Madison</span>
+                            <span class="word-pill">Alexander Hamilton</span>
+                            <span class="word-pill">Virginia Plan</span>
+                            <span class="word-pill">New Jersey Plan</span>
+                            <span class="word-pill">Great Compromise</span>
+                            <span class="word-pill">Bicameral Legislature</span>
+                            <span class="word-pill">Three-Fifths Compromise</span>
+                            <span class="word-pill">Slave Trade Clause</span>
+                            <span class="word-pill">Fugitive Slave Clause</span>
+                            <span class="word-pill">Separation of Powers</span>
+                            <span class="word-pill">Checks and Balances</span>
+                            <span class="word-pill">Electoral College</span>
+                            <span class="word-pill">Federalists</span>
+                            <span class="word-pill">Anti-Federalists</span>
+                            <span class="word-pill">The Federalist Papers</span>
+                            <span class="word-pill">Bill of Rights</span>
+                        </div>
+
+                        <div style="line-height: 2.4; font-size: 1.15rem;">
+                            In May 1787, fifty-five delegates gathered in Philadelphia for the 1. <input type="text" class="cloze-input" id="blank_1">, originally intending to revise the failing Articles of Confederation. However, visionary leaders like the intense Virginian 2. <input type="text" class="cloze-input" id="blank_2"> and the ambitious New Yorker 3. <input type="text" class="cloze-input" id="blank_3"> wanted to build an entirely new national government from scratch. Immediately, a fierce debate erupted over state representation. Large states favored the 4. <input type="text" class="cloze-input" id="blank_4">, which proposed representation based entirely on population. Fearful of losing their voice, small states countered with the 5. <input type="text" class="cloze-input" id="blank_5">, which demanded a unicameral legislature with equal representation for each state. The convention was saved from collapse by the 6. <input type="text" class="cloze-input" id="blank_6">, which created a 7. <input type="text" class="cloze-input" id="blank_7"> consisting of the House of Representatives (based on population) and the Senate (with equal representation).<br><br>
+
+                            The delegates also had to confront the divisive issue of slavery. Southern states wanted enslaved people to count for representation, leading to the cynical 8. <input type="text" class="cloze-input" id="blank_8">, which counted each enslaved person as a fraction of a free person. As part of a "Dirty Compromise," the North and South also agreed to the 9. <input type="text" class="cloze-input" id="blank_9">, preventing Congress from banning the importation of slaves until 1808, and the 10. <input type="text" class="cloze-input" id="blank_10">, which legally required the return of escaped enslaved individuals.<br><br>
+
+                            To prevent this powerful new government from becoming tyrannical, the Framers relied on the philosophy of 11. <input type="text" class="cloze-input" id="blank_11">, splitting authority among the legislative, executive, and judicial branches. These branches were tied together by a system of 12. <input type="text" class="cloze-input" id="blank_12">, such as the presidential veto, ensuring that change would be deliberate and broad-based. Furthermore, to choose the executive branch, they created the 13. <input type="text" class="cloze-input" id="blank_13">, a buffer system designed to keep the choice of the President out of the hands of the direct popular vote and prevent mobocracy.<br><br>
+
+                            When the document was finally signed, a bitter fight for ratification began. The 14. <input type="text" class="cloze-input" id="blank_14"> supported the new Constitution and argued for a strong central government. To persuade the public, they wrote 85 brilliant essays known collectively as 15. <input type="text" class="cloze-input" id="blank_15">. On the opposing side, the 16. <input type="text" class="cloze-input" id="blank_16"> feared this new central government would become a tyranny. Their greatest complaint was that the Constitution lacked a written guarantee of individual liberties, and they successfully demanded the inclusion of a 17. <input type="text" class="cloze-input" id="blank_17"> to protect freedoms like speech and religion before finalizing their support.
+                        </div>
+
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-5')">&larr; Previous</button>
+                        <button class="action-btn" onclick="finishChapter()" style="background: var(--color-navy); color: white; border-color: var(--color-navy);">Finished &check;</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        /* Background Management */
+        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+        let bgIndex = 0;
+        function rotateBackground() {
+            if (bgImages.length === 0) return;
+            const bgEl = document.getElementById('bg-slideshow');
+            if (!bgEl) return;
+            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+            bgIndex = (bgIndex + 1) % bgImages.length;
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateBackground();
+            setInterval(rotateBackground, 10000);
+        });
+
+        /* Navigation */
+        function switchTab(id, btnId = null, scrollTarget = null) {
+            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            const activeBtnId = btnId || ('nav-' + id);
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if(target) {
+                        const offset = 40;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            saveProgress();
+        }
+
+        /* Data Collection & Export */
+        function collectAssignmentData(isFinal) {
+            const studentName = document.getElementById('student-name').value || "Unknown_Student";
+            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+            const now = new Date().toLocaleDateString();
+            
+            const assignmentData = {
+                assignmentTitle: "Interactive Chapter 1.4 - The Constitutional Convention",
+                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+            };
+            
+            // Gather Visual Analysis Answers
+            for(let i=1; i<=20; i++) {
+                let el = document.getElementById('va_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+                }
+            }
+            
+            // Gather Checkpoint Answers
+            for(let i=1; i<=30; i++) {
+                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                if(inputs.length > 0) {
+                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+                }
+            }
+            
+            // Gather Perspective Questions
+            for(let i=1; i<=10; i++) {
+                let el = document.getElementById('pq_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+                }
+            }
+            
+            // Gather Cloze Activity Answers
+            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+            });
+            return assignmentData;
+        }
+
+        function triggerDownload(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadProgress() {
+            const data = collectAssignmentData(false);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+        }
+
+        function finishChapter() {
+            const dateField = document.getElementById('completion-date');
+            const now = new Date().toLocaleDateString();
+            if(dateField) dateField.value = now;
+            const data = collectAssignmentData(true);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Export_${safeName}.json`);
+            alert('Upload JSON file to Canvas');
+            switchTab('sec-1', 'nav-sec-1');
+        }
+
+        /* Loading Progress */
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    
+                    const nameInput = document.getElementById('student-name');
+                    const periodInput = document.getElementById('student-period');
+                    if (loadedData.studentInfo) {
+                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                            nameInput.value = loadedData.studentInfo.name;
+                            nameInput.setAttribute('readonly', 'true');
+                            nameInput.style.opacity = '0.7'; 
+                        }
+                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                            periodInput.value = loadedData.studentInfo.period;
+                            periodInput.setAttribute('disabled', 'true');
+                            periodInput.style.opacity = '0.7'; 
+                        }
+                    }
+
+                    if (loadedData.responses) {
+                        if (loadedData.responses.visualAnalysis) {
+                            for(let i=1; i<=20; i++) {
+                                let el = document.getElementById('va_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                                    if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                                }
+                            }
+                        }
+                        
+                        if (loadedData.responses.checkpoints) {
+                            for(let i=1; i<=30; i++) {
+                                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                                if(inputs.length > 0) {
+                                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                    let savedVal = loadedData.responses.checkpoints[qText];
+                                    if (savedVal && savedVal !== "No Answer") {
+                                        let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                        if(radio) radio.checked = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (loadedData.responses.perspectiveQuestions) {
+                            for(let i=1; i<=10; i++) {
+                                let el = document.getElementById('pq_' + i);
+                                if(el) {
+                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                                    if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                                }
+                            }
+                        }
+
+                        if (loadedData.responses.clozeActivity) {
+                            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                                let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                                if (savedVal) input.value = savedVal;
+                            });
+                        }
+                    }
+
+                    initCheckpoints();
+                    alert('Progress loaded successfully!');
+                } catch (err) {
+                    console.error(err);
+                    alert('Error loading progress file. Please make sure it is a valid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        /* Save & Reset Logic */
+        function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+        
+        function resetProgress() {
+            if(confirm('Are you sure you want to reset all progress?')) {
+                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+                
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                nameInput.removeAttribute('readonly');
+                nameInput.style.opacity = '1';
+                periodInput.removeAttribute('disabled');
+                periodInput.style.opacity = '1';
+                
+                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+                initCheckpoints();
+                switchTab('sec-1', 'nav-sec-1');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /* Checkpoint Management */
+        const TOTAL_CHECKPOINTS = 7; 
+
+        function initCheckpoints() {
+            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+            checkSectionUnlock();
+        }
+
+        function updateCpUI(blockId) {
+            const block = document.getElementById(blockId);
+            if(!block) return;
+            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            const indicator = block.querySelector('.cp-indicator');
+            const prevBtn = block.querySelector('.cp-prev-btn');
+            const nextBtn = block.querySelector('.cp-next-btn');
+            
+            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+            
+            if(nextBtn) {
+                const currentQ = questions[currentIndex];
+                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+                
+                if (currentIndex === questions.length - 1) {
+                    if (isAnswered) {
+                        nextBtn.innerText = "Checkpoint Completed ✓";
+                        nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
+                        nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+                    } else {
+                        nextBtn.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
+                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    }
+                } else {
+                    nextBtn.innerText = "Next Question \u2192";
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; }
+                    else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+                }
+            }
+            checkSectionUnlock();
+        }
+
+        function navigateCp(blockId, dir) {
+            const block = document.getElementById(blockId);
+            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            currentIndex += dir;
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+            block.setAttribute('data-current', currentIndex);
+            updateCpUI(blockId);
+        }
+
+        function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
+        function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+        
+        function setNavButtonState(btnId, enabled) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (enabled) {
+                btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+                btn.innerHTML = 'Next Section &rarr;'; btn.style.borderColor = 'var(--color-gold)';
+            } else {
+                btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
+                btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+            }
+        }
+
+        function checkSectionUnlock() {
+            setNavButtonState('btn-next-sec-1', true);
+            setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
+            setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10'));
+            setNavButtonState('btn-next-sec-4', isAnswered('cp11') && isAnswered('cp12') && isAnswered('cp13') && isAnswered('cp14'));
+            setNavButtonState('btn-next-sec-5', true); 
+        }
+
+        // Initialize on load
+        window.onload = initCheckpoints;
+    </script>
+</body>
+</html>
