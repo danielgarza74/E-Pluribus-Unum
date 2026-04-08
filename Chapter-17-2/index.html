@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chapter 17.2 - The Cold War Turns Hot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #262B2E;
+            --color-cream: #E8F1EE;
+            --color-navy: #4F8C8D;
+            --color-steel-nib: #C96B3B;
+            --color-gold: #D7D94C;
+            --color-gold-light: rgba(215, 217, 76, 0.4);
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Prominent Default Spotlights (Stacked) */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0 !important; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
+        .spotlight-why strong { color: var(--color-gold); }
+
+        /* Portrait Spotlights (Side-by-Side) */
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+
+        /* Full Sized Visuals */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+
+        /* Compact Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+
+<div class="app-container">
+    <!-- Left Navigation Panel -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Outbreak of the Korean War</button>
+            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. The Course and Consequences of the Conflict</button>
+            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The Nuclear Arms Race and Brinkmanship</button>
+            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. The Space Race and the Skies Above</button>
+            <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Turning Points | The Korean War</button>
+            <button id="nav-sec-7" class="nav-btn" onclick="switchTab('sec-7')">VI. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                Load Progress
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <!-- Section 1: Start Page -->
+        <div id="sec-1" class="chapter-section active-section">
+            <img src="assets/Header%20Banner%20Chapter%2017.2.png" alt="Chapter 17.2 Banner" class="hero-banner-flush">
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label for="student-name">Student Name</label>
+                        <input type="text" id="student-name" placeholder="First and Last Name">
+                    </div>
+                    <div>
+                        <label for="student-period">Class Period</label>
+                        <select id="student-period">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="completion-date">Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Core Objectives</h3>
+                    <ul>
+                        <li>Analyze the causes, course, and consequences of the Korean War, including the UN's police action and the stalemate at the 38th Parallel.</li>
+                        <li>Trace the escalation of the nuclear arms race from the atomic bomb to the H-bomb and the strategic shift to "brinkmanship."</li>
+                        <li>Evaluate the psychological and political impact of the launch of Sputnik on American education and space technology.</li>
+                    </ul>
+
+                    <h3>Key Terms</h3>
+                    <p class="first-p">38th Parallel | Korean War | General Douglas MacArthur | H-Bomb | Dwight D. Eisenhower | John Foster Dulles | Brinkmanship | Central Intelligence Agency (CIA) | Nikita Khrushchev | Sputnik | U-2 Incident | Francis Gary Powers | Mutually Assured Destruction (MAD)</p>
+
+                    <h4>Introduction: The Era of Global Escalation</h4>
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="A high-quality, realistic historical composition juxtaposing two core elements of the era's escalation. On the left side of the frame, a realistic black-and-white style depiction shows American infantrymen in heavy winter gear advancing cautiously through a rugged, snowy Korean landscape. This scene transitions on the right side into a stark, brightly colored depiction of a massive, glowing thermonuclear mushroom cloud rising over an ocean horizon. In the upper sky above the cloud, a faint, silvery silhouette of the Sputnik satellite orbits against the dark atmosphere." class="visual-img">
+                        <p class="caption-text">The transition from the late 1940s to the 1950s marked a dangerous evolution in superpower rivalry, moving from political containment in Europe to active military engagements in Asia and a relentless technological race to develop world-ending weapons. This global escalation transformed diplomatic standoffs into the daily realities of localized combat and the overarching shadow of mutually assured destruction.</p>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Analysis Question:</strong> How did the simultaneous development of advanced nuclear technology and localized military conflicts alter the way global superpowers approached international diplomacy during this era?</p>
+                            <textarea class="textarea-dark" id="va_9"></textarea>
+                        </div>
+                    </div>
+                    <p class="first-p">By the dawn of the 1950s, the Cold War shifted from a diplomatic standoff in Europe to a series of high-stakes military and technological confrontations across the globe. The fall of China to communism and the sudden invasion of South Korea forced the United States to transform its policy of containment into a physical, often bloody, reality. As American troops fought localized "police actions" in Asia, scientists and world leaders engaged in a terrifying race to master the power of the atom and the vacuum of space. This period defined a new world order where peace was maintained through the threat of total annihilation and the constant shadow of espionage. Ultimately, the "The American Experiment" faced its most grueling test yet: surviving a nuclear age where the line between diplomacy and catastrophe was razor-thin.</p>
+                </div>
+
+                <div class="bottom-nav">
+                    <button disabled style="opacity:0; cursor:default; width:auto;"></button>
+                    <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: The Outbreak of the Korean War -->
+        <div id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Outbreak of the Korean War</h2>
+                    <p class="first-p">In the years immediately following World War II, the American strategy of containment was primarily focused on Europe. Programs like the Marshall Plan and alliances like NATO were designed to rebuild and fortify Western democracies against Soviet expansion. However, the nature of the Cold War fundamentally changed at the dawn of the 1950s. The fall of China to communist forces in 1949 had already sent shockwaves through the American political establishment, creating a deep anxiety that the United States was "losing" Asia. This anxiety turned into a brutal reality when the ideological standoff between the democratic West and the communist East erupted into a massive, bloody conflict on a small peninsula in East Asia. The Cold War had turned hot, and the United States found itself sending millions of young men into combat to physically halt the spread of communism.</p>
+
+                    <h4>The Division at the 38th Parallel</h4>
+                    <p class="first-p">The roots of the conflict in Korea lay in the final days of World War II. For over three decades, the Japanese empire had brutally occupied and ruled the Korean peninsula, exploiting its resources and suppressing its people. In August 1945, as the Japanese empire collapsed, Allied forces moved in to accept the surrender of Japanese troops. A hasty political agreement was struck between the United States and the Soviet Union to divide the responsibility for accepting this surrender. Soviet forces, advancing from the north, accepted the Japanese surrender down to the <strong>38th Parallel</strong>, a line of latitude that roughly cut the peninsula in half. American forces, moving up from the south, accepted the surrender south of that line.</p>
+                    
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_1.png" alt="The 38th Parallel">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">A map illustrating the formal division of the Korean peninsula at the 38th Parallel following World War II.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> This artificial boundary physically manifested the geopolitical fracture between Soviet and American spheres of influence. It created the permanent political frontier that ultimately necessitated international military intervention when deliberately crossed.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How does this map of an artificially created boundary explain the underlying political tensions that set the stage for war on the peninsula?</p>
+                                <textarea class="textarea-dark" id="va_1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>What was intended to be a temporary military boundary quickly hardened into a permanent political frontier. As the Cold War deepened, the two superpowers established rival governments in their respective occupation zones. In the north, the Soviet Union installed a hardline communist government led by the charismatic and ambitious dictator Kim Il Sung. In the south, the United States supported the creation of a pro-Western, capitalist government led by Syngman Rhee, a fierce anti-communist who was, nevertheless, highly authoritarian in his own right. By 1949, both the United States and the Soviet Union had withdrawn the vast majority of their combat troops from the peninsula, leaving behind two heavily armed, deeply hostile Korean nations. Both Kim Il Sung and Syngman Rhee claimed to be the sole legitimate ruler of the entire peninsula, and both publicly declared their intention to reunify Korea under their own leadership.</p>
+
+                    <!-- Checkpoint 1 -->
+                    <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">1. Why did the division of Korea at the 38th Parallel harden into a permanent political frontier?</p>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) Because the Japanese army refused to leave the peninsula</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) Because the United States and the Soviet Union established rival governments in their respective occupation zones</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) Because the United Nations demanded a permanently divided Korea</label>
+                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) Because Syngman Rhee voluntarily surrendered power to Kim Il Sung</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-1', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-1', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The North Korean Invasion</h4>
+                    <p class="first-p">The volatile situation exploded into all-out war on the morning of June 25, 1950. Supplied with heavy Soviet artillery, advanced T-34 tanks, and tactical planning approved by Joseph Stalin, the North Korean army surged across the 38th Parallel in a massive surprise attack. The South Korean army, which possessed no tanks and little heavy artillery, was completely overwhelmed by the mechanized assault. Within days, the South Korean capital of Seoul had fallen to the communist forces, and the remnants of the South Korean military were in full retreat toward the southern tip of the peninsula.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="North Korean Tanks Advance">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Soviet-supplied military personnel and equipment heavily entrenched during the brutal winter months of the Korean conflict.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> This harsh environment demonstrated the massive logistical and human toll of fighting a localized proxy war in the nuclear age. The rapid brutalization of the conflict convinced Truman that military containment was necessary to prevent further Soviet aggression worldwide.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How did the physical intensity and frozen reality of this conflict push the United States to escalate its containment policy from economic aid to direct military action?</p>
+                                <textarea class="textarea-dark" id="va_2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>In Washington, D.C., President Harry S. Truman viewed the North Korean invasion not just as a local civil war, but as a deliberate test of the free world's resolve by the Soviet Union. Remembering how the failure of Western democracies to confront Adolf Hitler in the 1930s had led directly to World War II, Truman believed that failing to defend South Korea would encourage further communist aggression around the globe. He ordered American naval and air forces to provide immediate support to the South Koreans.</p>
+
+                    <p>Simultaneously, the United States appealed to the United Nations Security Council to intervene. In a stroke of immense historical luck for the United States, the Soviet delegation was currently boycotting the Security Council to protest the UN’s refusal to recognize the newly established communist government of China. Because the Soviet representative was absent and unable to use his veto power, the Security Council successfully passed a resolution condemning the North Korean invasion and calling upon member nations to provide military assistance to South Korea. Truman committed American ground troops to the conflict, framing the massive military intervention not as a declared war, but as a United Nations "police action." Despite this label, the United States provided the vast majority of the troops, equipment, and financial backing for the United Nations command.</p>
+
+                    <!-- Checkpoint 2 -->
+                    <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">2. Why did President Harry S. Truman view the North Korean invasion as an event that required immediate American intervention?</p>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-2')"> A) Because he wanted to secure permanent American military bases in East Asia</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-2')"> B) Because he believed that failing to defend South Korea would encourage further communist aggression, much like the failure to confront Hitler in the 1930s</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-2')"> C) Because the Soviet Union had explicitly ordered him to intervene</label>
+                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-2')"> D) Because South Korea was a critical source of oil for the United States</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">3. How was the United Nations Security Council able to pass a resolution authorizing military assistance to South Korea?</p>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) Because the Soviet Union actively voted in favor of the invasion</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) Because the Soviet delegation was boycotting the Security Council and was unable to use its veto power</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) Because the United States bypassed the typical security protocols to force a vote</label>
+                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) Because China used its veto power to override Soviet objections</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-2', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-2', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
+                    <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: The Course and Consequences of the Conflict -->
+        <div id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Course and Consequences of the Conflict</h2>
+                    <p class="first-p">The Korean War was a conflict defined by dramatic reversals of fortune, brutal weather conditions, and massive casualties that pushed the American military to its absolute breaking point. From the desperate defensive stand at the Pusan perimeter to the brilliant, high-stakes gamble of the Inchon invasion, the war forced the United States to confront the terrifying limitations of fighting a localized war in a nuclear age. As the battlefield shifted from the frozen mountains near the Yalu River back to the trenches of the 38th Parallel, the conflict became a crucible for American leadership, testing the constitutional principle of civilian control over the military as the administration grappled with the difficult reality of "limited war". Ultimately, the stalemate underscored the high stakes of the Cold War, where thousands died for yards of territory while the world held its breath to avoid a global nuclear holocaust.</p>
+
+                    <h4>MacArthur's Counterattack and the Chinese Intervention</h4>
+                    <p class="first-p">When American troops first arrived in Korea in the summer of 1950, they were severely unprepared for the ferocity of the North Korean advance. Throughout July and August, the combined American and South Korean forces were pushed all the way to the southeastern corner of the peninsula, desperately clinging to a small defensive perimeter around the port city of Pusan. The situation appeared hopeless. However, the supreme commander of the United Nations forces, <strong>General Douglas MacArthur</strong>, orchestrated a brilliant and highly risky counterattack.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_3.png" alt="The Battle of Inchon">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">United Nations forces participating in General Douglas MacArthur's amphibious assault at the western port of Inchon in September 1950.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> This bold military maneuver drastically changed the momentum of the war by trapping communist forces and pushing them rapidly north. The aggressive expansion of the attack toward the Yalu River directly resulted in massive Chinese intervention.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How did the initial success of this amphibious assault ultimately trigger the entry of an over 300,000-man Chinese army into the conflict?</p>
+                                <textarea class="textarea-dark" id="va_3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>In September 1950, MacArthur launched a massive amphibious invasion behind enemy lines at the western port city of Inchon. Navigating extreme tidal fluctuations and heavily fortified sea walls, the American forces successfully landed, cutting off the North Korean supply lines and trapping the communist army between the newly arrived forces at Inchon and the troops breaking out of the Pusan perimeter. The North Korean army collapsed, fleeing in disarray back across the 38th Parallel.</p>
+
+                    <p>Capitalizing on this stunning momentum, MacArthur convinced President Truman to alter the war’s objective. Instead of simply restoring the original border, the United Nations forces would push north into communist territory, crush the North Korean regime entirely, and reunify the peninsula into a single, democratic nation. By late October, American troops were racing northward, pushing toward the Yalu River, which served as the border between North Korea and communist China.</p>
+
+                    <p>The Chinese government, led by Mao Zedong, viewed the rapidly approaching American army as a severe threat to their own national security. China issued several stern warnings that it would not stand idly by and let American troops occupy the territory directly across its border. MacArthur dismissed these warnings, assuring Truman that the Chinese would not dare intervene. He was disastrously wrong. In late November 1950, over 300,000 Chinese soldiers secretly crossed the Yalu River and ambushed the overextended American forces in the freezing, mountainous terrain of North Korea. Using bugles, whistles, and massive human-wave attacks in the dead of night, the Chinese forces shattered the United Nations lines. The American military was forced into one of the longest and most agonizing retreats in its history, fighting their way southward through sub-zero temperatures and blinding blizzards. By early 1951, the Chinese and North Korean forces had pushed the Americans back across the 38th Parallel and recaptured the South Korean capital of Seoul.</p>
+
+                    <!-- Checkpoint 3 -->
+                    <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">4. What was the strategic goal of General Douglas MacArthur’s amphibious invasion at Inchon?</p>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-3')"> A) To safely evacuate all remaining American troops from the peninsula</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-3')"> B) To capture the Soviet border immediately</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-3')"> C) To launch a secret nuclear attack against China</label>
+                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-3')"> D) To cut off North Korean supply lines and trap the communist army</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">5. Why were United Nations forces forced into a massive and agonizing retreat in late 1950?</p>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) Because Congress refused to pass necessary funding for the war</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) Because over 300,000 Chinese soldiers crossed the Yalu River and ambushed the overextended American forces</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) Because South Korean forces defected to the North in large numbers</label>
+                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) Because the Soviet Union launched a nuclear strike on American military bases</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-3', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-3', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The Dismissal of a General and the Final Stalemate</h4>
+                    <p class="first-p">Faced with this massive Chinese intervention, General MacArthur demanded a radical expansion of the war. He requested permission to blockade the Chinese coast, use nationalist Chinese troops from Taiwan to invade the Chinese mainland, and drop dozens of atomic bombs on Chinese cities and military bases. President Truman flatly refused. Truman recognized that launching a massive attack on China would likely draw the Soviet Union into the conflict, triggering World War III and a potential nuclear holocaust. Truman insisted on fighting a "limited war," focusing solely on the original goal of defending South Korea.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_4.png" alt="General Douglas MacArthur">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">General Douglas MacArthur, whose bold strategy saved the UN forces before his insubordination led to his dismissal by President Truman.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> MacArthur's demand to expand the war into China illustrated the severe tension between ambitious military commanders and the political reality of nuclear-age limited war. The subsequent conflict forced the administration to assert the constitutional principle of civilian control over the armed forces.</p>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p"><strong>Analysis Question:</strong> What constitutional principle did the President feel compelled to defend when he ultimately dismissed the powerful commander pictured here?</p>
+                            <textarea class="textarea-dark" id="va_4"></textarea>
+                        </div>
+                    </div>
+
+                    <p>Furious that his hands were tied, MacArthur bypassed his commander-in-chief. He began writing letters to newspaper publishers and Republican politicians, publicly criticizing Truman’s strategy and declaring that "there is no substitute for victory." To the president, this was a clear case of insubordination. The United States Constitution explicitly places the civilian president in command of the military to prevent generals from seizing political power. To preserve the constitutional principle of civilian control over the armed forces, Truman made the highly unpopular decision to fire General Douglas MacArthur in April 1951. While many Americans were outraged at the dismissal of a beloved World War II hero, military leaders supported Truman, agreeing that expanding the war into China would be a catastrophic mistake.</p>
+
+                    <p>By the summer of 1951, the frontline stabilized near the original 38th Parallel. For the next two years, the Korean War degenerated into a bitter, grinding stalemate characterized by trench warfare, artillery barrages, and fierce battles over small, barren hills. While diplomatic negotiations dragged on endlessly, thousands of soldiers continued to die for yards of territory. Finally, the election of <strong>Dwight D. Eisenhower</strong> as President in 1952 brought a renewed push for peace. Eisenhower, a former five-star general, traveled to Korea and quietly let it be known that the United States might use nuclear weapons if a truce was not reached. In July 1953, an armistice was signed.</p>
+
+                    <p>The agreement essentially restored the pre-war boundaries, creating a heavily fortified Demilitarized Zone (DMZ) near the 38th Parallel that still divides North and South Korea today. The war was incredibly costly; over 36,000 Americans died, alongside an estimated two million Korean civilians and soldiers, as well as hundreds of thousands of Chinese troops. While the war failed to reunify Korea, it achieved the original objective of the Truman administration: the containment policy had been successfully defended with American blood, and South Korea was saved from communist conquest.</p>
+
+                    <!-- Checkpoint 4 -->
+                    <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">6. Why did President Truman make the highly controversial decision to fire General Douglas MacArthur?</p>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-4')"> A) Because MacArthur refused to launch an invasion of the Chinese mainland</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-4')"> B) Because MacArthur successfully negotiated a secret peace treaty with North Korea</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-4')"> C) Because MacArthur publicly criticized Truman’s strategy and bypassed the commander-in-chief, violating the constitutional principle of civilian control over the military</label>
+                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-4')"> D) Because MacArthur surrendered his entire army to Chinese forces</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">7. What was the primary result of the 1953 armistice that ended the Korean War?</p>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) The complete reunification of the Korean peninsula under a democratic government</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) The immediate withdrawal of all American troops from Asia forever</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) The restoration of pre-war boundaries and the creation of a heavily fortified Demilitarized Zone (DMZ) near the 38th Parallel</label>
+                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) The formal recognition of American defeat by the Soviet Union</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-4', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-4', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
+                    <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: The Nuclear Arms Race and Brinkmanship -->
+        <div id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Nuclear Arms Race and Brinkmanship</h2>
+                    <p class="first-p">The Korean War fundamentally militarized the Cold War, but an even more terrifying escalation was occurring in the laboratories and testing grounds of the superpower nations as they engaged in a relentless pursuit of weapons capable of ending human civilization. The loss of the American nuclear monopoly triggered a frantic crash program to develop the <strong>H-Bomb</strong>, replicating the power of the sun and creating a world where peace was maintained only by the guarantee of absolute mutual destruction. Under the Eisenhower administration, diplomacy took on a harder edge known as "<strong>Brinkmanship</strong>," a high-stakes strategy of pushing to the absolute edge of all-out war to force an enemy to back down. This era of high tension also saw the rise of a secret war, with the <strong>Central Intelligence Agency (CIA)</strong> utilizing covert operations, sabotage, and subversion to manage spheres of influence in a world where direct military confrontation had become too dangerous to risk.</p>
+
+                    <h4>The Hydrogen Bomb and the Policy of Deterrence</h4>
+                    <p class="first-p">In August 1949, the Soviet Union shocked the world by successfully testing its own atomic bomb, ending the brief American monopoly on nuclear weapons years earlier than Western scientists had predicted. The realization that Joseph Stalin now possessed the power to annihilate American cities triggered widespread panic. In response, President Truman authorized a crash program to develop a weapon exponentially more powerful than the atomic bombs dropped on Japan. This new weapon was the thermonuclear bomb, or <strong>H-Bomb</strong>. While the original atomic bombs relied on the splitting of atoms (fission), the H-bomb forced atoms together (fusion), replicating the terrifying power of the sun.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_5.gif" alt="Ivy Mike H-Bomb Test">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The massive thermonuclear detonation of "Ivy Mike," the first full-scale hydrogen bomb test in 1952.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The successful detonation of this thermonuclear device inaugurated an era of unprecedented destructive capability. It established the terrifying strategic paradigm of Mutually Assured Destruction, where peace was guaranteed solely by the threat of global annihilation.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> Why did the successful development of this specific weapon force both superpowers into the dangerous defensive position known as Mutually Assured Destruction (MAD)?</p>
+                                <textarea class="textarea-dark" id="va_5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>The United States successfully detonated the first H-Bomb, code-named "Ivy Mike," in 1952, vaporizing an entire island in the Pacific Ocean. Its explosive yield was roughly 1,000 times greater than the bomb that destroyed Hiroshima. However, the American advantage was fleeting; the Soviet Union successfully tested its own thermonuclear device less than a year later.</p>
+
+                    <p>By the time President Dwight D. Eisenhower took office, both superpowers possessed the capacity to inflict unimaginable destruction. Eisenhower's Secretary of State, <strong>John Foster Dulles</strong>, was a staunch anti-communist who believed that the previous policy of containment was too passive. Dulles argued that the United States could not afford to fight endless, costly conventional wars like the one in Korea. Instead, he formulated a policy known as "massive retaliation." Dulles promised that if the Soviet Union or its allies attacked American interests anywhere in the world, the United States would retaliate instantly with its full nuclear arsenal.</p>
+
+                    <p>This willingness to go to the absolute edge of all-out nuclear war in order to force the enemy to back down became known as <strong>Brinkmanship</strong>. To support this strategy, the United States rapidly expanded its air force, building thousands of strategic bombers designed to deliver nuclear payloads across the globe. This dynamic created a terrifying paradox: peace was maintained only by the guarantee of absolute mutual destruction. The prevailing strategic reality became known as <strong>Mutually Assured Destruction (MAD)</strong>. Under MAD, neither side dared to launch a direct attack on the other, knowing that a nuclear strike would guarantee an immediate, devastating counter-strike that would obliterate both nations. The survival of humanity rested entirely on the assumption that the leaders of both nations were rational actors who wished to avoid suicide.</p>
+
+                    <!-- Checkpoint 5 -->
+                    <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">8. How did the United States respond to the Soviet Union's successful test of its own atomic bomb in 1949?</p>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-5')"> A) By initiating immediate disarmament treaties with Joseph Stalin</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-5')"> B) By withdrawing all American forces from Europe</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-5')"> C) By abandoning the policy of containment entirely</label>
+                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-5')"> D) By authorizing a crash program to develop the immensely more powerful thermonuclear H-Bomb</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">9. How did the doctrine of Mutually Assured Destruction (MAD) paradoxically maintain peace between the superpowers?</p>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) By ensuring that the United Nations resolved all international disputes</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) By creating a situation where neither side dared to launch a direct attack, knowing that a nuclear strike would guarantee an immediate, devastating counter-strike resulting in mutual annihilation</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) By eliminating all nuclear stockpiles across the globe</label>
+                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) By allowing the Soviet Union to control all of Eastern Europe without interference</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-5', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-5', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>Covert Operations and Global Interventions</h4>
+                    <p class="first-p">Because the threat of nuclear annihilation made direct warfare between the United States and the Soviet Union too dangerous, the superpowers sought other ways to gain influence and subvert their enemies. The Eisenhower administration increasingly relied on the newly established <strong>Central Intelligence Agency (CIA)</strong> to conduct covert, or secret, operations around the world. The CIA used spies, bribery, sabotage, and propaganda to gather information and overthrow foreign governments that were perceived as friendly to the Soviet Union.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_6.png" alt="1953 Iranian Coup">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">A chaotic street scene from Tehran during the 1953 coup d'état orchestrated by the Central Intelligence Agency to overthrow the Iranian Prime Minister.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> This successful intelligence operation demonstrated the Eisenhower administration's pivot toward covert interventions to manage spheres of influence. While securing Western oil interests, the intervention permanently altered American relations with the Middle East and fostered deep local resentment.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> What does this chaotic street scene reveal about the covert tactics the United States used to manage global spheres of influence without triggering open war?</p>
+                                <textarea class="textarea-dark" id="va_6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>In 1953, the CIA executed its first major covert operation in Iran. When Iran’s prime minister nationalized the country's massive oil fields—taking them out of the hands of Western corporations—the United States feared the prime minister might turn to the Soviet Union for economic support. The CIA orchestrated a secret coup, distributing millions of dollars to anti-government forces to spark riots in the streets of Tehran. The operation successfully overthrew the prime minister and returned the pro-American Shah of Iran to absolute power, securing Western access to Iranian oil but sowing seeds of deep anti-American resentment in the Middle East. The following year, the CIA orchestrated a similar coup in Guatemala, training an army to overthrow a democratically elected president who had given uncultivated American corporate land to landless peasants.</p>
+
+                    <p>While the United States utilized the CIA to manage its sphere of influence, the Soviet Union maintained a brutal grip on its own satellite states. Following the death of Joseph Stalin in 1953, a new leader, <strong>Nikita Khrushchev</strong>, eventually took power in the Soviet Union. Khrushchev publicly criticized some of Stalin's worst atrocities and spoke occasionally of "peaceful coexistence" with the West. However, when the citizens of Hungary attempted to break free from Soviet control in a massive democratic uprising in 1956, Khrushchev brutally demonstrated the limits of his tolerance. He ordered heavily armed Soviet tanks to roll into the streets of Budapest, crushing the rebellion and killing tens of thousands of Hungarian citizens. The United States, restrained by the fear of triggering World War III, did nothing to assist the Hungarian freedom fighters, solidifying the iron grip of the Soviet Union over Eastern Europe.</p>
+
+                    <!-- Checkpoint 6 -->
+                    <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">10. Why did the Eisenhower administration increasingly rely on the Central Intelligence Agency (CIA) to achieve its foreign policy goals?</p>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-6')"> A) Because direct warfare with the Soviet Union had become too dangerous due to the threat of nuclear annihilation</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-6')"> B) Because the CIA was the only agency with the authority to negotiate nuclear treaties</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-6')"> C) Because Congress explicitly banned the use of the traditional military overseas</label>
+                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-6')"> D) Because the United Nations required covert operations for containment</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">11. How did the United States respond to the massive 1956 democratic uprising in Hungary?</p>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) It sent massive troop deployments to assist the Hungarian freedom fighters</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) It did nothing to intervene militarily, restrained by the fear of triggering World War III</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) It successfully negotiated a peaceful withdrawal of Soviet forces</label>
+                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) It launched a covert CIA operation that overthrew the Soviet-backed government</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-6', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-6', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
+                    <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: The Space Race and the Skies Above -->
+        <div id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Space Race and the Skies Above</h2>
+                    <p class="first-p">By the mid-1950s, the intense competition between the United States and the Soviet Union extended beyond geography and ideology into the realms of science, education, and the cosmos itself. The mastery of technology became the ultimate symbol of a system's superiority, a reality that came crashing home for Americans when the Soviet Union launched <strong>Sputnik</strong>, the world’s first artificial satellite. This technological shock shattered American assumptions of scientific dominance and triggered a massive national effort to revolutionize science education and aerospace research to counter the threat of long-range nuclear missiles. While the late 1950s saw cautious attempts at diplomacy, the fragile hopes for a breakthrough were utterly destroyed by the <strong>U-2 Incident</strong>, proving that in the skies above, the line between gathering intelligence and triggering a global catastrophe remained razor-thin.</p>
+
+                    <h4>The Shock of Sputnik</h4>
+                    <p class="first-p">By the mid-1950s, both superpowers were racing to develop Intercontinental Ballistic Missiles (ICBMs). These massive rockets were designed to do what bombers could not: deliver a nuclear warhead across the globe, from Soviet territory to American cities, in a matter of minutes, rendering traditional defenses useless.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_7.png" alt="Sputnik 1 Satellite">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The Sputnik 1 artificial satellite, the first human-made object to orbit the Earth.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The successful launch of this small device shattered the illusion of unparalleled American technological supremacy. The existence of the Soviet ICBM capable of launching it caused a widespread national panic, forcing immediate and massive reforms in American science education and research funding.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> Why did the successful deployment of this small transmitter trigger immediate and massive reforms in the American public education system?</p>
+                                <textarea class="textarea-dark" id="va_7"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>On October 4, 1957, the Soviet Union stunned the world by using an ICBM rocket to launch <strong>Sputnik</strong>, the world’s first artificial satellite. Sputnik was simply a small, polished aluminum sphere about the size of a beach ball, equipped with four antennas that transmitted a continuous radio "beep" back to Earth. As the tiny satellite orbited the planet every 96 minutes, passing over the United States multiple times a day, the psychological impact on the American public was profound.</p>
+
+                    <p>Americans had always assumed that their nation possessed superior scientific and technological capabilities. The launch of Sputnik shattered that confidence. Furthermore, the terrifying reality of Sputnik was not the satellite itself, but the rocket that carried it. If the Soviet Union possessed a rocket powerful enough to push a satellite into outer space, they clearly possessed a rocket powerful enough to drop a hydrogen bomb on New York or Washington, D.C. The launch triggered a wave of intense national self-criticism in the United States. Politicians and citizens demanded to know how America had fallen behind. In response, the U.S. government dramatically increased funding for scientific research, created the National Aeronautics and Space Administration (NASA) to coordinate the space effort, and passed the National Defense Education Act, which poured millions of dollars into public schools to aggressively improve the teaching of math, science, and foreign languages.</p>
+
+                    <!-- Checkpoint 7 -->
+                    <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">12. Why did the launch of the Sputnik satellite profoundly shock the American public and political establishment?</p>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-7')"> A) Because the satellite was armed with conventional explosives</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-7')"> B) Because it proved the Soviet Union possessed rocketry powerful enough to deliver a nuclear warhead to American cities in a matter of minutes</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-7')"> C) Because it carried the first Soviet cosmonaut into orbit</label>
+                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-7')"> D) Because it immediately disrupted all American communications systems</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">13. How did the United States government respond domestically to the launch of Sputnik?</p>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) By significantly reducing public school funding</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) By abandoning the space race to focus entirely on ground forces</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) By dramatically increasing funding for scientific research, creating NASA, and passing the National Defense Education Act to improve education</label>
+                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) By demanding an immediate end to all nuclear testing</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-7', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-7', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                    <h4>The U-2 Crisis and Broken Diplomacy</h4>
+                    <p class="first-p">Despite the intense arms race and the paranoia generated by Sputnik, the late 1950s saw cautious attempts at diplomacy. President Eisenhower and Premier Khrushchev agreed to meet at a major summit in Paris in the spring of 1960 to discuss nuclear disarmament and the ongoing tensions regarding the divided city of Berlin. However, the fragile hopes for a diplomatic breakthrough were utterly destroyed by a highly secret intelligence failure.</p>
+
+                    <p>Since 1955, the CIA had been flying top-secret spy missions deep over Soviet territory. The aircraft used for these missions was the U-2, a high-altitude plane designed to fly at 70,000 feet, far beyond the reach of Soviet fighter jets and, the CIA believed, beyond the range of Soviet anti-aircraft missiles. The U-2 was equipped with advanced infrared cameras that allowed American intelligence to photograph Soviet troop movements, missile sites, and military bases with astonishing detail. Eisenhower was increasingly nervous about these flights, knowing that if a plane were discovered, it would be viewed as a massive violation of international law and an act of war.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_8.png" alt="U-2 Wreckage">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Soviet citizens viewing the displayed wreckage of the American U-2 spy plane piloted by Francis Gary Powers in 1960.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The public capture and display of this aircraft humiliated the Eisenhower administration and exposed secretive espionage operations. The ensuing diplomatic scandal abruptly ended crucial disarmament talks, plunging the superpowers back into severe hostility.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Analysis Question:</strong> How did the dramatic public display of this downed aircraft permanently shatter the fragile attempts at diplomacy during the planned 1960 Paris summit?</p>
+                                <textarea class="textarea-dark" id="va_8"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>On May 1, 1960, just days before the scheduled Paris summit, a Soviet guided missile successfully struck an American U-2 plane flying over the heart of Russia. The pilot, <strong>Francis Gary Powers</strong>, parachuted to safety but was immediately captured by Soviet authorities. Unaware that Powers had survived and that the Soviets possessed the wreckage of the spy plane, the Eisenhower administration issued a fabricated cover story, claiming that a civilian weather plane had simply drifted off course.</p>
+
+                    <p>Khrushchev sprang the trap. He dramatically revealed the captured pilot, the spy cameras, and the wreckage of the U-2, publicly humiliating the American government and exposing Eisenhower’s lie. Eisenhower was forced to take personal responsibility for the secret flights. He admitted they were espionage missions but refused to apologize, arguing that the closed nature of the Soviet state made such intelligence gathering necessary for American security. Khrushchev was furious. He stormed out of the Paris summit before it even began and withdrew his invitation for Eisenhower to visit the Soviet Union. The <strong>U-2 Incident</strong> shattered whatever limited trust had been built between the two leaders, plunging the United States and the Soviet Union back into the deepest, most dangerous depths of the Cold War.</p>
+
+                    <!-- Checkpoint 8 -->
+                    <div class="checkpoint-block" id="cp-block-8" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div style="margin-bottom:15px;"><span class="cp-indicator" style="color:var(--color-gold); font-family:var(--font-ui); font-size:0.9rem;"></span></div>
+                        
+                        <div class="checkpoint-q">
+                            <p class="first-p">14. What was the primary purpose of the American U-2 flights over Soviet territory?</p>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-8')"> A) To deliver secret messages to Soviet dissidents</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-8')"> B) To bomb hidden Soviet military bases</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-8')"> C) To conduct high-altitude espionage missions and photograph Soviet military sites</label>
+                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-8')"> D) To test experimental hypersonic technologies</label>
+                        </div>
+
+                        <div class="checkpoint-q">
+                            <p class="first-p">15. How did the U-2 incident affect diplomatic relations between the United States and the Soviet Union in 1960?</p>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) It led directly to a successful arms reduction treaty in Paris</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) It shattered trust, causing Khrushchev to storm out of the Paris summit and plunging the nations back into deep hostility</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) It forced the Soviet Union to immediately surrender its nuclear program</label>
+                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) It resulted in a joint US-Soviet space exploration agreement</label>
+                        </div>
+
+                        <div style="margin-top:20px;">
+                            <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-8', -1)" style="width:auto; padding:5px 10px; font-size:0.85rem; margin-right:10px;">&larr; Previous</button>
+                            <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-8', 1)" style="width:auto; padding:5px 10px; font-size:0.85rem;">Next Question &rarr;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
+                    <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Turning Points | The Korean War -->
+        <div id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Turning Points | The Korean War</h2>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_2.png" alt="A detailed, realistic historical map of the Korean Peninsula circa 1953, stylized to resemble a mid-century military briefing document laid on a wooden desk. The map clearly delineates the 38th Parallel with a stark, jagged red line marking the Demilitarized Zone (DMZ). Blue arrows indicate United Nations forces positioned to the south, while red arrows indicate Chinese and North Korean forces to the north. Partially overlaid in the top left corner is a realistic depiction of a typewritten United Nations Security Council resolution document, subtly stamped with the words 'POLICE ACTION' in faded ink." class="visual-img">
+                        <p class="caption-text">The reliance on a multinational mandate rather than a formal Congressional declaration of war fundamentally altered the execution of American foreign policy. By utilizing executive authority as commander-in-chief to commit massive troop numbers to an overseas conflict, a lasting precedent was established that vastly expanded presidential military power and paved the way for future undeclared interventions.</p>
+                    </div>
+
+                    <h4>The First "Hot" War</h4>
+                    
+                    <h5>The Event</h5>
+                    <p class="first-p">On June 25, 1950, the Cold War dynamic permanently shifted when North Korean forces, heavily armed and supported by the Soviet Union, invaded South Korea. Until this moment, the United States had combated the spread of communism primarily through economic aid, such as the Marshall Plan, and diplomatic alliances, such as the formation of NATO. The invasion of South Korea forced the United States to act on the principles of the Truman Doctrine with direct military force. Securing a mandate from the United Nations, President Truman deployed millions of American troops into combat in Asia, officially transforming the ideological struggle of the Cold War into a massive, physical war.</p>
+
+                    <h5>How Things Changed</h5>
+                    <p class="first-p">The Korean War represented a profound turning point in American foreign policy and the mechanics of presidential power. Previously, the United States had drawn down its military forces dramatically following the end of major conflicts. The Korean War convinced American policymakers that a massive, permanent, peacetime military establishment was absolutely necessary to contain Soviet aggression worldwide. Furthermore, the conflict altered how the United States goes to war. Truman committed forces to Korea without ever seeking a formal declaration of war from Congress, relying instead on his authority as commander-in-chief and the United Nations resolution. This set a major historical precedent, expanding executive power and paving the way for future undeclared military interventions, most notably in Vietnam.</p>
+
+                    <h5>Historical Significance</h5>
+                    <p class="first-p">The conflict not only devastated the Korean peninsula—leaving it permanently divided at the 38th Parallel with millions dead—but it also solidified the global nature of the Cold War. It demonstrated that the United States was willing to spill American blood to defend distant nations that possessed little intrinsic economic or strategic value, simply to uphold the principle of containment. It also ushered in the terrifying era of "limited war" in the nuclear age, as the superpowers learned they had to fight proxy wars without triggering a civilization-ending nuclear exchange.</p>
+
+                    <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 8px;">
+                        <h3>Leadership Evaluation Questions</h3>
+                        
+                        <p class="first-p"><strong>Evaluate Strategy</strong> Why did President Truman’s commitment to the concept of "limited war" in Korea necessitate the removal of General Douglas MacArthur, and what did this reveal about the principle of civilian control over the military?</p>
+                        <textarea class="textarea-dark" id="pq_1" style="margin-bottom: 20px;"></textarea>
+
+                        <p class="first-p"><strong>Compare Viewpoints</strong> Contrast the Soviet Union’s strategy of providing clandestine material support to the North with the United States' decision to lead a transparent, multinational UN coalition. How did these different approaches reflect each superpower's goals in 1950?</p>
+                        <textarea class="textarea-dark" id="pq_2" style="margin-bottom: 20px;"></textarea>
+
+                        <p class="first-p"><strong>Assess the Legacy</strong> How did the precedent of bypassing a formal Congressional declaration of war fundamentally reshape the constitutional balance of power regarding American foreign interventions in the decades that followed?</p>
+                        <textarea class="textarea-dark" id="pq_3"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous</button>
+                    <button id="btn-next-sec-6" class="action-btn" onclick="switchTab('sec-7', 'nav-sec-7')">Next Section &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Vocabulary Activity -->
+        <div id="sec-7" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Test your knowledge of the Cold War's escalation by filling in the blanks with the correct terms.</p>
+
+                    <div class="word-bank">
+                        <div class="word-pill">38th Parallel</div>
+                        <div class="word-pill">Korean War</div>
+                        <div class="word-pill">General Douglas MacArthur</div>
+                        <div class="word-pill">H-Bomb</div>
+                        <div class="word-pill">Dwight D. Eisenhower</div>
+                        <div class="word-pill">John Foster Dulles</div>
+                        <div class="word-pill">Brinkmanship</div>
+                        <div class="word-pill">Central Intelligence Agency (CIA)</div>
+                        <div class="word-pill">Nikita Khrushchev</div>
+                        <div class="word-pill">Sputnik</div>
+                        <div class="word-pill">U-2 Incident</div>
+                        <div class="word-pill">Francis Gary Powers</div>
+                        <div class="word-pill">Mutually Assured Destruction (MAD)</div>
+                    </div>
+
+                    <p class="first-p" style="line-height: 2.5;">
+                        The Cold War intensified when North Korean forces crossed the <input class="cloze-input" type="text" data-answer="38th Parallel"> in 1950, sparking the <input class="cloze-input" type="text" data-answer="Korean War">. Although <input class="cloze-input" type="text" data-answer="General Douglas MacArthur"> initially turned the tide with a brilliant landing at Inchon, his later insubordination regarding the expansion of the war into China led to his dismissal. As the conflict reached a stalemate, the world watched a terrifying technological race unfold. The development of the <input class="cloze-input" type="text" data-answer="H-Bomb"> meant that a single weapon could now destroy entire cities, leading to the strategic reality of <input class="cloze-input" type="text" data-answer="Mutually Assured Destruction (MAD)">, where neither side dared strike first for fear of total annihilation.
+                    </p>
+                    <p style="line-height: 2.5;">
+                        Following the election of <input class="cloze-input" type="text" data-answer="Dwight D. Eisenhower">, U.S. foreign policy became more aggressive. His Secretary of State, <input class="cloze-input" type="text" data-answer="John Foster Dulles">, championed a policy of <input class="cloze-input" type="text" data-answer="Brinkmanship">, or the willingness to go to the edge of nuclear war to maintain peace. Simultaneously, the U.S. began using the <input class="cloze-input" type="text" data-answer="Central Intelligence Agency (CIA)"> to conduct covert operations to overthrow unfriendly regimes.
+                    </p>
+                    <p style="line-height: 2.5;">
+                        The tension moved into the cosmos in 1957 when the Soviet Union, led by <input class="cloze-input" type="text" data-answer="Nikita Khrushchev">, launched <input class="cloze-input" type="text" data-answer="Sputnik">, sparking the Space Race and a crisis in American education. Diplomacy between the two nations finally collapsed in 1960 during the <input class="cloze-input" type="text" data-answer="U-2 Incident">. A high-altitude spy plane piloted by <input class="cloze-input" type="text" data-answer="Francis Gary Powers"> was shot down over Soviet territory, exposing American espionage and ending hopes for a peaceful summit.
+                    </p>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">&larr; Previous</button>
+                    <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+/* Background Management */
+const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+let bgIndex = 0;
+function rotateBackground() {
+    if (bgImages.length === 0) return;
+    const bgEl = document.getElementById('bg-slideshow');
+    if (!bgEl) return;
+    bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+    bgIndex = (bgIndex + 1) % bgImages.length;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    rotateBackground();
+    setInterval(rotateBackground, 10000);
+});
+
+/* Navigation */
+function switchTab(id, btnId = null, scrollTarget = null) {
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+    const activeBtnId = btnId || ('nav-' + id);
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) {
+        activeBtn.classList.add('active-nav');
+    }
+    if (scrollTarget) {
+        setTimeout(() => {
+            const target = document.getElementById(scrollTarget);
+            if(target) {
+                const offset = 40;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = target.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }, 50);
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    saveProgress();
+}
+
+/* Data Collection & Export */
+function collectAssignmentData(isFinal) {
+    const studentName = document.getElementById('student-name').value || "Unknown_Student";
+    const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+    const now = new Date().toLocaleDateString();
+    
+    // GENERATOR: Update assignmentTitle dynamically based on the Chapter
+    const assignmentData = {
+        assignmentTitle: "Interactive Chapter 17.2 - The Cold War Turns Hot",
+        studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+        responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+    };
+
+    // Gather Visual Analysis Answers
+    for(let i=1; i<=20; i++) {
+        let el = document.getElementById('va_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+            assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+        }
+    }
+
+    // Gather Checkpoint Answers
+    for(let i=1; i<=30; i++) {
+        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+        if(inputs.length > 0) {
+            let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+            assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+        }
+    }
+
+    // Gather Perspective Questions
+    for(let i=1; i<=10; i++) {
+        let el = document.getElementById('pq_' + i);
+        if(el) {
+            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+            assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+        }
+    }
+
+    // Gather Cloze Activity Answers
+    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+        assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+    });
+
+    return assignmentData;
+}
+
+function triggerDownload(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadProgress() {
+    const data = collectAssignmentData(false);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+    triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+}
+
+function finishChapter() {
+    const dateField = document.getElementById('completion-date');
+    const now = new Date().toLocaleDateString();
+    if(dateField) dateField.value = now;
+    
+    const data = collectAssignmentData(true);
+    const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+    triggerDownload(data, `Chapter_Export_${safeName}.json`);
+    alert('Upload JSON file to Canvas');
+    switchTab('sec-1', 'nav-sec-1');
+}
+
+/* Loading Progress */
+function loadProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedData = JSON.parse(e.target.result);
+            // Restore ID Panel and Burn In
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            
+            if (loadedData.studentInfo) {
+                if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                    nameInput.value = loadedData.studentInfo.name;
+                    nameInput.setAttribute('readonly', 'true');
+                    nameInput.style.opacity = '0.7'; 
+                }
+                if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                    periodInput.value = loadedData.studentInfo.period;
+                    periodInput.setAttribute('disabled', 'true');
+                    periodInput.style.opacity = '0.7'; 
+                }
+            }
+
+            if (loadedData.responses) {
+                if (loadedData.responses.visualAnalysis) {
+                    for(let i=1; i<=20; i++) {
+                        let el = document.getElementById('va_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
+                            if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                        }
+                    }
+                }
+                
+                if (loadedData.responses.checkpoints) {
+                    for(let i=1; i<=30; i++) {
+                        let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                        if(inputs.length > 0) {
+                            let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                            let savedVal = loadedData.responses.checkpoints[qText];
+                            if (savedVal && savedVal !== "No Answer") {
+                                let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
+                                if(radio) radio.checked = true;
+                            }
+                        }
+                    }
+                }
+
+                if (loadedData.responses.perspectiveQuestions) {
+                    for(let i=1; i<=10; i++) {
+                        let el = document.getElementById('pq_' + i);
+                        if(el) {
+                            let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                            if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                        }
+                    }
+                }
+
+                if (loadedData.responses.clozeActivity) {
+                    document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                        let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                        if (savedVal) input.value = savedVal;
+                    });
+                }
+            }
+            initCheckpoints();
+            alert('Progress loaded successfully!');
+        } catch (err) {
+            console.error(err);
+            alert('Error loading progress file. Please make sure it is a valid JSON file.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* Save & Reset Logic */
+function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+
+function resetProgress() {
+    if(confirm('Are you sure you want to reset all progress?')) {
+        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        
+        // Un-burn ID panel fields
+        const nameInput = document.getElementById('student-name');
+        const periodInput = document.getElementById('student-period');
+        nameInput.removeAttribute('readonly');
+        nameInput.style.opacity = '1';
+        periodInput.removeAttribute('disabled');
+        periodInput.style.opacity = '1';
+        
+        document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+        initCheckpoints();
+        switchTab('sec-1', 'nav-sec-1');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* Checkpoint Management */
+const TOTAL_CHECKPOINTS = 8; // Match total checkpoint blocks generated
+
+function initCheckpoints() {
+    for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+    checkSectionUnlock();
+}
+
+function updateCpUI(blockId) {
+    const block = document.getElementById(blockId);
+    if(!block) return;
+    const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    const indicator = block.querySelector('.cp-indicator');
+    const prevBtn = block.querySelector('.cp-prev-btn');
+    const nextBtn = block.querySelector('.cp-next-btn');
+
+    questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+
+    if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+    if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+    
+    if(nextBtn) {
+        const currentQ = questions[currentIndex];
+        const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+        
+        if (currentIndex === questions.length - 1) {
+            if (isAnswered) {
+                nextBtn.innerText = "Checkpoint Completed ✓";
+                nextBtn.style.borderColor = "var(--color-navy)"; 
+                nextBtn.style.color = "var(--color-cream)"; 
+                nextBtn.style.backgroundColor = "var(--color-navy)";
+                nextBtn.disabled = true; 
+                nextBtn.style.cursor = 'default'; 
+                nextBtn.style.opacity = '1';
+            } else {
+                nextBtn.innerText = "Finish Checkpoint";
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed';
+                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+                nextBtn.style.color = "var(--color-gold)"; 
+                nextBtn.style.borderColor = "var(--color-gold)";
+            }
+        } else {
+            nextBtn.innerText = "Next Question \u2192";
+            nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
+            nextBtn.style.color = "var(--color-gold)"; 
+            nextBtn.style.borderColor = "var(--color-gold)";
+            if (isAnswered) { 
+                nextBtn.disabled = false; 
+                nextBtn.style.opacity = '1'; 
+                nextBtn.style.cursor = 'pointer'; 
+            } else { 
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = '0.5'; 
+                nextBtn.style.cursor = 'not-allowed'; 
+            }
+        }
+    }
+    checkSectionUnlock();
+}
+
+function navigateCp(blockId, dir) {
+    const block = document.getElementById(blockId);
+    let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+    const questions = block.querySelectorAll('.checkpoint-q');
+    
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+    
+    block.setAttribute('data-current', currentIndex);
+    updateCpUI(blockId);
+}
+
+function handleRadioChange(blockId) { 
+    saveProgress(); 
+    updateCpUI(blockId); 
+}
+
+function isAnswered(name) { 
+    return document.querySelector(`input[name="${name}"]:checked`) !== null; 
+}
+
+function setNavButtonState(btnId, enabled) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (enabled) {
+        btn.removeAttribute('disabled'); 
+        btn.style.opacity = '1'; 
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = 'Next Section &rarr;'; 
+        btn.style.borderColor = 'var(--color-gold)';
+    } else {
+        btn.setAttribute('disabled', 'true'); 
+        btn.style.opacity = '0.5'; 
+        btn.style.cursor = 'not-allowed';
+        btn.innerHTML = '🔒 Answer Checkpoints to Continue'; 
+        btn.style.borderColor = 'var(--color-steel-nib)';
+    }
+}
+
+function checkSectionUnlock() {
+    setNavButtonState('btn-next-sec-1', true);
+    setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3'));
+    setNavButtonState('btn-next-sec-3', isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7'));
+    setNavButtonState('btn-next-sec-4', isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11'));
+    setNavButtonState('btn-next-sec-5', isAnswered('cp12') && isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15'));
+    setNavButtonState('btn-next-sec-6', true); // Turning Points section has no checkpoints
+}
+
+// Initialize on load
+window.onload = () => {
+    initCheckpoints();
+};
+</script>
+</body>
+</html>

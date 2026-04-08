@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 17.4 | Suburbia | The American Dream</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --color-navy-deep: #262B2E;
+            --color-cream: #E8F1EE;
+            --color-navy: #4F8C8D;
+            --color-steel-nib: #C96B3B;
+            --color-gold: #D7D94C;
+            --color-gold-light: #ebec8a;
+            --color-wax-red: #A63A3A;
+            --font-heading: 'Times New Roman', serif;
+            --font-body: 'Arial', sans-serif;
+            --font-ui: 'Verdana', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+
+        /* Background Effects */
+        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
+        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
+
+        /* Layout Architecture */
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        /* Left Navigation Panel */
+        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(215, 217, 76, 0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav::-webkit-scrollbar { display: none; }
+        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(215, 217, 76, 0.2); padding-bottom: 0.5rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn.active-nav { background: rgba(215, 217, 76, 0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
+        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
+
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0; }
+            .content-wrapper { padding: 30px 20px; }
+            .content-block { padding: 2rem; }
+        }
+
+        /* Typography */
+        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
+        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
+        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
+        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        p:not(.first-p) { text-indent: 2.5em; }
+        .first-p { text-indent: 0 !important; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+
+        /* UI Elements */
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
+        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
+        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
+        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+
+        /* Spotlights */
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
+        .spotlight-content { display: block; margin-top: 20px; }
+        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0 !important; }
+        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
+        .spotlight-why strong { color: var(--color-gold); }
+
+        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
+        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
+
+        /* Visuals */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
+        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
+        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .id-panel { grid-template-columns: 1fr; }
+            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
+            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+        }
+
+        /* Checkpoint System */
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(215, 217, 76, 0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
+        .checkpoint-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
+        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); font-weight: bold; }
+        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
+        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(215, 217, 76, 0.3); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+
+        /* Cloze Specific */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
+        .word-pill { background: rgba(79, 140, 141, 0.3); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
+        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+
+        /* Buttons & Navigation */
+        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
+        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
+        .action-btn:disabled { transform: none !important; }
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(215, 217, 76, 0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .bottom-nav .action-btn { width: auto; }
+        .chapter-section { display: none; }
+        .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div id="bg-slideshow"></div>
+
+    <div class="app-container">
+        <!-- Navigation Panel -->
+        <nav class="side-nav">
+            <div class="nav-title">Table of Contents</div>
+            <div class="nav-links">
+                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
+                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Peacetime Transition</button>
+                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. The New American Landscape</button>
+                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The Culture of Affluence</button>
+                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. Data and Debate</button>
+                <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Vocabulary Activity</button>
+            </div>
+            <div class="nav-actions">
+                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
+                    Load Progress
+                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+                </label>
+                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Section 1: Start Page -->
+            <section id="sec-1" class="chapter-section active-section">
+                <img src="assets/Header%20Banner%20Chapter%2017.4.png" alt="Header Banner" class="hero-banner-flush">
+                <div class="content-wrapper">
+                    <div class="id-panel">
+                        <div>
+                            <label for="student-name">Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter Full Name" oninput="saveProgress()">
+                        </div>
+                        <div>
+                            <label for="student-period">Period</label>
+                            <select id="student-period" onchange="saveProgress()">
+                                <option value="">Select</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="completion-date">Date Completed</label>
+                            <input type="text" id="completion-date" readonly placeholder="N/A">
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>Core Objectives</h3>
+                        <ul>
+                            <li>Analyze the social and economic effects of the GI Bill of Rights on home ownership and higher education.</li>
+                            <li>Trace the demographic shifts caused by the Baby Boom and the mass migration to planned suburban communities like Levittown.</li>
+                            <li>Evaluate the cultural pressure toward conformity in the 1950s workplace and domestic sphere.</li>
+                        </ul>
+
+                        <h3>Key Terms</h3>
+                        <p class="first-p">GI Bill of Rights | Suburbs | Levittown | Harry S. Truman | Dixiecrat | Fair Deal | Conglomerate | Franchise | Baby Boom | Dr. Jonas Salk | Consumerism | Planned Obsolescence | Interstate Highway Act</p>
+
+                        <h4 style="margin-top: 3rem;">Introduction: The Architecture of Affluence</h4>
+                        <p class="first-p">The end of World War II in 1945 brought joyous celebrations to American streets, but these were accompanied by deep anxieties about a potential return to the devastating depths of the Great Depression. However, instead of an economic collapse, the United States entered an era of unprecedented expansion, fueled by sweeping federal legislation and a massive unleashing of wartime savings. This postwar boom completely transformed the national landscape, driving millions of families into mass-produced residential communities and tethering the American lifestyle to the automobile. Concurrently, this period of immense material prosperity fostered a strict culture of conformity within corporate workplaces and traditional domestic spheres. Ultimately, the 1950s defined the modern standard of living, though this suburban dream was deeply exclusive and strictly regulated by race and geography.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_1.png" class="visual-img" alt="Visual 1">
+                            <p class="caption-text">The massive unleashing of wartime savings and sweeping federal legislation fueled an unprecedented post-war economic boom, driving millions of American families into mass-produced suburban communities and establishing a heavily subsidized, culturally rigid modern standard of living.</p>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Visual Analysis:</strong> How did the transition from a wartime command economy to a peacetime consumer society rely on both government legislation and the financial habits developed by American citizens during the war?</p>
+                                <textarea id="va_1" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <div></div>
+                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2')">Next Section →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Peacetime Transition -->
+            <section id="sec-2" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>The Peacetime Transition</h2>
+                    <div class="content-block">
+                        <p class="first-p">As the guns of war fell silent, America faced the daunting domestic challenge of transitioning from a wartime command economy to a peacetime consumer society. The federal government stepped in to ease this demobilization through the GI Bill of Rights, providing returning veterans with unemployment safety nets, low-interest housing loans, and unprecedented access to higher education. However, the immediate postwar years were also marked by severe economic turbulence, as the sudden lifting of price controls caused skyrocketing inflation, leading to massive, paralyzing strikes by millions of workers. Amidst this instability, President Harry S. Truman navigated deep political fractures; his controversial, principled stand on civil rights alienated Southern Democrats, yet he successfully secured a historic reelection upset and pushed for elements of his Fair Deal program.</p>
+                        
+                        <h3>The GI Blueprint</h3>
+                        <p class="first-p">When the guns of World War II finally fell silent in the late summer of 1945, the joyous celebrations in the streets of American cities were soon accompanied by a profound, underlying anxiety. Millions of American soldiers, sailors, and marines were rapidly demobilizing and returning home, shedding their uniforms, and looking for civilian employment. For the older generation of Americans, the sudden end of wartime production brought back terrifying memories of the 1930s. Government officials and everyday citizens alike feared that the sudden influx of millions of veterans into the labor market, combined with the cancellation of billions of dollars in military contracts, would plunge the United States right back into the devastating depths of the Great Depression. The transition from a wartime command economy to a peacetime consumer economy was arguably the greatest domestic challenge the nation faced.</p>
+                        <p>To ease this massive transition and reward the veterans who had saved the free world, the federal government passed the Servicemen's Readjustment Act of 1944, universally known as the <strong>GI Bill of Rights</strong>. This sweeping legislation fundamentally altered the social and economic landscape of the United States. The law provided a variety of unprecedented benefits to returning veterans. For those unable to find immediate employment, it guaranteed a year’s worth of unemployment benefits, providing a crucial financial safety net while they searched for work. More importantly, the GI Bill offered low-interest, federally guaranteed loans to veterans who wanted to buy a home, purchase a farm, or start a small business. This provision alone fueled a massive surge in home construction and small business creation, serving as the financial foundation for the postwar economic boom.</p>
+                        <p>Perhaps the most transformative aspect of the GI Bill of Rights was its education provision. Prior to World War II, a college education was largely considered a privilege reserved for the wealthy elite. The GI Bill changed this paradigm by offering to pay the tuition and living expenses for veterans who wished to attend college or vocational schools. Millions of veterans, many of whom had grown up in severe poverty during the Depression and had never dreamed of stepping foot on a university campus, eagerly seized this opportunity. College enrollments skyrocketed across the nation, forcing universities to rapidly expand their campuses and hire thousands of new professors. This democratization of higher education created the most highly educated workforce in American history, generating a massive pool of engineers, teachers, doctors, and managers that would drive the incredible technological and economic advancements of the coming decades.</p>
+
+                        <!-- Spotlight 1: Portrait -->
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_1.png" alt="Spotlight 1">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">A poster advertising the benefits of the GI Bill for returning veterans.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The GI Bill fundamentally transformed the American economy by providing working-class veterans with unprecedented access to higher education and homeownership. This legislation established the financial foundation for the massive expansion of the middle class in the postwar era.</p>
+                            </div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Student Question:</strong> How did the educational provisions of the GI Bill contribute to the long-term economic prosperity of the postwar era?</p>
+                                <textarea id="va_2" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 1 -->
+                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">1. What was the primary purpose of the GI Bill of Rights?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To provide financial safety nets, low-interest loans, and college tuition for returning veterans</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To force millions of older workers out of the labor market to make room for returning soldiers</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To immediately draft unemployed civilians into the military</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To permanently end all federal funding for public education</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">2. How did the GI Bill transform higher education in the United States?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) It restricted university enrollment strictly to the wealthy elite</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) It created unprecedented access, allowing millions of veterans to attend college and vocational schools</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) It forced universities to drastically reduce their size and fire thousands of professors</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) It banned the teaching of technical and engineering skills on public campuses</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-1', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-1', 1)">Next Question →</button>
+                            </div>
+                        </div>
+
+                        <h3>The Engine of the Postwar Economy</h3>
+                        <p class="first-p">Despite the profound success of the GI Bill, the immediate postwar economy was not without severe turbulence. During the war, the federal government's Office of Price Administration (OPA) had strictly controlled the prices of everyday goods to prevent inflation. When Congress suddenly lifted these price controls in the summer of 1946, the cost of consumer goods skyrocketed, with prices for basic necessities jumping by as much as 25 percent in a matter of days. This sudden spike drastically reduced the purchasing power of the American worker, sparking fears that the cancellation of military contracts would plunge the nation right back into the depths of the Great Depression.</p>
+                        <p>However, the anticipated economic collapse never arrived, largely due to the financial habits Americans were forced to develop during the war. While citizens had worked long hours and earned high wages in defense plants, strict wartime rationing meant there were very few consumer goods available to purchase. Consequently, Americans had accumulated a staggering $135 billion in savings from defense work, service pay, and investments in war bonds. This massive accumulation of wealth created a powerful financial reservoir just waiting to be tapped by the domestic market.</p>
+                        <p>Furthermore, the postwar boom was not sustained by consumer savings alone; it was heavily propped up by government action and foreign policy. As the Cold War intensified, the federal government maintained incredibly high levels of defense spending—particularly with the outbreak of the Korean War—which kept industrial production high and unemployment low. Additionally, massive foreign aid programs like the Marshall Plan injected billions of dollars into rebuilding Western Europe, which in turn created robust, revitalized foreign markets eager to purchase American exports.</p>
+                        <p>Once factories fully retooled to produce civilian goods rather than tanks and bomber planes, the American public unleashed their saved wealth. Citizens rushed to buy the cars, televisions, electrical appliances, and homes they had been denied for years. This incredible explosion of consumer demand fueled steady, long-term economic growth, expanding the middle class and establishing a standard of living that was the envy of the world, ultimately equating consumerism with the American Dream itself.</p>
+
+                        <!-- Spotlight 2: Portrait -->
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_2.png" alt="Spotlight 2">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">A typical 1950s youth posing with a newly purchased television set.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> After years of wartime rationing and saving, American consumers unleashed billions of dollars into the domestic market. The purchase of new appliances like television sets drove massive industrial production and cemented consumerism as a core element of the new American standard of living.</p>
+                            </div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Student Question:</strong> How does the widespread purchasing of new consumer appliances reflect the economic shift from a wartime command economy to a peacetime consumer economy?</p>
+                                <textarea id="va_3" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 2 -->
+                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">3. Why did consumer prices suddenly skyrocket in the summer of 1946?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) Congress lifted the wartime price controls established by the OPA</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) A widespread drought drastically reduced domestic food production</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) Millions of factory workers voluntarily agreed to work for lower wages</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) The introduction of the first modern credit cards caused massive debt defaults</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">4. What sustained the postwar economic boom alongside accumulated consumer savings?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) High government defense spending and foreign aid programs like the Marshall Plan</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) Mass deportation of immigrant laborers to create jobs for American citizens</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) A complete ban on purchasing manufactured goods from foreign nations</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) The immediate abolition of the federal income tax system</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-2', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-2', 1)">Next Question →</button>
+                            </div>
+                        </div>
+
+                        <h3>Labor on the Brink</h3>
+                        <p class="first-p">Managing the turbulent transition to a peacetime economy fell onto the shoulders of President <strong>Harry S. Truman</strong>. Truman had inherited the presidency following the sudden death of Franklin D. Roosevelt, and he faced an incredibly daunting set of domestic challenges. Not only was he forced to navigate the treacherous early days of the Cold War abroad, but he also had to deal with severe economic instability and deep political divisions at home.</p>
+                        <p>As inflation soared in 1946, American workers found that their paychecks could no longer cover the rising cost of living. In response, millions of workers in the steel, coal, and railroad industries went on strike, demanding higher wages and better working conditions. The sheer scale of these strikes threatened to paralyze the entire national economy. Truman, generally a friend to organized labor, grew increasingly furious at the union leaders, believing that their strikes were threatening national security during a fragile time. In a dramatic display of executive power, Truman threatened to draft the striking railroad workers into the military and then order them, as soldiers, to stay on the job. Before he could follow through on this unprecedented threat, the unions backed down and reached a settlement. However, the strikes severely damaged Truman's popularity, leading the American public to elect a conservative Republican majority to Congress in 1946, a legislative body that would consistently block Truman's domestic agenda.</p>
+
+                        <!-- Spotlight 3: Landscape -->
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_3.png" alt="Spotlight 3">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Workers picketing during the immense nationwide labor strikes of 1946.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> As postwar inflation soared, millions of workers found their wages unable to match the rising cost of living, leading to massive strikes that threatened to paralyze the nation. This wave of labor unrest forced President Truman into a high-stakes confrontation with union leaders at a critical moment in the economic transition.</p>
+                                <div class="question-box">
+                                    <p class="first-p"><strong>Student Question:</strong> Why did the sudden lifting of wartime price controls lead directly to massive labor strikes across multiple major industries?</p>
+                                    <textarea id="va_4" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 3 -->
+                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">5. Why did millions of American workers go on strike in 1946?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) Their wages could no longer cover the rapidly rising cost of living caused by postwar inflation</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) They wanted to protest the integration of the U.S. armed forces</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) They were demanding a reduction in the national minimum wage</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) They opposed the expansion of Social Security coverage</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-3', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 1</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-3', 1)">Next Question →</button>
+                            </div>
+                        </div>
+
+                        <h3>Truman's Upset</h3>
+                        <p class="first-p">Despite his struggles with the economy, Truman took a bold and historic stand on the issue of civil rights. Following the war, African American veterans who had fought for freedom overseas returned home to face brutal racism, systemic segregation, and horrific violence, particularly in the South. Truman, horrified by reports of violence against Black veterans, appointed a presidential commission on civil rights. Following their recommendations, he asked Congress to pass a federal anti-lynching law, a ban on the poll tax as a voting requirement, and a permanent civil rights commission. When the conservative Congress flatly refused to pass any of these measures, Truman used his executive authority. In 1948, he issued a landmark executive order mandating the complete integration of the United States armed forces, ending the policy of racially segregated military units. He also ordered an end to discrimination in the hiring of government employees.</p>
+                        <p>Truman's principled stand on civil rights triggered a massive political revolt within his own Democratic Party. As the 1948 presidential election approached, a large group of Southern Democrats, furious over Truman's integration policies, stormed out of the national convention. They formed the States' Rights Democratic Party and nominated Governor Strom Thurmond of South Carolina for president. These rebellious Southern politicians became known as the <strong>Dixiecrat</strong> faction. They were determined to protect the Southern system of racial segregation and prevent any federal interference in state laws.</p>
+                        <p>With his party fractured by the Dixiecrats on the right and by a progressive faction on the left, practically every political expert and newspaper in the country predicted that Truman would suffer a crushing defeat to the Republican candidate, Governor Thomas E. Dewey of New York. Refusing to surrender, Truman launched a furious, nationwide "whistle-stop" train tour. He traveled across the country, giving hundreds of fiery speeches from the back of a train, attacking the "do-nothing" Republican Congress. In one of the greatest political upsets in American history, Truman won reelection, famously holding up a prematurely printed newspaper with the headline "Dewey Defeats Truman" while celebrating his victory. Emboldened by his win, Truman proposed an ambitious economic program he called the <strong>Fair Deal</strong>. An extension of Roosevelt's New Deal, the Fair Deal proposed nationwide compulsory health insurance and a crop-subsidy system to provide a steady income for farmers. While conservative opposition in Congress defeated his health care and farming proposals, Truman successfully pushed through an increase in the minimum wage, an expansion of Social Security coverage, and federal funding for low-income housing projects.</p>
+
+                        <!-- Spotlight 4: Landscape -->
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_4.png" alt="Spotlight 4">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">President Truman joyously holding up a Chicago Tribune newspaper that incorrectly announced his defeat.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Despite deep political fractures within his own party and facing almost certain defeat, Truman's aggressive whistle-stop campaign secured a shocking victory in the 1948 election. This moment demonstrates how his administration survived the Dixiecrat rebellion and secured a mandate to push for his Fair Deal programs.</p>
+                                <div class="question-box">
+                                    <p class="first-p"><strong>Student Question:</strong> Why is the 1948 presidential election considered a pivotal moment for both the Democratic Party and the broader civil rights debate?</p>
+                                    <textarea id="va_5" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 4 -->
+                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">6. What bold action did President Truman take regarding civil rights in 1948?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-4')"> A) He issued an executive order mandating the complete integration of the U.S. armed forces</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-4')"> B) He successfully passed a federal anti-lynching law through the conservative Congress</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-4')"> C) He established the massive, racially segregated Levittown development</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-4')"> D) He formed the States' Rights Democratic Party to protect racial segregation</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">7. Why did the Dixiecrat faction split from the Democratic Party in 1948?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) They were furious over Truman's civil rights policies and determined to protect racial segregation</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) They wanted to expand the Fair Deal to include nationwide compulsory health insurance</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) They opposed Truman's decision to draft striking railroad workers into the military</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) They believed the GI Bill provided too many housing loans to suburban minority candidates</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-4', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-4', 1)">Next Question →</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-1')">← Previous Section</button>
+                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3')">Next Section →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: New American Landscape -->
+            <section id="sec-3" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>The New American Landscape</h2>
+                    <div class="content-block">
+                        <p class="first-p">With the economy roaring to life, the physical geography and demographic makeup of the nation shifted dramatically. Facing a severe housing shortage, developers like William Levitt utilized factory assembly line techniques to build affordable, planned residential communities outside of crowded cities, kicking off a mass migration to the suburbs. This suburban explosion was matched by an incredible demographic shift, as economic confidence led to a massive spike in the birth rate that fundamentally altered the national economy and culture. Concurrently, monumental scientific breakthroughs and public works, such as the eradication of polio and the construction of the interstate highway system, radically improved public health and physically connected the newly sprawling suburban map.</p>
+                        
+                        <h3>Engineering the Suburbs</h3>
+                        <p class="first-p">As the American economy roared to life in the 1950s, the physical landscape of the nation underwent a radical transformation. Returning veterans faced a severe housing shortage. During the Great Depression and World War II, very few new homes had been constructed. In the late 1940s, it was common to find multiple families crammed into tiny apartments, or living in converted streetcars, grain silos, and even coal sheds. The desperate need for affordable family housing led to the creation of the modern <strong>Suburbs</strong>—residential communities located outside of crowded, industrial city centers.</p>
+                        <p>The pioneer of this suburban revolution was a developer named William Levitt. Levitt utilized the mass-production techniques of the factory assembly line and applied them to home construction. By standardizing the design, pre-cutting the lumber, and breaking the building process down into twenty-seven distinct steps, Levitt’s crews could build houses at an astonishing speed. In a potato field on Long Island, New York, Levitt built a massive, planned community that came to be known as <strong>Levittown</strong>. Featuring rows of identical, affordable homes with neat front lawns, white picket fences, and modern appliances, Levittown became the blueprint for the American Dream. Thousands of young families flocked to these developments, utilizing the low-interest loans provided by the GI Bill of Rights. However, this suburban dream was deliberately exclusive. Levittown and similar communities frequently employed restrictive covenants—legal clauses written into the property deeds that explicitly forbade the sale or rental of the homes to African Americans, Jewish Americans, and other minority groups, permanently cementing racial segregation into the geography of the postwar landscape.</p>
+                        <p>The mass migration to the suburbs was accompanied by an unprecedented demographic explosion. As soldiers returned home and economic confidence soared, Americans began getting married at younger ages and having significantly more children than previous generations. This massive spike in the birth rate, which lasted from the late 1940s to the early 1960s, is known as the <strong>Baby Boom</strong>. At the height of the boom in 1957, an American infant was born every seven seconds. This generation became the largest in the nation's history, fundamentally altering the American economy and culture. The baby boom fueled an insatiable demand for larger houses, new schools, children’s clothing, and toys. Entire industries pivoted to cater to the needs of these growing families, elevating child-rearing to a national obsession and cementing the image of the nuclear family as the absolute center of American life.</p>
+
+                        <!-- Spotlight 5: Landscape -->
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_5.png" alt="Spotlight 5">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">An aerial view showing the mass-produced, standardized houses of an early suburban Levittown community.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Levittown represented a radical transformation of the American landscape, utilizing factory assembly line techniques to mass-produce affordable, single-family homes. This explicitly planned development triggered a massive demographic migration out of cities, while simultaneously enforcing strict racial segregation through restrictive covenants.</p>
+                                <div class="question-box">
+                                    <p class="first-p"><strong>Student Question:</strong> In what ways did the mass-production techniques used to build suburban tract housing compare to the industrial methods developed during wartime manufacturing?</p>
+                                    <textarea id="va_6" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 5 -->
+                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">8. How did William Levitt revolutionize the home construction industry?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-5')"> A) He successfully applied factory assembly line techniques to rapidly build standardized, affordable houses</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-5')"> B) He convinced Congress to strictly limit all new residential construction to crowded city centers</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-5')"> C) He designed luxury high-rise apartments exclusively for wealthy corporate executives</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-5')"> D) He pioneered the immediate integration of massive suburban developments</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">9. What was the primary demographic impact of the Baby Boom?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) It created an enormous spike in the birth rate that fueled demand for larger homes, schools, and consumer goods</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) It sharply decreased the national demand for children's toys and clothing</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) It led to a massive movement away from traditional nuclear family models</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) It forced the government to impose strict nationwide limits on family size</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-5', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-5', 1)">Next Question →</button>
+                            </div>
+                        </div>
+
+                        <h3>Paving the Future</h3>
+                        <p class="first-p">The prosperity of the era was also marked by incredible medical advancements that saved the lives of millions of these children. For decades, the disease poliomyelitis, or polio, had terrorized American families, paralyzing or killing thousands of children every summer. In 1955, the brilliant medical researcher <strong>Dr. Jonas Salk</strong> introduced the first effective polio vaccine. The federal government sponsored a massive, nationwide inoculation program, distributing the vaccine to millions of schoolchildren. Within a few short years, the terrifying threat of polio was virtually eliminated, symbolizing the triumph of modern American science and improving the quality of life for the baby boom generation.</p>
+                        <p>To connect this rapidly expanding network of suburban communities with the cities where people worked, the government undertook the largest public works project in American history. In 1956, President Dwight D. Eisenhower signed the <strong>Interstate Highway Act</strong>, which authorized the construction of a 41,000-mile network of high-speed, multi-lane expressways spanning the entire nation. While the highway system was publicly promoted as a necessity for the new suburban commuter and the exploding automobile industry, Eisenhower also viewed it as a critical national defense measure, allowing for the rapid evacuation of major cities and the swift movement of military convoys in the event of a Soviet nuclear attack. The new highways transformed America; they accelerated the decline of the commercial railroad system, sparked the creation of drive-in restaurants, motels, and massive shopping malls, and fundamentally tethered the American lifestyle to the automobile.</p>
+
+                        <!-- Spotlight 6: Portrait -->
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_6.png" alt="Spotlight 6">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Dr. Jonas Salk, the medical researcher who successfully developed the first effective vaccine against polio.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The introduction of the polio vaccine was a monumental public health breakthrough that saved millions of children from a terrifying, paralyzing disease. This massive nationwide inoculation campaign symbolized the triumph of modern American science and drastically improved the security of the baby boom generation.</p>
+                            </div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Student Question:</strong> How did the successful campaign to eradicate polio reflect the era's broader confidence in scientific innovation and government-sponsored public health initiatives?</p>
+                                <textarea id="va_7" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 6 -->
+                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">10. What was President Eisenhower's secondary justification for the Interstate Highway Act of 1956?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-6')"> A) It served as a national defense measure allowing for rapid military transport and city evacuations</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-6')"> B) It intentionally dismantled the newly created fast-food franchise system</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-6')"> C) It forced Americans to rely strictly on the commercial railroad system rather than automobiles</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-6')"> D) It deliberately contained all new middle-class housing projects strictly within major city limits</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-6', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 1</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-6', 1)">Next Question →</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-2')">← Previous Section</button>
+                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4')">Next Section →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Culture of Affluence -->
+            <section id="sec-4" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>The Culture of Affluence</h2>
+                    <div class="content-block">
+                        <p class="first-p">The extraordinary prosperity of the 1950s fundamentally altered the nature of American work and established strict societal expectations. The rise of massive multi-industry corporations and standardized business models created a surge in white-collar jobs, offering employees secure, comfortable lives in exchange for an intense psychological pressure to conform and surrender their individuality. This pressure extended deeply into the domestic sphere, where rigid gender roles were strictly enforced, even as many women secretly felt profoundly unfulfilled by their suburban isolation. The ultimate reward for this conformity was an era of rampant consumerism, driven by easy credit, sophisticated advertising, and planned obsolescence, though this gleaming facade often masked the rapid decay of urban centers left behind by affluent white flight.</p>
+                        
+                        <h3>The Culture of Conformity</h3>
+                        <p class="first-p">As millions of Americans settled into their new suburban homes, the nature of American work shifted dramatically. For the first time in the nation's history, white-collar workers—those in clerical, managerial, or professional occupations—outnumbered blue-collar, manual laborers. The postwar economic boom led to the massive expansion of corporate America, fundamentally altering the way businesses operated and how workers viewed their careers.</p>
+                        <p>One of the defining economic developments of the era was the rise of the <strong>Conglomerate</strong>. A conglomerate is a massive, multi-industry corporation made up of several smaller, completely unrelated companies. To protect themselves against downturns in any single market, large corporations began buying up diverse businesses. For example, a company that primarily manufactured electronics might purchase a car rental agency, an insurance firm, and a hotel chain. This diversification guaranteed corporate stability and created vast bureaucracies of mid-level managers who spent their days in identical office buildings. Alongside conglomerates, the 1950s witnessed the explosion of the <strong>Franchise</strong> business model. A franchise is a company that offers similar products or services in many different locations, sold by independent business owners who pay to use the parent company's name and system. The most famous early example was McDonald's, led by entrepreneur Ray Kroc, who standardized the fast-food process to guarantee that a customer would receive the exact same hamburger in California as they would in New York.</p>
+                        <p>These massive corporate structures offered their employees secure, well-paying jobs, excellent health benefits, and comfortable retirements. However, this security came with a steep psychological cost: the intense pressure to conform. The corporate culture of the 1950s highly valued team players who did not rock the boat, who dressed similarly, and who agreed with the company's established practices. Sociologists and writers of the era noted that businesses were actively weeding out creative, independent thinkers in favor of the "organization man," a loyal employee who surrendered his individuality for the sake of corporate harmony. This pressure to conform extended deeply into the domestic sphere of the suburbs. There were profound social expectations regarding how a middle-class family should live: the husband was expected to be the sole breadwinner, while the wife was expected to find ultimate fulfillment as a cheerful homemaker and mother. Despite these rigid cultural scripts, many women secretly felt deeply unfulfilled by the isolating routine of suburban domesticity, planting the seeds for the feminist movement of the following decade.</p>
+
+                        <!-- Spotlight 7: Portrait -->
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_7.png" alt="Spotlight 7">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">An early McDonald's restaurant highlighting the standardized approach to fast food and franchise business.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The explosion of franchise businesses like McDonald's fundamentally altered the American economic landscape by prioritizing predictable, standardized services over independent, localized businesses. This shift toward mass corporate structures closely mirrored the broader societal push toward conformity and uniform middle-class lifestyles.</p>
+                            </div>
+                            <div class="question-box">
+                                <p class="first-p"><strong>Student Question:</strong> How does the business model of a nationwide franchise like McDonald's reflect the societal pressures toward conformity in postwar corporate culture?</p>
+                                <textarea id="va_8" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 7 -->
+                        <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">11. How did the rise of the conglomerate and franchise business models affect the white-collar workplace?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-7')"> A) They created massive bureaucracies that prioritized the "organization man" while applying intense pressure to conform</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-7')"> B) They deliberately encouraged radical independence and creative disruption over pure corporate loyalty</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-7')"> C) They dramatically reduced the total number of professional managers and clerical workers</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-7')"> D) They ensured that most American workers lived in severe poverty throughout the post-war era</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">12. According to sociologists of the era, what was the primary expectation for middle-class women living in the suburbs?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-7')"> A) To aggressively pursue executive positions within major multi-industry conglomerates</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-7')"> B) To find ultimate fulfillment as cheerful homemakers and mothers</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-7')"> C) To immediately organize massive labor strikes that threatened to freeze the national economy</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-7')"> D) To serve as the sole breadwinners while their husbands primarily focused on child-rearing</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-7', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-7', 1)">Next Question →</button>
+                            </div>
+                        </div>
+
+                        <h3>The Price of Prosperity</h3>
+                        <p class="first-p">The ultimate reward for this corporate and suburban conformity was unprecedented material wealth. The 1950s became the golden age of <strong>Consumerism</strong>, as buying material goods came to be equated with American success and a patriotic defense against communism. Flush with cash and fueled by an explosion of easy credit, including the introduction of the first modern credit cards, Americans purchased a dazzling array of new products. Sales of washing machines, refrigerators, electric blenders, and especially televisions skyrocketed.</p>
+                        <p>To ensure that consumers kept buying even after they had acquired these new items, manufacturers enthusiastically embraced the strategy of <strong>Planned Obsolescence</strong>. In this system, companies purposely designed products to become outdated, wear out, or break down within a short period of time. Furthermore, the automobile and fashion industries introduced new designs every single year, convincing consumers that last year's model was hopelessly out of style. Americans were constantly pressured by a highly sophisticated advertising industry to discard their perfectly functional goods and buy the newest, most modern replacements.</p>
+                        <p>However, this gleaming image of the American Dream was profoundly incomplete. The mass migration of affluent white families to the suburbs—a process often referred to as "white flight"—drained American cities of vital tax revenue. As businesses and middle-class residents abandoned the urban core, city centers fell into rapid decay, leaving behind millions of African American, Latino, and working-class citizens trapped in deteriorating neighborhoods with underfunded schools, failing infrastructure, and limited economic opportunities. While television commercials and magazine advertisements broadcast an idealized vision of universal middle-class prosperity, the reality of the 1950s was a deeply divided nation, where access to the suburban dream was strictly regulated by race and geography.</p>
+
+                        <!-- Spotlight 8: Landscape -->
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_8.png" alt="Spotlight 8">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">A declining urban neighborhood left behind as affluent residents migrated to newly constructed suburbs.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> While the 1950s were characterized by incredible suburban affluence, this prosperity deliberately excluded millions of minority and working-class citizens who were trapped in deteriorating urban centers. The mass migration of white flight drained cities of crucial tax revenue, setting the stage for deep geographic and racial divides.</p>
+                                <div class="question-box">
+                                    <p class="first-p"><strong>Student Question:</strong> Why did the incredible wealth generated by the postwar economic boom fail to reach the residents of major urban centers?</p>
+                                    <textarea id="va_9" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkpoint Block 8 -->
+                        <div class="checkpoint-block" id="cp-block-8" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">13. Which business strategy successfully encouraged Americans to constantly purchase new consumer goods?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-8')"> A) Planned obsolescence, which intentionally designed products to become quickly outdated or break down</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-8')"> B) The total elimination of all modern credit cards and installment payment plans</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-8')"> C) The immediate prohibition of commercial television sets and electric blenders</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-8')"> D) A massive reduction in complex advertising campaigns tailored toward suburban housewives</label>
+                                </div>
+                                <div class="checkpoint-q" style="display:none;">
+                                    <p class="first-p">14. How did the phenomenon known as "white flight" impact American urban centers?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-8')"> A) It dramatically increased total city populations by drawing affluent individuals from surrounding rural territories</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-8')"> B) It rapidly infused urban cores with unprecedented streams of high commercial tax revenue</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-8')"> C) It drained cities of vital tax revenue and trapped minorities in deteriorating neighborhoods with limited opportunities</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-8')"> D) It completely eliminated economic disparities by equally dispersing all material wealth across urban landscapes</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-8', -1)">← Previous</button>
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-weight: bold; color: var(--color-gold);">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-8', 1)">Next Question →</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-3')">← Previous Section</button>
+                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5')">Next Section →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Data and Debate -->
+            <section id="sec-5" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>Quantitative & Spatial Analysis | Data and Debate</h2>
+                    <div class="content-block">
+                        <h4>The Baby Boom and the Suburban Explosion</h4>
+                        
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" class="visual-img" alt="Visual 2">
+                            <p class="caption-text">The rapid expansion of suburban housing and the ensuing spike in automobile ownership heavily subsidized affluent families, while discriminatory practices and restrictive covenants trapped minority populations in underfunded, decaying urban centers, creating deep spatial and economic inequalities.</p>
+                        </div>
+
+                        <h5>The Evidence</h5>
+                        <p class="first-p">Between 1940 and 1960, the demographic and spatial data of the United States shifted more dramatically than at almost any other time in history. Census data reveals that the U.S. birth rate plummeted during the Great Depression, but following the end of World War II, it skyrocketed. In 1957 alone, over 4.3 million babies were born. Concurrently, data tracking housing construction shows a massive spike. In 1944, only 114,000 new single-family homes were started; by 1950, that number had surged to nearly 1.7 million, with the vast majority of these new homes being built in newly zoned suburban tracts outside of major urban centers. Automobile ownership data mirrored this trend, jumping from roughly 26 million registered cars in 1945 to over 60 million by 1960.</p>
+
+                        <h5>What the Data Reveals</h5>
+                        <p class="first-p">These three data points—the soaring birth rate, the explosion of suburban housing construction, and the massive increase in automobile ownership—are intimately connected. The data reveals a young, rapidly expanding population that possessed the economic confidence to start large families. It shows that as these families grew, they utilized the low-interest loans of the GI Bill to move out of crowded city apartments into spacious, single-family suburban homes. Finally, the car data proves that this new suburban lifestyle was entirely dependent on the automobile, as these new communities were built far away from urban jobs and traditional public transportation networks.</p>
+
+                        <h5>The Historical Debate</h5>
+                        <p class="first-p">Historians vigorously debate the long-term impact of these statistics. Traditional historians often point to this data as evidence of the "Golden Age" of American capitalism, arguing that the suburban explosion represented a magnificent democratization of wealth, allowing millions of working-class veterans to achieve the dream of homeownership. Revisionist historians, however, interpret the same data as evidence of systemic inequality. They argue that the housing data hides the reality of restrictive covenants and discriminatory lending practices (redlining) that explicitly barred African Americans and other minorities from purchasing homes in these booming suburbs, essentially locking them out of the primary engine of middle-class wealth creation for generations.</p>
+
+                        <h5>Why It Matters</h5>
+                        <p class="first-p">The spatial shift from the city to the suburb dictated the future of American politics, economics, and environmental policy. The demand generated by the baby boom fueled a massive consumer economy, necessitating the building of thousands of new schools, shopping malls, and hospitals. Conversely, the "white flight" indicated by this data left inner cities starved of tax revenue, setting the stage for the severe urban crises and racial unrest that would explode across the nation in the 1960s.</p>
+
+                        <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 8px;">
+                            <h3>Spatial Reasoning Questions</h3>
+                            
+                            <p class="first-p"><strong>Synthesize Connections:</strong> Analyze the relationship between the surge in housing starts and the jump in automobile registrations; why did the physical layout of the new suburbs make the car a functional necessity rather than a luxury?</p>
+                            <textarea id="pq_1" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+
+                            <p class="first-p" style="margin-top: 1.5rem;"><strong>Check for Bias:</strong> Compare the "Golden Age" interpretation with the revisionist perspective; how does the inclusion of data regarding redlining and restrictive covenants change the narrative of the "democratization of wealth"?</p>
+                            <textarea id="pq_2" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+
+                            <p class="first-p" style="margin-top: 1.5rem;"><strong>Trace the Cause:</strong> Evaluate the long-term consequences of "white flight" as suggested by the shift in tax revenue; how did the spatial reorganization of the 1950s contribute to the urban economic crises of the following decade?</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Type your response here..." oninput="saveProgress()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-4')">← Previous Section</button>
+                        <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6')">Next Section →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Vocabulary Activity -->
+            <section id="sec-6" class="chapter-section">
+                <div class="content-wrapper">
+                    <h2>Vocabulary Activity</h2>
+                    <div class="content-block">
+                        <p class="first-p">Read the historical narrative below and fill in the numbered blanks using the correct term from the Word Bank. Each term will be used exactly once.</p>
+                        
+                        <div class="word-bank">
+                            <span class="word-pill">GI Bill of Rights</span>
+                            <span class="word-pill">Suburbs</span>
+                            <span class="word-pill">Levittown</span>
+                            <span class="word-pill">Harry S. Truman</span>
+                            <span class="word-pill">Dixiecrat</span>
+                            <span class="word-pill">Fair Deal</span>
+                            <span class="word-pill">Conglomerate</span>
+                            <span class="word-pill">Franchise</span>
+                            <span class="word-pill">Baby Boom</span>
+                            <span class="word-pill">Dr. Jonas Salk</span>
+                            <span class="word-pill">Consumerism</span>
+                            <span class="word-pill">Planned Obsolescence</span>
+                            <span class="word-pill">Interstate Highway Act</span>
+                        </div>
+
+                        <p class="first-p">Following the allied victory in World War II, President <strong>1. <input type="text" class="cloze-input" data-index="1" oninput="saveProgress()"></strong> faced the enormous task of transitioning the United States to a peacetime economy. To prevent another depression and assist returning veterans, the federal government passed the <strong>2. <input type="text" class="cloze-input" data-index="2" oninput="saveProgress()"></strong>, which provided crucial financial safety nets, paid for college tuitions, and offered low-interest loans.</p>
+
+                        <p>These loans fueled a mass migration out of crowded city centers and into planned residential communities known as the <strong>3. <input type="text" class="cloze-input" data-index="3" oninput="saveProgress()"></strong>. The most famous blueprint for these mass-produced neighborhoods was <strong>4. <input type="text" class="cloze-input" data-index="4" oninput="saveProgress()"></strong>, built in a New York potato field. As families settled into these affordable homes, economic confidence soared, resulting in a massive demographic spike in the birth rate known as the <strong>5. <input type="text" class="cloze-input" data-index="5" oninput="saveProgress()"></strong>. To protect this growing generation from devastating illnesses, medical science advanced rapidly, highlighted by the polio vaccine introduced by <strong>6. <input type="text" class="cloze-input" data-index="6" oninput="saveProgress()"></strong>. To physically connect this sprawling new landscape and ensure rapid military transport in case of a Cold War emergency, the government passed the <strong>7. <input type="text" class="cloze-input" data-index="7" oninput="saveProgress()"></strong>.</p>
+
+                        <p>Economically, the workplace transformed as large corporations dominated the landscape. Some businesses chose to diversify into a massive <strong>8. <input type="text" class="cloze-input" data-index="8" oninput="saveProgress()"></strong> to protect themselves against single-market downturns, while others utilized the <strong>9. <input type="text" class="cloze-input" data-index="9" oninput="saveProgress()"></strong> model to sell standardized products across different locations. The ultimate reward for corporate loyalty was unprecedented material wealth, kicking off a golden age of <strong>10. <input type="text" class="cloze-input" data-index="10" oninput="saveProgress()"></strong>. To ensure Americans kept purchasing new appliances and cars, manufacturers enthusiastically embraced the strategy of <strong>11. <input type="text" class="cloze-input" data-index="11" oninput="saveProgress()"></strong>, purposely designing products to become outdated or break down quickly.</p>
+
+                        <p>Politically, the era was defined by intense fractures. The president's bold executive orders integrating the military and his push for civil rights angered Southern politicians, leading them to form the rebellious <strong>12. <input type="text" class="cloze-input" data-index="12" oninput="saveProgress()"></strong> faction during the 1948 election. Despite this split, the president secured a stunning victory and attempted to expand the social safety net through an ambitious economic program called the <strong>13. <input type="text" class="cloze-input" data-index="13" oninput="saveProgress()"></strong>.</p>
+                    </div>
+
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-5')">← Previous Section</button>
+                        <button class="action-btn" style="background: var(--color-navy); color: white; border-color: var(--color-navy);" onclick="finishChapter()">Finished ✓</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /* Background Management */
+        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+        let bgIndex = 0;
+        function rotateBackground() {
+            if (bgImages.length === 0) return;
+            const bgEl = document.getElementById('bg-slideshow');
+            if (!bgEl) return;
+            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+            bgIndex = (bgIndex + 1) % bgImages.length;
+        }
+
+        /* Navigation */
+        function switchTab(id, btnId = null, scrollTarget = null) {
+            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            const activeBtnId = btnId || ('nav-' + id);
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if(target) {
+                        const offset = 40;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            saveProgress();
+        }
+
+        /* Data Collection & Export */
+        function collectAssignmentData(isFinal) {
+            const studentName = document.getElementById('student-name').value || "Unknown_Student";
+            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+            const now = new Date().toLocaleDateString();
+            
+            const assignmentData = {
+                assignmentTitle: "Interactive Chapter 17.4 - Suburbia | The American Dream",
+                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+            };
+
+            for(let i=1; i<=9; i++) {
+                let el = document.getElementById('va_' + i);
+                if(el) {
+                    let promptLabel = "Visual Prompt " + i;
+                    if(el.previousElementSibling && el.previousElementSibling.innerText) {
+                        promptLabel = el.previousElementSibling.innerText.trim();
+                    }
+                    assignmentData.responses.visualAnalysis[promptLabel] = el.value.trim();
+                }
+            }
+
+            for(let i=1; i<=14; i++) {
+                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                if(inputs.length > 0) {
+                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+                }
+            }
+
+            for(let i=1; i<=3; i++) {
+                let el = document.getElementById('pq_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+                }
+            }
+
+            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+            });
+
+            return assignmentData;
+        }
+
+        function triggerDownload(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadProgress() {
+            const data = collectAssignmentData(false);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
+        }
+
+        function finishChapter() {
+            const dateField = document.getElementById('completion-date');
+            const now = new Date().toLocaleDateString();
+            if(dateField) dateField.value = now;
+            const data = collectAssignmentData(true);
+            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+            triggerDownload(data, `Chapter_Export_${safeName}.json`);
+            alert('Upload JSON file to Canvas');
+            switchTab('sec-1');
+        }
+
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    const nameInput = document.getElementById('student-name');
+                    const periodInput = document.getElementById('student-period');
+                    
+                    if (loadedData.studentInfo) {
+                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                            nameInput.value = loadedData.studentInfo.name;
+                            nameInput.setAttribute('readonly', 'true');
+                            nameInput.style.opacity = '0.7'; 
+                        }
+                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                            periodInput.value = loadedData.studentInfo.period;
+                            periodInput.setAttribute('disabled', 'true');
+                            periodInput.style.opacity = '0.7'; 
+                        }
+                    }
+
+                    if (loadedData.responses) {
+                        for(let i=1; i<=9; i++) {
+                            let el = document.getElementById('va_' + i);
+                            if(el) {
+                                let label = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : "";
+                                if(loadedData.responses.visualAnalysis[label]) el.value = loadedData.responses.visualAnalysis[label];
+                            }
+                        }
+                        for(let i=1; i<=14; i++) {
+                            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                            if(inputs.length > 0) {
+                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                let savedVal = loadedData.responses.checkpoints[qText];
+                                if (savedVal && savedVal !== "No Answer") {
+                                    let radio = document.querySelector('input[name="cp' + i + '"][value="' + savedVal + '"]');
+                                    if(radio) radio.checked = true;
+                                }
+                            }
+                        }
+                        for(let i=1; i<=3; i++) {
+                            let el = document.getElementById('pq_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : "";
+                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                            }
+                        }
+                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                            if (savedVal) input.value = savedVal;
+                        });
+                    }
+                    initCheckpoints();
+                    alert('Progress loaded successfully!');
+                } catch (err) {
+                    console.error(err);
+                    alert('Error loading progress file.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function saveProgress() { console.log('State updated.'); checkSectionUnlock(); }
+
+        function resetProgress() {
+            if(confirm('Are you sure you want to reset all progress?')) {
+                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+                const nameInput = document.getElementById('student-name');
+                const periodInput = document.getElementById('student-period');
+                nameInput.removeAttribute('readonly'); nameInput.style.opacity = '1';
+                periodInput.removeAttribute('disabled'); periodInput.style.opacity = '1';
+                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+                initCheckpoints();
+                switchTab('sec-1');
+            }
+        }
+
+        /* Checkpoint Management */
+        const TOTAL_CHECKPOINTS = 8; 
+
+        function initCheckpoints() {
+            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
+            checkSectionUnlock();
+        }
+
+        function updateCpUI(blockId) {
+            const block = document.getElementById(blockId);
+            if(!block) return;
+            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            const indicator = block.querySelector('.cp-indicator');
+            const prevBtn = block.querySelector('.cp-prev-btn');
+            const nextBtn = block.querySelector('.cp-next-btn');
+
+            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+            
+            if(nextBtn) {
+                const currentQ = questions[currentIndex];
+                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+                if (currentIndex === questions.length - 1) {
+                    if (isAnswered) {
+                        nextBtn.innerText = "Checkpoint Completed ✓";
+                        nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
+                        nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+                    } else {
+                        nextBtn.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
+                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    }
+                } else {
+                    nextBtn.innerText = "Next Question →";
+                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; }
+                    else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+                }
+            }
+        }
+
+        function navigateCp(blockId, dir) {
+            const block = document.getElementById(blockId);
+            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            currentIndex += dir;
+            block.setAttribute('data-current', currentIndex);
+            updateCpUI(blockId);
+        }
+
+        function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
+        
+        function isAns(name) { 
+            return document.querySelector('input[name="' + name + '"]:checked') !== null; 
+        }
+
+        function setNavButtonState(btnId, enabled) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (enabled) {
+                btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+                btn.innerHTML = 'Next Section →'; btn.style.borderColor = 'var(--color-gold)';
+            } else {
+                btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
+                btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+            }
+        }
+
+        function checkSectionUnlock() {
+            setNavButtonState('btn-next-sec-1', true);
+            
+            const sec1Done = isAns('cp1') && isAns('cp2') && isAns('cp3') && isAns('cp4') && isAns('cp5') && isAns('cp6') && isAns('cp7');
+            setNavButtonState('btn-next-sec-2', sec1Done);
+            
+            const sec2Done = sec1Done && isAns('cp8') && isAns('cp9') && isAns('cp10');
+            setNavButtonState('btn-next-sec-3', sec2Done);
+            
+            const sec3Done = sec2Done && isAns('cp11') && isAns('cp12') && isAns('cp13') && isAns('cp14');
+            setNavButtonState('btn-next-sec-4', sec3Done);
+            
+            setNavButtonState('btn-next-sec-5', sec3Done);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateBackground();
+            setInterval(rotateBackground, 10000);
+            initCheckpoints();
+        });
+    </script>
+</body>
+</html>
