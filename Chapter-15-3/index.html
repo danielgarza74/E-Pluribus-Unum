@@ -3,964 +3,1022 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Chapter 15.3 - The European Theater</title>
+    <title>15.3 - The European Theater</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-navy-deep: #20263A; 
-            --color-cream: #F4EBDD;    
-            --color-navy: #4F6FA3;     
-            --color-steel-nib: #7F7A74; 
-            --color-gold: #C45A44;     
-            --color-gold-light: #C45A44;
-            --color-wax-red: #A63A3A;
-            --font-heading: 'Times New Roman', serif;
-            --font-body: 'Arial', sans-serif;
-            --font-ui: 'Verdana', sans-serif;
+            /* Swapped: --bg-beige is now Siren Blue, --accent-navy is now Blackout Indigo */
+            --bg-beige: #4F6FA3; 
+            --text-ink: #F4EBDD;
+            --accent-navy: #20263A;
+            --accent-green: #7F7A74;
+            --highlight-red: #C45A44;
+            --bg-panel: #FFFFFF;
+            --bg-panel-hover: #F3F5F9;
+            --border-faint: rgba(244, 235, 221, 0.2);
+            --border-strong: var(--highlight-red);
+            --navy-faint: rgba(32, 38, 58, 0.15);
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Cormorant Garamond', serif;
+            --font-ui: 'Cinzel', serif;
         }
 
         * { box-sizing: border-box; }
-        html, body { overflow-x: hidden; margin: 0; padding: 0; }
-        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
-        /* Background Effects */
-        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
-        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
-        
-        /* Layout Architecture */
-        .app-container { display: flex; position: relative; z-index: 2; }
-        
-        /* Left Navigation Panel */
-        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
-        .side-nav::-webkit-scrollbar { display: none; }
-        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
-        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
-        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
-        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
-        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
-        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
-        
-        /* Main Content Area */
-        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
-        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
-        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
-        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
-        @media (max-width: 1024px) { 
-            .side-nav { display: none; } 
-            .main-content { margin-left: 0; } 
-            .content-wrapper { padding: 30px 20px; } 
-            .content-block { padding: 2rem; } 
+        html, body { overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-beige);
+            color: var(--text-ink);
+            line-height: 1.7;
+            font-size: 1.25rem;
+            /* Gradient updated to use a subtle indigo depth over the blue background */
+            background-image: radial-gradient(circle at top center, rgba(32, 38, 58, 0.25) 0%, transparent 60%);
+            min-height: 100vh;
         }
-        
-        /* Typography */
-        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
-        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
-        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+
+        #bg-slideshow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-size: cover; background-position: center;
+            transition: background-image 1.5s ease-in-out;
+            opacity: 0.12;
+            filter: grayscale(100%) contrast(150%);
+        }
+
+        .app-container { display: flex; position: relative; z-index: 2; }
+
+        .side-nav {
+            position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-faint);
+            display: flex; flex-direction: column; padding: 2rem 1.5rem;
+            z-index: 100; overflow-y: auto; scrollbar-width: none;
+        }
+        .side-nav::-webkit-scrollbar { display: none; }
+
+        .nav-title {
+            font-family: var(--font-heading); color: var(--highlight-red); font-size: 1.1rem;
+            margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.15em;
+            border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; font-weight: 600;
+        }
+
+        .nav-links { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; }
+        .nav-btn {
+            background: transparent; border: none; border-left: 3px solid transparent;
+            color: #20263A; text-align: left; padding: 12px 15px;
+            font-family: var(--font-ui); cursor: pointer; transition: all 0.3s;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .nav-btn.active-nav {
+            background: rgba(197, 160, 9, 0.05);
+            border-left: 3px solid var(--highlight-red);
+            color: var(--highlight-red);
+            font-weight: 600;
+        }
+        .nav-btn:hover:not(.active-nav) { background: rgba(32, 38, 58, 0.05); border-left-color: var(--navy-faint); }
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+
+        .chapter-hero {
+            background-color: var(--accent-navy); /* Now Blackout Indigo */
+            color: var(--text-ink);
+            padding: 3rem 2rem 2.25rem;
+            position: relative;
+            text-align: center;
+            border-bottom: 3px solid var(--highlight-red);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-eyebrow {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            color: rgba(244, 235, 221, 0.6);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            z-index: 2;
+        }
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.6rem);
+            font-weight: 700;
+            color: #F4EBDD;
+            margin: 0 auto 0.75rem;
+            max-width: 850px;
+            line-height: 1.15;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+        .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: rgba(244, 235, 221, 0.85);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            font-weight: 400;
+            line-height: 1.6;
+            z-index: 2;
+        }
+        .hero-footer {
+            font-family: var(--font-heading);
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--highlight-red);
+            z-index: 2;
+        }
+
+        .content-block {
+            background: var(--bg-panel);
+            border: 1px solid var(--highlight-red);
+            padding: 3rem; margin-bottom: 3rem; display: flow-root;
+            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #20263A;
+        }
+        .content-block::after {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border: 1px solid var(--border-faint);
+            pointer-events: none;
+        }
+
+        h2 { font-family: var(--font-heading); color: var(--accent-navy) !important; font-size: 2.8rem !important; line-height: 1.2; margin-bottom: 2rem !important; font-weight: 700; text-align: center; border-bottom: 2px double var(--border-faint); padding-bottom: 1rem; }
+        h3 { font-family: var(--font-heading); color: var(--accent-green) !important; font-size: 2.2rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; font-weight: 600; }
+        h4 { font-family: var(--font-heading); color: #2B2D31 !important; font-size: 1.6rem !important; line-height: 1.4; margin-bottom: 1rem !important; margin-top: 2.5rem !important; font-weight: 600; border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        h5 { font-family: var(--font-heading); color: var(--highlight-red) !important; font-size: 1.35rem !important; font-weight: 700; margin-top: 2rem !important; margin-bottom: 1rem !important; }
+
+        p { margin-bottom: 1.5rem; font-size: 1.25rem; }
         p:not(.first-p) { text-indent: 2.5em; }
         .first-p { text-indent: 0 !important; }
-        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
-        
-        /* UI Elements */
-        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
-        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
-        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
-        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
-        
-        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
-        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
-        
-        /* Prominent Default Spotlights (Stacked) */
-        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
-        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
-        .spotlight-content { display: block; margin-top: 20px; }
-        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; }
-        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; }
-        .spotlight-why strong { color: var(--color-gold); }
-        
-        /* Portrait Spotlights (Side-by-Side) */
-        .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
-        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
-        .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
-        .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
-        
-        /* Full Sized Visuals */
-        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
-        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
-        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0; }
-        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
-        
-        @media (max-width: 768px) { 
-            .id-panel { grid-template-columns: 1fr; }
-            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
-            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.25rem; color: var(--accent-green); }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #20263A; font-weight: 600; }
+
+        .id-panel {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem;
+            background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-faint); position: relative;
+            color: #20263A;
         }
-        
-        /* Compact Checkpoint System */
-        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
-        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
-        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
-        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
-        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
-        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
-        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
-        
-        /* Cloze Specific */
-        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
-        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
-        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
-        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
-        
-        /* Buttons & Navigation */
-        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
-        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
-        .action-btn:disabled { transform: none !important; }
-        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .id-panel label { display: block; font-family: var(--font-heading); font-size: 0.85rem; color: var(--accent-green); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .id-panel input, .id-panel select {
+            width: 100%; background: #F3F5F9; border: 1px solid var(--navy-faint);
+            color: #20263A; padding: 12px; font-family: var(--font-body); font-size: 1.15rem; transition: border 0.3s;
+        }
+
+        .textarea-dark {
+            width: 100%; background: #F3F5F9; border: 1px solid var(--navy-faint);
+            color: #20263A; padding: 1.5rem; min-height: 120px; font-family: var(--font-body);
+            font-size: 1.2rem; resize: vertical; transition: border 0.3s;
+        }
+
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 25px; border: 1px solid var(--highlight-red); clear: both; position: relative; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; position: relative; z-index: 1;}
+        .spotlight-caption { font-size: 1.05rem; text-align: left; margin-bottom: 15px; font-style: italic; color: var(--accent-green); line-height: 1.5; text-indent: 0 !important; }
+        .spotlight-why { font-size: 1.15rem; color: #20263A; margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
+        .spotlight-why strong { color: var(--highlight-red); font-family: var(--font-heading); font-size: 1.1em; }
+
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 20px; border: 1px solid var(--border-faint); clear: both; }
+        .visual-img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; }
+        .caption-text { font-style: italic; font-size: 1.05rem; color: var(--accent-green); margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+
+        .question-box { border-left: 3px solid var(--highlight-red); padding-left: 1.5rem; margin-top: 1.5rem; }
+        .question-box p { text-indent: 0 !important; }
+
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 1px dashed var(--highlight-red); background: var(--bg-panel); clear: both; position: relative; }
+        .checkpoint-block h3 { margin-top: 0 !important; font-size: 1.6rem !important; }
+        .checkpoint-q .checklist-item {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer;
+            padding: 10px 15px; background: var(--bg-panel); border: 1px solid var(--navy-faint);
+            transition: all 0.2s; font-size: 1.1rem; line-height: 1.3; color: #20263A;
+        }
+        .checkpoint-q .checklist-item:hover { background: var(--bg-panel-hover); border-color: var(--highlight-red); }
+
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: var(--bg-panel); border: 1px solid var(--border-faint); margin-bottom: 2rem; }
+        .word-pill { background: transparent; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 18px; font-size: 0.9rem; font-weight: 600; font-family: var(--font-heading); text-transform: uppercase; }
+        .cloze-input { background: transparent; border: none; border-bottom: 2px solid var(--highlight-red); color: var(--highlight-red); padding: 0 8px; font-size: 1.25rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); font-weight: bold; }
+
+        .action-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.85rem 1.75rem; font-family: var(--font-heading); font-weight: 600;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem;
+            transition: all 0.4s ease; background: transparent; color: var(--highlight-red);
+            border: 1px solid var(--highlight-red); width: 100%; position: relative; overflow: hidden;
+        }
+        .action-btn:hover:not(:disabled) { color: #fff; background: var(--highlight-red); box-shadow: 0 0 20px rgba(197, 160, 9, 0.2); transform: translateY(-2px); }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid var(--border-faint); margin-top: 3rem; gap: 20px; clear: both; position: relative; z-index: 10;}
         .bottom-nav .action-btn { width: auto; }
+
         .chapter-section { display: none; }
         .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="bg-slideshow"></div>
+    <div id="bg-slideshow"></div>
 
-<div class="app-container">
-    <nav class="side-nav">
-        <div class="nav-title">Table of Contents</div>
-        <div class="nav-links">
-            <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
-            <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. Defining the Strategy</button>
-            <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. The Fall of the Third Reich</button>
-            <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. Social History: American Experience</button>
-            <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. Vocabulary Activity</button>
-        </div>
-        <div class="nav-actions">
-            <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
-            <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
-                Load Progress
-                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
-            </label>
-            <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
-        </div>
-    </nav>
-
-    <main class="main-content">
-        <!-- Start Page -->
-        <section id="sec-1" class="chapter-section active-section">
-            <img src="assets/Header%20Banner%20Chapter%2015.3.png" class="hero-banner-flush" alt="Chapter Header" />
-            <div class="content-wrapper">
-                <div class="id-panel">
-                    <div>
-                        <label>Student Name</label>
-                        <input type="text" id="student-name" placeholder="First and Last Name">
-                    </div>
-                    <div>
-                        <label>Period</label>
-                        <select id="student-period">
-                            <option value="">Select...</option>
-                            <option value="1">Period 1</option>
-                            <option value="2">Period 2</option>
-                            <option value="3">Period 3</option>
-                            <option value="4">Period 4</option>
-                            <option value="6">Period 6</option>
-                            <option value="7">Period 7</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Date Completed</label>
-                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
-                    </div>
-                </div>
-
-                <div class="content-block">
-                    <h3>Core Objectives</h3>
-                    <ul>
-                        <li>Analyze the strategic debate regarding the "Second Front" and the significance of the D-Day invasion (Operation Overlord).</li>
-                        <li>Trace the Allied advance from North Africa through Italy and across Western Europe to the defeat of Germany.</li>
-                        <li>Evaluate the leadership roles of Allied commanders and the impact of the air war on German industrial capacity.</li>
-                    </ul>
-
-                    <h3>Key Terms</h3>
-                    <p class="first-p">European Theater | Dwight D. Eisenhower | Operation Torch | D-Day (Operation Overlord) | Battle of the Bulge | George S. Patton | Tuskegee Airmen | V-E Day | Harry S. Truman</p>
-
-                    <h3>Introduction: The Road to Liberation and the Defeat of Fascism</h3>
-                    <p class="first-p">Following the attack on Pearl Harbor, the United States found itself thrust into a global conflict spanning two massive oceans and requiring unprecedented mobilization. Facing enemies on multiple continents, Allied leaders made the crucial strategic decision to prioritize the defeat of Nazi Germany, recognizing the existential threat posed by its immense industrial and military power. This chapter explores the grueling campaigns necessary to liberate occupied Europe, tracking the Allied advance from the deserts of North Africa and the mountains of Italy to the beaches of Normandy and the heart of the Third Reich. Through the leadership of key commanders, the courage of diverse fighting units, and the massive industrial output of the American "Arsenal of Democracy," the Allies slowly turned the tide of the war to secure a hard-fought victory.</p>
-
-                    <div class="visual-wrapper">
-                        <img src="assets/Visual_1.png" class="visual-img" alt="Map of the European Theater" />
-                        <p class="caption-text">The "Europe First" grand strategy prioritized the defeat of Nazi Germany due to its immense industrial capacity and existential threat to global security. By coordinating simultaneous advances from the Mediterranean, Western Europe, and the Eastern Front, the Allied powers systematically dismantled the Axis empire's borders and converged on the heart of the Third Reich.</p>
-                        <div class="question-box">
-                            <p class="first-p"><strong>Analysis Question:</strong> How did the geographical reality of a multi-front war dictate the strategic priorities and logistical challenges faced by the Allied powers?</p>
-                            <textarea id="va_1" class="textarea-dark" placeholder="Enter your analysis here..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bottom-nav">
-                    <div></div>
-                    <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2')">Next Section &rarr;</button>
-                </div>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="side-nav">
+            <div class="nav-title">Table of Contents</div>
+            <div class="nav-links">
+                <button class="nav-btn active-nav" id="nav-sec-1" onclick="switchTab('sec-1')">Start Page</button>
+                <button class="nav-btn" id="nav-sec-2" onclick="switchTab('sec-2')">I. Defining the Strategy</button>
+                <button class="nav-btn" id="nav-sec-3" onclick="switchTab('sec-3')">II. The Fall of the Third Reich</button>
+                <button class="nav-btn" id="nav-sec-4" onclick="switchTab('sec-4')">III. Social History: American Experience</button>
+                <button class="nav-btn" id="nav-sec-5" onclick="switchTab('sec-5')">IV. Vocabulary Activity</button>
             </div>
-        </section>
-
-        <!-- Section 2 -->
-        <section id="sec-2" class="chapter-section">
-            <div class="content-wrapper">
-                <div class="content-block">
-                    <h2>Defining the Strategy</h2>
-                    <p class="first-p">Before launching a direct assault on "Fortress Europe," the Allied powers had to agree on a unified strategy and gain critical combat experience. This section details the contentious debates between the "Big Three" leaders over the "Europe First" approach and the decision to attack the Axis empire's edges. By initiating operations in North Africa and slogging through the difficult terrain of Italy, American forces learned harsh but necessary lessons in modern warfare while strategically tying down elite German divisions. Concurrently, a relentless strategic bombing campaign in the skies over Germany began dismantling the Nazi war machine from above.</p>
-                    
-                    <h3>The Grand Strategy: Europe First</h3>
-                    <p class="first-p">Following the shock of the attack on Pearl Harbor, the United States faced an immediate and daunting military dilemma. The nation was now engaged in a global conflict that spanned two massive oceans and involved multiple continents. However, President Franklin D. Roosevelt and his military advisors, in consultation with British Prime Minister Winston Churchill, made a critical strategic decision: they would prioritize the <strong>European Theater</strong>. This "Germany First" strategy was based on the belief that Nazi Germany, with its massive industrial capacity, advanced scientific research, and control over the heart of Europe, posed a far more significant existential threat to global security than Japan. If the Soviet Union or Great Britain were knocked out of the war, the Allies would lose their essential bases for any future counter-offensive.</p>
-                    <p>Agreeing on the priority of the war in Europe was easier than agreeing on the method of victory. The "Big Three" leaders—Roosevelt, Churchill, and Joseph Stalin—were often at odds regarding military timing and geography. Stalin, whose Soviet armies were enduring the full weight of the German <em>Wehrmacht</em>, was desperate for the United States and Britain to launch an immediate invasion of Western Europe. He demanded a "Second Front" to force Adolf Hitler to divert divisions away from the Eastern Front, where Soviet soldiers and civilians were dying in astronomical numbers. Stalin grew increasingly suspicious of his Western allies, fearing that they were intentionally delaying the invasion to let the Germans and Soviets destroy each other, thereby weakening the Soviet Union for the post-war era.</p>
-                    <p>Churchill, however, was haunted by the memories of the First World War and the horrific casualties suffered in the trench warfare of the Western Front. He was deeply reluctant to attempt a cross-channel invasion of France until the German military had been significantly weakened. He feared that a premature landing would result in a disaster that could effectively end the war in a single day. Instead, Churchill proposed a strategy of attacking the "periphery" or the edges of the Nazi empire. He referred to Southern Europe as the "soft underbelly" of the Axis. By attacking North Africa first, Churchill argued the Allies could gain combat experience, secure the Mediterranean, and support the British Empire's interests in the Middle East and India. Roosevelt ultimately agreed to this peripheral strategy, recognizing that the American "Arsenal of Democracy" needed more time to build the specialized ships, planes, and tanks required for a direct assault on "Fortress Europe."</p>
-
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_1.png" alt="Casablanca Conference War Planning Staff Photograph" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">Roosevelt, Churchill, and their military staffs gather at the Casablanca Conference in January 1943.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> This subsection focuses on the strategic debate over how to defeat Germany and when to open a true second front in Western Europe. A Casablanca planning photograph shifts the emphasis away from a generic “Big Three” portrait and toward coalition war planning, showing how Allied leaders had to balance production, timing, geography, and competing political priorities before committing to the liberation of Europe.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did Allied planning at Casablanca shape the decision to delay a cross-channel invasion and pursue a peripheral strategy first?</p>
-                                <textarea id="va_2" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="checkpoint-block" id="cp-block-1" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. Why was Joseph Stalin desperate for the United States and Britain to launch a "Second Front" in Western Europe?</p>
-                            <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To secure a path for the Soviet Union to invade Great Britain.</label>
-                            <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To force Hitler to divert divisions away from the Eastern Front.</label>
-                            <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To prevent the United States from capturing the French capital.</label>
-                            <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To allow Soviet forces to focus entirely on the Pacific Theater.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. Why was Winston Churchill deeply reluctant to attempt a cross-channel invasion of France early in the war?</p>
-                            <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) He wanted to protect British colonial holdings in the Pacific first.</label>
-                            <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) He feared catastrophic casualties similar to the trench warfare of World War I.</label>
-                            <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) He believed the German military was already defeated.</label>
-                            <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) He hoped to negotiate a peace treaty with Adolf Hitler.</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-1', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-1', 1)">Next Question &#8594;</button>
-                        </div>
-                    </div>
-
-                    <h3>Operation Torch and the North African Campaign</h3>
-                    <p class="first-p">In November 1942, the United States launched its first major offensive in the West, known as <strong>Operation Torch</strong>. This was an ambitious amphibious invasion of Axis-controlled North Africa, specifically targeting Morocco and Algeria. The operation was led by General <strong>Dwight D. Eisenhower</strong>, a commander who would eventually become the supreme architect of the Allied victory in Europe. Eisenhower was chosen not just for his military tactical skill, but for his extraordinary ability to balance the competing political interests and massive egos of the British and American military high commands. His task was to transform a collection of inexperienced American units and veteran British forces into a single, cohesive fighting machine.</p>
-                    <p>The campaign in North Africa served as a brutal and necessary school for the American soldier. Initially, U.S. troops were overconfident and lacked the tactical discipline required to fight a modern, mechanized army. In February 1943, at the Battle of Kasserine Pass in Tunisia, the Americans suffered a humiliating defeat at the hands of General Erwin Rommel’s "Afrika Korps." Rommel, known as the "Desert Fox," utilized superior tank tactics and air support to shatter the American lines. The defeat exposed significant flaws in American military leadership and equipment, leading to a major reorganization of the U.S. Army.</p>
-                    <p>To restore discipline and offensive spirit, Eisenhower turned to General <strong>George S. Patton</strong>. Patton was a flamboyant, highly disciplined, and often controversial commander who believed that "speed and violence of action" were the keys to winning any battle. He demanded that his soldiers maintain a sharp military appearance even in the middle of a desert war and instilled a ferocity in his units that would become the hallmark of the American Third Army. Working alongside British General Bernard Montgomery, Patton helped drive the Axis forces back. By May 1943, the Allies had cornered the German and Italian armies in Tunisia, resulting in the surrender of nearly 250,000 Axis troops. This victory not only removed the threat to the Suez Canal but also provided the Allies with a springboard for the invasion of Italy.</p>
-
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_2.png" alt="American Troops Landing in North Africa" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">American soldiers land on the North African coast during Operation Torch in November 1942.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> Operation Torch marked the first major American offensive in the European war and gave inexperienced U.S. forces crucial combat experience against Axis troops. The campaign also elevated Eisenhower’s leadership, exposed weaknesses in American tactics at Kasserine Pass, and positioned the Allies for the invasion of Italy.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> Why did Operation Torch matter as both a military test for American forces and a stepping stone toward later Allied victories in Europe?</p>
-                                <textarea id="va_3" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="checkpoint-block" id="cp-block-2" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. What was a significant outcome of the American defeat at the Battle of Kasserine Pass?</p>
-                            <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) It forced the complete withdrawal of Allied troops from North Africa.</label>
-                            <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) It exposed critical flaws in American military leadership and equipment.</label>
-                            <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) It resulted in Erwin Rommel surrendering his forces to the Allies.</label>
-                            <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) It caused the United States to shift its focus entirely to the Pacific war.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. How did General George S. Patton change the dynamic of the American forces in North Africa?</p>
-                            <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) He negotiated a strategic ceasefire with German commanders.</label>
-                            <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) He focused entirely on defensive trench warfare tactics.</label>
-                            <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) He instilled a renewed sense of discipline and "violence of action."</label>
-                            <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) He commanded the first successful amphibious landing in Italy.</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-2', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-2', 1)">Next Question &#8594;</button>
-                        </div>
-                    </div>
-
-                    <h3>The Italian Campaign: The "Tough Old Gut"</h3>
-                    <p class="first-p">Following the success in North Africa, the Allies launched an invasion of Sicily in July 1943. The rapid fall of the island led to a political collapse in Rome. The Italian people, exhausted by the war and Mussolini's empty promises of a new Roman Empire, turned against the dictator. King Victor Emmanuel III had Mussolini arrested, and the new Italian government began secret negotiations to join the Allies. Churchill’s "soft underbelly" strategy appeared to be working. However, Hitler refused to let his southern flank collapse. German troops immediately occupied northern and central Italy, rescued Mussolini in a daring paratrooper raid, and prepared to defend the peninsula with fanatical intensity.</p>
-                    <p>What followed was one of the most grueling and bloody campaigns of the war. Italy’s mountainous geography and narrow valleys were a defender’s dream and an attacker’s nightmare. The German commander, Albert Kesselring, constructed a series of formidable defensive lines, the most famous being the Gustav Line, centered on the ancient monastery of Monte Cassino. For months, American and British troops were forced into a slow, yard-by-yard slog through the freezing mud and snow of the Italian mountains. Even after the Allies finally broke through and liberated Rome in June 1944, the fighting in Italy continued until the final days of the war. While the Italian campaign was often overshadowed by the later events in France, it served the vital strategic purpose of tying down dozens of elite German divisions that Hitler would desperately need on other fronts.</p>
-
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_3.png" alt="Ruins of Monte Cassino" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">The monastery at Monte Cassino stands shattered after heavy bombardment and fighting in the Italian campaign.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> Monte Cassino became the defining symbol of the brutal struggle up the Italian peninsula, where mountains, mud, and fortified German defensive lines turned the campaign into a long war of attrition. The battle helps explain why Italy tied down major German forces even though it never became the quick breakthrough Churchill had hoped for.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the fighting at Monte Cassino reveal the military realities of the Allied campaign in Italy?</p>
-                                <textarea id="va_4" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="checkpoint-block" id="cp-block-3" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. How did Italy's geography impact the Allied campaign on the peninsula?</p>
-                            <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) The flat plains allowed for rapid tank movements and a quick victory.</label>
-                            <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) Mountainous terrain and narrow valleys heavily favored the German defenders.</label>
-                            <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) Extensive river networks allowed the Allies to bypass German defenses easily.</label>
-                            <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) The lack of coastal access prevented the Allies from using naval support.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. What was a vital strategic purpose served by the grueling Italian campaign?</p>
-                            <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It forced the immediate and unconditional surrender of Nazi Germany.</label>
-                            <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It tied down dozens of elite German divisions that Hitler needed elsewhere.</label>
-                            <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It allowed the Allies to launch a direct cross-channel invasion of France.</label>
-                            <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It successfully removed Benito Mussolini from power permanently.</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-3', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-3', 1)">Next Question &#8594;</button>
-                        </div>
-                    </div>
-
-                    <h3>The War in the Clouds: Strategic Bombing</h3>
-                    <p class="first-p">While ground forces were fighting in Italy, a parallel and equally vital conflict was being waged in the skies over Germany. The Allied strategic bombing campaign was designed to dismantle the Nazi war machine by destroying its industrial base and demoralizing its civilian population. The British Royal Air Force (RAF) focused on "area bombing" at night, using incendiary bombs to create massive firestorms in German cities. In contrast, the U.S. Army Air Forces (USAAF) specialized in "precision bombing" during the day. Flying in massive "combat box" formations of B-17 Flying Fortresses and B-24 Liberators, American crews targeted specific high-value objectives such as oil refineries, ball-bearing factories, and railway hubs.</p>
-                    <p>The air war was incredibly dangerous and costly. Until 1944, Allied bombers lacked the range for fighter escorts to accompany them all the way to their targets deep inside Germany. This left the "heavies" vulnerable to the specialized interceptors of the German Luftwaffe and the deadly anti-aircraft fire known as flak. In some raids, such as the 1943 mission against the ball-bearing factories at Schweinfurt, the U.S. lost nearly 20 percent of its participating aircraft and crews. The tide of the air war only turned with the introduction of the P-51 Mustang, a long-range fighter equipped with "drop tanks" that allowed it to protect the bombers all the way to Berlin and back. These fighters not only saved the bombers but also systematically hunted down and destroyed the German air force, giving the Allies total air superiority.</p>
-                    <p>A critical component of this air victory was the distinguished service of the <strong>Tuskegee Airmen</strong>. This was an elite group of African American pilots trained at the segregated Tuskegee Institute in Alabama. At a time when the U.S. military was still strictly segregated and many white officers believed that Black men lacked the courage or intelligence to fly combat aircraft, the Tuskegee Airmen proved their critics wrong. Serving primarily as bomber escorts in the Mediterranean and Europe, they earned a reputation for extraordinary skill and bravery, rarely losing a bomber under their protection to enemy fighters. Their success provided a powerful argument for the integration of the military and became a cornerstone of the emerging civil rights movement in the post-war United States.</p>
-
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_4.png" alt="Tuskegee Airmen at a Briefing in Italy" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">Several Tuskegee Airmen attend a briefing during World War II service in Italy.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> This subsection highlights the strategic bombing campaign and the fighter escort mission that made deep raids over Germany more effective. A wartime briefing photo fits the subsection because the Tuskegee Airmen served in the Mediterranean theater as combat pilots and escorts, while their success also challenged racist assumptions within the segregated U.S. military.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> Why did the combat service of the Tuskegee Airmen matter for both Allied air operations and the broader struggle for racial equality in the United States?</p>
-                                <textarea id="va_5" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="checkpoint-block" id="cp-block-4" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. What strategic approach did the U.S. Army Air Forces (USAAF) take during the bombing of Germany?</p>
-                            <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) Nighttime area bombing focused on creating firestorms in cities.</label>
-                            <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) Daytime precision bombing targeting specific industrial and military sites.</label>
-                            <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) Low-altitude strafing runs to support advancing infantry units.</label>
-                            <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) Dropping paratroopers directly into major German industrial centers.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. How did the Tuskegee Airmen contribute to the Allied war effort in the European Theater?</p>
-                            <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) They were the first unit to successfully land on the beaches of Normandy.</label>
-                            <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) They developed the radar technology used to track incoming Luftwaffe fighters.</label>
-                            <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) They served as highly skilled bomber escorts, rarely losing a plane to the enemy.</label>
-                            <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) They led the intelligence operations that created the "phantom army."</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-4', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-4', 1)">Next Question &#8594;</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bottom-nav">
-                    <button class="action-btn" onclick="switchTab('sec-1')">&larr; Previous</button>
-                    <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3')" disabled>🔒 Answer Checkpoints to Continue</button>
-                </div>
+            <div class="nav-actions">
+                <button class="action-btn" onclick="downloadProgress()"><span style="position: relative; z-index: 1;">Save Progress</span></button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: flex; margin-bottom: 0;">
+                    <span style="position: relative; z-index: 1;">Load Progress</span>
+                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+                </label>
+                <button class="action-btn" onclick="resetProgress()"><span style="position: relative; z-index: 1;">Reset Progress</span></button>
             </div>
-        </section>
+        </nav>
 
-        <!-- Section 3 -->
-        <section id="sec-3" class="chapter-section">
-            <div class="content-wrapper">
-                <div class="content-block">
-                    <h2>The Fall of the Third Reich</h2>
-                    <p class="first-p">With the Axis powers weakened and American industrial might fully mobilized, the Allies were finally prepared to open the long-awaited "Second Front". This section traces the dramatic and bloody advance into Western Europe, beginning with the monumental amphibious invasion of Normandy and the subsequent rapid breakout across France. Despite a desperate and deadly final counteroffensive by German forces in the freezing Ardennes Forest, the Allied military machine proved unstoppable. The narrative culminates in the convergence of Western and Soviet forces on Berlin, the sudden transition of American presidential leadership, and the ultimate unconditional surrender of Nazi Germany.</p>
-                    
-                    <h3>D-Day: Operation Overlord</h3>
-                    <p class="first-p">By early 1944, the Allies were finally ready to launch the "Second Front" that Stalin had been demanding since 1941. Codenamed <strong>D-Day (Operation Overlord)</strong>, the invasion of Normandy was the most complex and massive amphibious operation in human history. Eisenhower, now the Supreme Allied Commander, was responsible for coordinating an international force of nearly three million soldiers, 11,000 aircraft, and over 4,000 ships. To ensure the success of the landings, the Allies engaged in a massive deception campaign known as Operation Fortitude. They created a "phantom army" complete with inflatable tanks and fake radio signals to convince Hitler that the invasion would land at the Pas-de-Calais, the shortest distance across the English Channel.</p>
-                    <p>The deception was so successful that Hitler held many of his best armored divisions in reserve at Pas-de-Calais even after the real invasion had begun at Normandy. On the morning of June 6, 1944, the Allied armada struck five beaches along a 50-mile stretch of the French coast: Utah, Omaha, Gold, Juno, and Sword. The landings were preceded by the dropping of three divisions of paratroopers behind enemy lines in the middle of the night to secure key bridges and causeways. At dawn, the largest naval bombardment in history commenced, as the Allied fleet battered the "Atlantic Wall"—the massive system of German coastal fortifications.</p>
-                    <p>The fighting at Omaha Beach was particularly horrific. American soldiers encountered veteran German units entrenched in bunkers atop high cliffs. As the landing craft ramps dropped, the men were met with a wall of machine-gun and artillery fire. For several hours, the invasion was in jeopardy, as the first waves of troops were pinned down on the bloody sand. However, through individual acts of extraordinary heroism and the initiative of junior officers, the Americans managed to scale the cliffs and silence the German guns. By the end of the day, the Allies had secured a foothold in occupied Europe. Eisenhower’s "Great Crusade" had finally begun, and the end of the Third Reich was now a matter of time and logistics.</p>
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Section 1: Start Page -->
+            <section id="sec-1" class="chapter-section active-section">
+                <header class="chapter-hero">
+                    <div class="hero-eyebrow">CHAPTER 15 | SECTION 3</div>
+                    <h1 class="hero-title">THE EUROPEAN THEATER</h1>
+                    <div class="hero-subtitle">What strategic decisions and military campaigns were necessary for the Allied powers to liberate occupied Europe and defeat Nazi Germany?</div>
+                    <div class="hero-footer">E PLURIBUS UNUM | UNIT 2 · BOOM, BUST, & WAR | CHAPTER 15 · WORLD WAR II ABROAD</div>
+                </header>
 
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_5.png" alt="Landing Craft Approaching Omaha Beach" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">American troops crouch in a landing craft as they approach Omaha Beach on June 6, 1944.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> Operation Overlord was the long-awaited second front and the largest amphibious invasion in history. A landing-craft view captures the scale, danger, and human cost of the Normandy assault, especially at Omaha Beach, where success depended on individual initiative under devastating fire.</p>
+                <div class="content-wrapper">
+                    <div class="id-panel">
+                        <div>
+                            <label>Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter full name...">
+                        </div>
+                        <div>
+                            <label>Period</label>
+                            <select id="student-period">
+                                <option value="">Select...</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Date Completed</label>
+                            <input type="text" id="completion-date" readonly placeholder="---">
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <h4>Core Objectives</h4>
+                        <ul class="first-p">
+                            <li>Analyze the strategic debate regarding the "Second Front" and the significance of the D-Day invasion (Operation Overlord).</li>
+                            <li>Trace the Allied advance from North Africa through Italy and across Western Europe to the defeat of Germany.</li>
+                            <li>Evaluate the leadership roles of Allied commanders and the impact of the air war on German industrial capacity.</li>
+                        </ul>
+
+                        <h4>Key Terms</h4>
+                        <p class="first-p">European Theater | Dwight D. Eisenhower | Operation Torch | D-Day (Operation Overlord) | Battle of the Bulge | George S. Patton | Tuskegee Airmen | V-E Day | Harry S. Truman</p>
+
+                        <h4>Introduction | The Road to Liberation and the Defeat of Fascism</h4>
+                        <p class="first-p">Following the attack on Pearl Harbor, the United States found itself thrust into a global conflict spanning two massive oceans and requiring unprecedented mobilization. Facing enemies on multiple continents, Allied leaders made the crucial strategic decision to prioritize the defeat of Nazi Germany, recognizing the existential threat posed by its immense industrial and military power. This chapter explores the grueling campaigns necessary to liberate occupied Europe, tracking the Allied advance from the deserts of North Africa and the mountains of Italy to the beaches of Normandy and the heart of the Third Reich. Through the leadership of key commanders, the courage of diverse fighting units, and the massive industrial output of the American "Arsenal of Democracy," the Allies slowly turned the tide of the war to secure a hard-fought victory.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_1.png" class="visual-img" alt="Strategic Map" onerror="this.style.display='none'">
+                            <p class="caption-text">The "Europe First" grand strategy prioritized the defeat of Nazi Germany due to its immense industrial capacity and existential threat to global security. By coordinating simultaneous advances from the Mediterranean, Western Europe, and the Eastern Front, the Allied powers systematically dismantled the Axis empire's borders and converged on the heart of the Third Reich.</p>
                             <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the success of the Normandy landings transform the Allied war effort in Western Europe?</p>
-                                <textarea id="va_6" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                                <p><strong>Analysis Question:</strong> How did the geographical reality of a multi-front war dictate the strategic priorities and logistical challenges faced by the Allied powers?</p>
+                                <textarea id="va_1" class="textarea-dark" placeholder="Type your analysis here..."></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="checkpoint-block" id="cp-block-5" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. What was the primary objective of the deception campaign known as Operation Fortitude?</p>
-                            <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) To hide the true strength of the Soviet Red Army from the German high command.</label>
-                            <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) To trick Hitler into believing the Allied invasion would land at the Pas-de-Calais.</label>
-                            <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) To convince the Italian government to switch sides and join the Allies.</label>
-                            <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) To disguise the development of the first American atomic weapons.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. Which of the five D-Day landing beaches saw the most horrific fighting and highest American casualties?</p>
-                            <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) Utah</label>
-                            <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) Gold</label>
-                            <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Juno</label>
-                            <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) Omaha</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-5', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-5', 1)">Next Question &#8594;</button>
-                        </div>
+                    <div class="bottom-nav">
+                        <div></div>
+                        <button class="action-btn" id="btn-next-sec-1" onclick="switchTab('sec-2')"><span style="position: relative; z-index: 1;">Next Section →</span></button>
                     </div>
+                </div>
+            </section>
 
-                    <h3>The Breakout and the Liberation of Paris</h3>
-                    <p class="first-p">Following the D-Day landings, the Allies spent several weeks in a brutal struggle through the "bocage"—the dense hedgerow country of Normandy that provided perfect cover for German defenders. The stalemate was finally broken in late July 1944 during Operation Cobra. General <strong>George S. Patton</strong> and his Third Army led a lightning-fast breakout, utilizing the same principles of speed and mobility that the Germans had pioneered in their <em>Blitzkrieg</em> strategy. Patton’s armor raced across the French countryside, bypassing German strongpoints and disrupting their lines of communication and supply.</p>
-                    <p>The rapid Allied advance led to the liberation of Paris in August 1944. The sight of Allied troops marching past the Arc de Triomphe signaled the beginning of the end for the Nazi occupation of Western Europe. By the autumn of 1944, the Allies had reached the borders of Germany itself. The industrial might of the United States was now being felt in full force; for every tank or plane the Germans managed to produce, the American "Arsenal" was producing ten. However, as the Allies prepared to enter the German heartland, the logistical challenge of supplying such a massive army across the entire width of France began to slow the advance, giving Hitler one final opportunity to strike back.</p>
+            <!-- Section 2: Defining the Strategy -->
+            <section id="sec-2" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Defining the Strategy</h2>
+                        <p class="first-p">Before launching a direct assault on "Fortress Europe," the Allied powers had to agree on a unified strategy and gain critical combat experience. This section details the contentious debates between the "Big Three" leaders over the "Europe First" approach and the decision to attack the Axis empire's edges. By initiating operations in North Africa and slogging through the difficult terrain of Italy, American forces learned harsh but necessary lessons in modern warfare while strategically tying down elite German divisions. Concurrently, a relentless strategic bombing campaign in the skies over Germany began dismantling the Nazi war machine from above.</p>
 
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_6.png" alt="Liberation of Paris Crowds" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">Civilians fill the streets of Paris as Allied forces help liberate the city in August 1944.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> The liberation of Paris marked the collapse of German control over one of the most symbolically important cities in occupied Europe. It also showed that the breakout from Normandy had shifted the Allies from a grinding beachhead struggle to a fast-moving offensive across France.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the liberation of Paris differ from the earlier fighting in Normandy in both military character and political meaning?</p>
-                                <textarea id="va_7" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        <h4>The Grand Strategy | Europe First</h4>
+                        <p class="first-p">Following the shock of the attack on Pearl Harbor, the United States faced an immediate and daunting military dilemma. The nation was now engaged in a global conflict that spanned two massive oceans and involved multiple continents. However, President Franklin D. Roosevelt and his military advisors, in consultation with British Prime Minister Winston Churchill, made a critical strategic decision: they would prioritize the <strong>European Theater</strong>. This "Germany First" strategy was based on the belief that Nazi Germany, with its massive industrial capacity, advanced scientific research, and control over the heart of Europe, posed a far more significant existential threat to global security than Japan. If the Soviet Union or Great Britain were knocked out of the war, the Allies would lose their essential bases for any future counter-offensive.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_1.png" alt="Casablanca Conference" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Roosevelt, Churchill, and their military staffs gather at the Casablanca Conference in January 1943.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> This subsection focuses on the strategic debate over how to defeat Germany and when to open a true second front in Western Europe. A Casablanca planning photograph shifts the emphasis away from a generic “Big Three” portrait and toward coalition war planning, showing how Allied leaders had to balance production, timing, geography, and competing political priorities before committing to the liberation of Europe.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> How did Allied planning at Casablanca shape the decision to delay a cross-channel invasion and pursue a peripheral strategy first?</p>
+                                    <textarea id="va_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>Agreeing on the priority of the war in Europe was easier than agreeing on the method of victory. The "Big Three" leaders—Roosevelt, Churchill, and Joseph Stalin—were often at odds regarding military timing and geography. Stalin, whose Soviet armies were enduring the full weight of the German <em>Wehrmacht</em>, was desperate for the United States and Britain to launch an immediate invasion of Western Europe. He demanded a "Second Front" to force Adolf Hitler to divert divisions away from the Eastern Front, where Soviet soldiers and civilians were dying in astronomical numbers. Stalin grew increasingly suspicious of his Western allies, fearing that they were intentionally delaying the invasion to let the Germans and Soviets destroy each other, thereby weakening the Soviet Union for the post-war era.</p>
+
+                        <p>Churchill, however, was haunted by the memories of the First World War and the horrific casualties suffered in the trench warfare of the Western Front. He was deeply reluctant to attempt a cross-channel invasion of France until the German military had been significantly weakened. He feared that a premature landing would result in a disaster that could effectively end the war in a single day. Instead, Churchill proposed a strategy of attacking the "periphery" or the edges of the Nazi empire. He referred to Southern Europe as the "soft underbelly" of the Axis. By attacking North Africa first, Churchill argued the Allies could gain combat experience, secure the Mediterranean, and support the British Empire's interests in the Middle East and India. Roosevelt ultimately agreed to this peripheral strategy, recognizing that the American "Arsenal of Democracy" needed more time to build the specialized ships, planes, and tanks required for a direct assault on "Fortress Europe."</p>
+
+                        <div id="cp-block-1" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">1. Why was Joseph Stalin desperate for the United States and Britain to launch a "Second Front" in Western Europe?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To secure a path for the Soviet Union to invade Great Britain.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="B" onchange="handleRadioChange('cp-block-1')"> B) To force Hitler to divert divisions away from the Eastern Front.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To prevent the United States from capturing the French capital.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To allow Soviet forces to focus entirely on the Pacific Theater.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">2. Why was Winston Churchill deeply reluctant to attempt a cross-channel invasion of France early in the war?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) He wanted to protect British colonial holdings in the Pacific first.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) He feared catastrophic casualties similar to the trench warfare of World War I.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) He believed the German military was already defeated.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) He hoped to negotiate a peace treaty with Adolf Hitler.</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-1', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-1', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>Operation Torch and the North African Campaign</h4>
+                        <p class="first-p">In November 1942, the United States launched its first major offensive in the West, known as <strong>Operation Torch</strong>. This was an ambitious amphibious invasion of Axis-controlled North Africa, specifically targeting Morocco and Algeria. The operation was led by General <strong>Dwight D. Eisenhower</strong>, a commander who would eventually become the supreme architect of the Allied victory in Europe. Eisenhower was chosen not just for his military tactical skill, but for his extraordinary ability to balance the competing political interests and massive egos of the British and American military high commands. His task was to transform a collection of inexperienced American units and veteran British forces into a single, cohesive fighting machine.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_2.png" alt="Operation Torch" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">American soldiers land on the North African coast during Operation Torch in November 1942.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Operation Torch marked the first major American offensive in the European war and gave inexperienced U.S. forces crucial combat experience against Axis troops. The campaign also elevated Eisenhower’s leadership, exposed weaknesses in American tactics at Kasserine Pass, and positioned the Allies for the invasion of Italy.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> Why did Operation Torch matter as both a military test for American forces and a stepping stone toward later Allied victories in Europe?</p>
+                                    <textarea id="va_3" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>The campaign in North Africa served as a brutal and necessary school for the American soldier. Initially, U.S. troops were overconfident and lacked the tactical discipline required to fight a modern, mechanized army. In February 1943, at the Battle of Kasserine Pass in Tunisia, the Americans suffered a humiliating defeat at the hands of General Erwin Rommel’s "Afrika Korps." Rommel, known as the "Desert Fox," utilized superior tank tactics and air support to shatter the American lines. The defeat exposed significant flaws in American military leadership and equipment, leading to a major reorganization of the U.S. Army.</p>
+
+                        <p>To restore discipline and offensive spirit, Eisenhower turned to General <strong>George S. Patton</strong>. Patton was a flamboyant, highly disciplined, and often controversial commander who believed that "speed and violence of action" were the keys to winning any battle. He demanded that his soldiers maintain a sharp military appearance even in the middle of a desert war and instilled a ferocity in his units that would become the hallmark of the American Third Army. Working alongside British General Bernard Montgomery, Patton helped drive the Axis forces back. By May 1943, the Allies had cornered the German and Italian armies in Tunisia, resulting in the surrender of nearly 250,000 Axis troops. This victory not only removed the threat to the Suez Canal but also provided the Allies with a springboard for the invasion of Italy.</p>
+
+                        <div id="cp-block-2" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">3. What was a significant outcome of the American defeat at the Battle of Kasserine Pass?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) It forced the complete withdrawal of Allied troops from North Africa.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) It exposed critical flaws in American military leadership and equipment.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) It resulted in Erwin Rommel surrendering his forces to the Allies.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) It caused the United States to shift its focus entirely to the Pacific war.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">4. How did General George S. Patton change the dynamic of the American forces in North Africa?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) He negotiated a strategic ceasefire with German commanders.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) He focused entirely on defensive trench warfare tactics.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) He instilled a renewed sense of discipline and "violence of action."</label>
+                                    <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) He commanded the first successful amphibious landing in Italy.</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-2', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-2', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>The Italian Campaign | The "Tough Old Gut"</h4>
+                        <p class="first-p">Following the success in North Africa, the Allies launched an invasion of Sicily in July 1943. The rapid fall of the island led to a political collapse in Rome. The Italian people, exhausted by the war and Mussolini's empty promises of a new Roman Empire, turned against the dictator. King Victor Emmanuel III had Mussolini arrested, and the new Italian government began secret negotiations to join the Allies. Churchill’s "soft underbelly" strategy appeared to be working. However, Hitler refused to let his southern flank collapse. German troops immediately occupied northern and central Italy, rescued Mussolini in a daring paratrooper raid, and prepared to defend the peninsula with fanatical intensity.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_3.png" alt="Monte Cassino" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">The monastery at Monte Cassino stands shattered after heavy bombardment and fighting in the Italian campaign.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Monte Cassino became the defining symbol of the brutal struggle up the Italian peninsula, where mountains, mud, and fortified German defensive lines turned the campaign into a long war of attrition. The battle helps explain why Italy tied down major German forces even though it never became the quick breakthrough Churchill had hoped for.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> How did the fighting at Monte Cassino reveal the military realities of the Allied campaign in Italy?</p>
+                                    <textarea id="va_4" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>What followed was one of the most grueling and bloody campaigns of the war. Italy’s mountainous geography and narrow valleys were a defender’s dream and an attacker’s nightmare. The German commander, Albert Kesselring, constructed a series of formidable defensive lines, the most famous being the Gustav Line, centered on the ancient monastery of Monte Cassino. For months, American and British troops were forced into a slow, yard-by-yard slog through the freezing mud and snow of the Italian mountains. Even after the Allies finally broke through and liberated Rome in June 1944, the fighting in Italy continued until the final days of the war. While the Italian campaign was often overshadowed by the later events in France, it served the vital strategic purpose of tying down dozens of elite German divisions that Hitler would desperately need on other fronts.</p>
+
+                        <div id="cp-block-3" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">5. How did Italy's geography impact the Allied campaign on the peninsula?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) The flat plains allowed for rapid tank movements and a quick victory.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) Mountainous terrain and narrow valleys heavily favored the German defenders.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) Extensive river networks allowed the Allies to bypass German defenses easily.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) The lack of coastal access prevented the Allies from using naval support.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">6. What was a vital strategic purpose served by the grueling Italian campaign?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It forced the immediate and unconditional surrender of Nazi Germany.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It tied down dozens of elite German divisions that Hitler needed elsewhere.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It allowed the Allies to launch a direct cross-channel invasion of France.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It successfully removed Benito Mussolini from power permanently.</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-3', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-3', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>The War in the Clouds | Strategic Bombing</h4>
+                        <p class="first-p">While ground forces were fighting in Italy, a parallel and equally vital conflict was being waged in the skies over Germany. The Allied strategic bombing campaign was designed to dismantle the Nazi war machine by destroying its industrial base and demoralizing its civilian population. The British Royal Air Force (RAF) focused on "area bombing" at night, using incendiary bombs to create massive firestorms in German cities. In contrast, the U.S. Army Air Forces (USAAF) specialized in "precision bombing" during the day. Flying in massive "combat box" formations of B-17 Flying Fortresses and B-24 Liberators, American crews targeted specific high-value objectives such as oil refineries, ball-bearing factories, and railway hubs.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_4.png" alt="Tuskegee Airmen" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Several Tuskegee Airmen attend a briefing during World War II service in Italy.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> This subsection highlights the strategic bombing campaign and the fighter escort mission that made deep raids over Germany more effective. A wartime briefing photo fits the subsection because the Tuskegee Airmen served in the Mediterranean theater as combat pilots and escorts, while their success also challenged racist assumptions within the segregated U.S. military.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> Why did the combat service of the Tuskegee Airmen matter for both Allied air operations and the broader struggle for racial equality in the United States?</p>
+                                    <textarea id="va_5" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>The air war was incredibly dangerous and costly. Until 1944, Allied bombers lacked the range for fighter escorts to accompany them all the way to their targets deep inside Germany. This left the "heavies" vulnerable to the specialized interceptors of the German Luftwaffe and the deadly anti-aircraft fire known as flak. In some raids, such as the 1943 mission against the ball-bearing factories at Schweinfurt, the U.S. lost nearly 20 percent of its participating aircraft and crews. The tide of the air war only turned with the introduction of the P-51 Mustang, a long-range fighter equipped with "drop tanks" that allowed it to protect the bombers all the way to Berlin and back. These fighters not only saved the bombers but also systematically hunted down and destroyed the German air force, giving the Allies total air superiority.</p>
+
+                        <p>A critical component of this air victory was the distinguished service of the <strong>Tuskegee Airmen</strong>. This was an elite group of African American pilots trained at the segregated Tuskegee Institute in Alabama. At a time when the U.S. military was still strictly segregated and many white officers believed that Black men lacked the courage or intelligence to fly combat aircraft, the Tuskegee Airmen proved their critics wrong. Serving primarily as bomber escorts in the Mediterranean and Europe, they earned a reputation for extraordinary skill and bravery, rarely losing a bomber under their protection to enemy fighters. Their success provided a powerful argument for the integration of the military and became a cornerstone of the emerging civil rights movement in the post-war United States.</p>
+
+                        <div id="cp-block-4" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">7. What strategic approach did the U.S. Army Air Forces (USAAF) take during the bombing of Germany?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) Nighttime area bombing focused on creating firestorms in cities.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) Daytime precision bombing targeting specific industrial and military sites.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) Low-altitude strafing runs to support advancing infantry units.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) Dropping paratroopers directly into major German industrial centers.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">8. How did the Tuskegee Airmen contribute to the Allied war effort in the European Theater?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) They were the first unit to successfully land on the beaches of Normandy.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) They developed the radar technology used to track incoming Luftwaffe fighters.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) They served as highly skilled bomber escorts, rarely losing a plane to the enemy.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) They led the intelligence operations that created the "phantom army."</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-4', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-4', 1)"><span>Next Question →</span></button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="checkpoint-block" id="cp-block-6" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. What geographical feature of Normandy provided perfect cover for German defenders and initially slowed the Allied advance?</p>
-                            <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) The dense hedgerow country known as the "bocage."</label>
-                            <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) The steep, snowy peaks of the French Alps.</label>
-                            <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) The wide, fast-moving waters of the Rhine River.</label>
-                            <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) The expansive desert plains of southern France.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. What was the result of General George S. Patton's armored offensive during Operation Cobra?</p>
-                            <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) The Allies were pushed back to the English Channel.</label>
-                            <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) A massive stalemate that lasted until the end of the winter.</label>
-                            <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) A lightning-fast breakout that led to the liberation of Paris.</label>
-                            <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) The immediate capture of the German capital city of Berlin.</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-6', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-6', 1)">Next Question &#8594;</button>
-                        </div>
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-1')"><span style="position: relative; z-index: 1;">← Previous Section</span></button>
+                        <button class="action-btn" id="btn-next-sec-2" onclick="switchTab('sec-3')"><span style="position: relative; z-index: 1;">Next Section →</span></button>
                     </div>
+                </div>
+            </section>
 
-                    <h3>The Final Gamble: The Battle of the Bulge</h3>
-                    <p class="first-p">In December 1944, Hitler launched a final, desperate counteroffensive through the Ardennes Forest in Belgium, the same region through which he had invaded France in 1940. His goal was to drive a "bulge" through the Allied lines, capture the strategic port of Antwerp, and force the Western Allies to sign a separate peace treaty. This would have allowed Hitler to concentrate his remaining military power on the Eastern Front against the approaching Soviet Union. This conflict became known as the <strong>Battle of the Bulge</strong>.</p>
-                    <p>The attack took the Allies completely by surprise. In the midst of one of the coldest winters on record, German panzer divisions smashed through the thin American lines. At the critical road junction of Bastogne, the 101st Airborne Division was completely surrounded and cut off. When the German commander sent a formal demand for surrender, the American commander, General Anthony McAuliffe, famously replied with a single, defiant word: "Nuts!" The resilience of the American G.I. at Bastogne and other points along the line bought the Allies enough time for the weather to clear, allowing Allied air power to return to the skies and devastate German supply columns.</p>
-                    <p>General Patton performed a remarkable feat of military logistics by pivoting his entire Third Army 90 degrees in the middle of a winter storm to strike the southern flank of the German bulge. By January 1945, the German offensive had been crushed, and the final reserves of the German military were exhausted. The road to Berlin was now open from both the east and the west. The <strong>Battle of the Bulge</strong> was the largest and bloodiest battle fought by the United States during the war, but it ensured that the final collapse of Nazi Germany would be rapid.</p>
+            <!-- Section 3: The Fall of the Third Reich -->
+            <section id="sec-3" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>The Fall of the Third Reich</h2>
+                        <p class="first-p">With the Axis powers weakened and American industrial might fully mobilized, the Allies were finally prepared to open the long-awaited "Second Front". This section traces the dramatic and bloody advance into Western Europe, beginning with the monumental amphibious invasion of Normandy and the subsequent rapid breakout across France. Despite a desperate and deadly final counteroffensive by German forces in the freezing Ardennes Forest, the Allied military machine proved unstoppable. The narrative culminates in the convergence of Western and Soviet forces on Berlin, the sudden transition of American presidential leadership, and the ultimate unconditional surrender of Nazi Germany.</p>
 
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_7.png" alt="Bastogne Memorial and Battle of the Bulge Commemoration" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">A memorial at Bastogne commemorates one of the central flashpoints of the Battle of the Bulge.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> Bastogne became the emblem of the American stand against Hitler’s final major western offensive in December 1944. The defense there illustrates the larger story of the battle: surprise, severe winter conditions, stubborn American resistance, and the eventual collapse of Germany’s last reserves.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the defense of Bastogne help turn Hitler’s Ardennes offensive into a disastrous failure for Germany?</p>
-                                <textarea id="va_8" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                        <h4>D-Day | Operation Overlord</h4>
+                        <p class="first-p">By early 1944, the Allies were finally ready to launch the "Second Front" that Stalin had been demanding since 1941. Codenamed <strong>D-Day (Operation Overlord)</strong>, the invasion of Normandy was the most complex and massive amphibious operation in human history. Eisenhower, now the Supreme Allied Commander, was responsible for coordinating an international force of nearly three million soldiers, 11,000 aircraft, and over 4,000 ships. To ensure the success of the landings, the Allies engaged in a massive deception campaign known as Operation Fortitude. They created a "phantom army" complete with inflatable tanks and fake radio signals to convince Hitler that the invasion would land at the Pas-de-Calais, the shortest distance across the English Channel.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_5.png" alt="Omaha Beach" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">American troops crouch in a landing craft as they approach Omaha Beach on June 6, 1944.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Operation Overlord was the long-awaited second front and the largest amphibious invasion in history. A landing-craft view captures the scale, danger, and human cost of the Normandy assault, especially at Omaha Beach, where success depended on individual initiative under devastating fire.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> How did the success of the Normandy landings transform the Allied war effort in Western Europe?</p>
+                                    <textarea id="va_6" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>The deception was so successful that Hitler held many of his best armored divisions in reserve at Pas-de-Calais even after the real invasion had begun at Normandy. On the morning of June 6, 1944, the Allied armada struck five beaches along a 50-mile stretch of the French coast: Utah, Omaha, Gold, Juno, and Sword. The landings were preceded by the dropping of three divisions of paratroopers behind enemy lines in the middle of the night to secure key bridges and causeways. At dawn, the largest naval bombardment in history commenced, as the Allied fleet battered the "Atlantic Wall"—the massive system of German coastal fortifications.</p>
+
+                        <p>The fighting at Omaha Beach was particularly horrific. American soldiers encountered veteran German units entrenched in bunkers atop high cliffs. As the landing craft ramps dropped, the men were met with a wall of machine-gun and artillery fire. For several hours, the invasion was in jeopardy, as the first waves of troops were pinned down on the bloody sand. However, through individual acts of extraordinary heroism and the initiative of junior officers, the Americans managed to scale the cliffs and silence the German guns. By the end of the day, the Allies had secured a foothold in occupied Europe. Eisenhower’s "Great Crusade" had finally begun, and the end of the Third Reich was now a matter of time and logistics.</p>
+
+                        <div id="cp-block-5" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">9. What was the primary objective of the deception campaign known as Operation Fortitude?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) To hide the true strength of the Soviet Red Army from the German high command.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) To trick Hitler into believing the Allied invasion would land at the Pas-de-Calais.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) To convince the Italian government to switch sides and join the Allies.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) To disguise the development of the first American atomic weapons.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">10. Which of the five D-Day landing beaches saw the most horrific fighting and highest American casualties?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) Utah</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) Gold</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) Juno</label>
+                                    <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) Omaha</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-5', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-5', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>The Breakout and the Liberation of Paris</h4>
+                        <p class="first-p">Following the D-Day landings, the Allies spent several weeks in a brutal struggle through the "bocage"—the dense hedgerow country of Normandy that provided perfect cover for German defenders. The stalemate was finally broken in late July 1944 during Operation Cobra. General <strong>George S. Patton</strong> and his Third Army led a lightning-fast breakout, utilizing the same principles of speed and mobility that the Germans had pioneered in their <em>Blitzkrieg</em> strategy. Patton’s armor raced across the French countryside, bypassing German strongpoints and disrupting their lines of communication and supply.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_6.png" alt="Liberation of Paris" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Civilians fill the streets of Paris as Allied forces help liberate the city in August 1944.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> The liberation of Paris marked the collapse of German control over one of the most symbolically important cities in occupied Europe. It also showed that the breakout from Normandy had shifted the Allies from a grinding beachhead struggle to a fast-moving offensive across France.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> How did the liberation of Paris differ from the earlier fighting in Normandy in both military character and political meaning?</p>
+                                    <textarea id="va_7" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>The rapid Allied advance led to the liberation of Paris in August 1944. The sight of Allied troops marching past the Arc de Triomphe signaled the beginning of the end for the Nazi occupation of Western Europe. By the autumn of 1944, the Allies had reached the borders of Germany itself. The industrial might of the United States was now being felt in full force; for every tank or plane the Germans managed to produce, the American "Arsenal" was producing ten. However, as the Allies prepared to enter the German heartland, the logistical challenge of supplying such a massive army across the entire width of France began to slow the advance, giving Hitler one final opportunity to strike back.</p>
+
+                        <div id="cp-block-6" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">11. What geographical feature of Normandy provided perfect cover for German defenders and initially slowed the Allied advance?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) The dense hedgerow country known as the "bocage."</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) The steep, snowy peaks of the French Alps.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) The wide, fast-moving waters of the Rhine River.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) The expansive desert plains of southern France.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">12. What was the result of General George S. Patton's armored offensive during Operation Cobra?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-6')"> A) The Allies were pushed back to the English Channel.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-6')"> B) A massive stalemate that lasted until the end of the winter.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-6')"> C) A lightning-fast breakout that led to the liberation of Paris.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-6')"> D) The immediate capture of the German capital city of Berlin.</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-6', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-6', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>The Final Gamble | The Battle of the Bulge</h4>
+                        <p class="first-p">In December 1944, Hitler launched a final, desperate counteroffensive through the Ardennes Forest in Belgium, the same region through which he had invaded France in 1940. His goal was to drive a "bulge" through the Allied lines, capture the strategic port of Antwerp, and force the Western Allies to sign a separate peace treaty. This would have allowed Hitler to concentrate his remaining military power on the Eastern Front against the approaching Soviet Union. This conflict became known as the <strong>Battle of the Bulge</strong>.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_7.png" alt="Bastogne Memorial" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">A memorial at Bastogne commemorates one of the central flashpoints of the Battle of the Bulge.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> Bastogne became the emblem of the American stand against Hitler’s final major western offensive in December 1944. The defense there illustrates the larger story of the battle: surprise, severe winter conditions, stubborn American resistance, and the eventual collapse of Germany’s last reserves.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> How did the defense of Bastogne help turn Hitler’s Ardennes offensive into a disastrous failure for Germany?</p>
+                                    <textarea id="va_8" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>The attack took the Allies completely by surprise. In the midst of one of the coldest winters on record, German panzer divisions smashed through the thin American lines. At the critical road junction of Bastogne, the 101st Airborne Division was completely surrounded and cut off. When the German commander sent a formal demand for surrender, the American commander, General Anthony McAuliffe, famously replied with a single, defiant word: "Nuts!" The resilience of the American G.I. at Bastogne and other points along the line bought the Allies enough time for the weather to clear, allowing Allied air power to return to the skies and devastate German supply columns.</p>
+
+                        <p>General Patton performed a remarkable feat of military logistics by pivoting his entire Third Army 90 degrees in the middle of a winter storm to strike the southern flank of the German bulge. By January 1945, the German offensive had been crushed, and the final reserves of the German military were exhausted. The road to Berlin was now open from both the east and the west. The <strong>Battle of the Bulge</strong> was the largest and bloodiest battle fought by the United States during the war, but it ensured that the final collapse of Nazi Germany would be rapid.</p>
+
+                        <div id="cp-block-7" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">13. What was Adolf Hitler’s primary goal when he launched the counteroffensive known as the Battle of the Bulge?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) To permanently conquer the Soviet capital of Moscow.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) To capture the port of Antwerp and force a separate peace with the Western Allies.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) To successfully evacuate remaining German troops from North Africa.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) To test new defensive fortifications along the Atlantic Wall.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">14. How did General Anthony McAuliffe famously respond to the German demand for surrender at Bastogne?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) "Never!"</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) "Retreat!"</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) "Nuts!"</label>
+                                    <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) "Charge!"</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-7', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-7', 1)"><span>Next Question →</span></button>
+                            </div>
+                        </div>
+
+                        <h4>The Drive to Berlin and V-E Day</h4>
+                        <p class="first-p">As the Western Allies crossed the Rhine River and entered the German heartland, the Soviet Red Army was launching a massive offensive from the east. The two Allied forces raced toward Berlin, the capital of the Third Reich. While some American generals, including Patton, argued that the United States should seize Berlin first for political reasons, General Eisenhower decided to stop the American advance at the Elbe River. He believed that the cost in American lives to take a city that had already been designated as part of the Soviet occupation zone was not worth the price. The honor—and the horrific casualties—of the final street-by-street battle for Berlin fell to the Soviets.</p>
+
+                        <div class="spotlight-wrapper">
+                            <img src="assets/Spotlight_8.png" alt="V-E Day Celebration" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption">Crowds gather in London to celebrate Victory in Europe Day after Germany’s surrender in May 1945.</p>
+                                <p class="spotlight-why"><strong>Why it Matters:</strong> V-E Day marked the end of the war in Europe and the destruction of the Third Reich after years of total war. Public celebration captures the scale of Allied relief and triumph, while also fitting the subsection’s reminder that the Pacific war still continued and that the postwar order was already taking shape.</p>
+                                <div class="question-box">
+                                    <p><strong>Student Question:</strong> Why did V-E Day represent both the successful liberation of Europe and the beginning of a new set of global challenges?</p>
+                                    <textarea id="va_9" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>During these final, dramatic weeks, the world was shocked by the sudden death of President Franklin D. Roosevelt on April 12, 1945. Vice President <strong>Harry S. Truman</strong> was suddenly thrust into the presidency. Truman, a former senator from Missouri, had been largely kept in the dark about many of the war’s most secret projects, including the development of the atomic bomb. Despite his lack of experience in international diplomacy, Truman vowed to maintain Roosevelt’s policies and demand the unconditional surrender of the Axis powers.</p>
+
+                        <p>On April 30, 1945, as Soviet troops fought their way into the heart of Berlin, Adolf Hitler committed suicide in his underground bunker. One week later, on May 7, the German high command signed an unconditional surrender at Eisenhower’s headquarters in France. The following day, May 8, 1945, was celebrated as <strong>V-E Day</strong> (Victory in Europe Day). Millions of people in Allied nations celebrated the end of the war in Europe, but the joy was tempered by the realization that a brutal and costly war still raged in the Pacific. The United States had successfully led the liberation of Europe, but the dawn of the nuclear age was only months away.</p>
+
+                        <div id="cp-block-8" class="checkpoint-block" data-current="0">
+                            <h3>Checkpoint</h3>
+                            <div class="checkpoint-grid">
+                                <div class="checkpoint-q">
+                                    <p class="first-p">15. Why did General Eisenhower decide to stop the American advance at the Elbe River rather than race the Soviets to Berlin?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) He believed the cost in American lives to take a city designated for the Soviet zone was not worth it.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) His forces had completely run out of ammunition and fuel supplies.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) He was directly ordered by President Truman to negotiate a ceasefire.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) He wanted to redirect all American troops immediately to the Pacific Theater.</label>
+                                </div>
+                                <div class="checkpoint-q">
+                                    <p class="first-p">16. Which sudden event forced Vice President Harry S. Truman into the presidency during the final weeks of the war?</p>
+                                    <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) The resignation of the current administration.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) The death of President Franklin D. Roosevelt.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) An emergency national election held in 1945.</label>
+                                    <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) The signing of the unconditional surrender on V-E Day.</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-6">
+                                <button class="action-btn cp-prev-btn" style="width: auto;" onclick="navigateCp('cp-block-8', -1)"><span>← Back</span></button>
+                                <span class="cp-indicator font-bold text-accent-navy">1 of 2</span>
+                                <button class="action-btn cp-next-btn" style="width: auto;" onclick="navigateCp('cp-block-8', 1)"><span>Next Question →</span></button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="checkpoint-block" id="cp-block-7" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. What was Adolf Hitler’s primary goal when he launched the counteroffensive known as the Battle of the Bulge?</p>
-                            <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) To permanently conquer the Soviet capital of Moscow.</label>
-                            <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) To capture the port of Antwerp and force a separate peace with the Western Allies.</label>
-                            <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) To successfully evacuate remaining German troops from North Africa.</label>
-                            <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) To test new defensive fortifications along the Atlantic Wall.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. How did General Anthony McAuliffe famously respond to the German demand for surrender at Bastogne?</p>
-                            <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-7')"> A) "Never!"</label>
-                            <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-7')"> B) "Retreat!"</label>
-                            <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-7')"> C) "Nuts!"</label>
-                            <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-7')"> D) "Charge!"</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-7', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-7', 1)">Next Question &#8594;</button>
-                        </div>
-                    </div>
-
-                    <h3>The Drive to Berlin and V-E Day</h3>
-                    <p class="first-p">As the Western Allies crossed the Rhine River and entered the German heartland, the Soviet Red Army was launching a massive offensive from the east. The two Allied forces raced toward Berlin, the capital of the Third Reich. While some American generals, including Patton, argued that the United States should seize Berlin first for political reasons, General Eisenhower decided to stop the American advance at the Elbe River. He believed that the cost in American lives to take a city that had already been designated as part of the Soviet occupation zone was not worth the price. The honor—and the horrific casualties—of the final street-by-street battle for Berlin fell to the Soviets.</p>
-                    <p>During these final, dramatic weeks, the world was shocked by the sudden death of President Franklin D. Roosevelt on April 12, 1945. Vice President <strong>Harry S. Truman</strong> was suddenly thrust into the presidency. Truman, a former senator from Missouri, had been largely kept in the dark about many of the war’s most secret projects, including the development of the atomic bomb. Despite his lack of experience in international diplomacy, Truman vowed to maintain Roosevelt’s policies and demand the unconditional surrender of the Axis powers.</p>
-                    <p>On April 30, 1945, as Soviet troops fought their way into the heart of Berlin, Adolf Hitler committed suicide in his underground bunker. One week later, on May 7, the German high command signed an unconditional surrender at Eisenhower’s headquarters in France. The following day, May 8, 1945, was celebrated as <strong>V-E Day</strong> (Victory in Europe Day). Millions of people in Allied nations celebrated the end of the war in Europe, but the joy was tempered by the realization that a brutal and costly war still raged in the Pacific. The United States had successfully led the liberation of Europe, but the dawn of the nuclear age was only months away.</p>
-
-                    <div class="spotlight-wrapper">
-                        <img src="assets/Spotlight_8.png" alt="V-E Day Celebration in London" />
-                        <div class="spotlight-content">
-                            <p class="spotlight-caption">Crowds gather in London to celebrate Victory in Europe Day after Germany’s surrender in May 1945.</p>
-                            <p class="spotlight-why"><strong>Why it Matters:</strong> V-E Day marked the end of the war in Europe and the destruction of the Third Reich after years of total war. Public celebration captures the scale of Allied relief and triumph, while also fitting the subsection’s reminder that the Pacific war still continued and that the postwar order was already taking shape.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> Why did V-E Day represent both the successful liberation of Europe and the beginning of a new set of global challenges?</p>
-                                <textarea id="va_9" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="checkpoint-block" id="cp-block-8" data-current="0">
-                        <h3>Checkpoint</h3>
-                        <div class="checkpoint-q">
-                            <p class="first-p">1. Why did General Eisenhower decide to stop the American advance at the Elbe River rather than race the Soviets to Berlin?</p>
-                            <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-8')"> A) He believed the cost in American lives to take a city designated for the Soviet zone was not worth it.</label>
-                            <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-8')"> B) His forces had completely run out of ammunition and fuel supplies.</label>
-                            <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-8')"> C) He was directly ordered by President Truman to negotiate a ceasefire.</label>
-                            <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-8')"> D) He wanted to redirect all American troops immediately to the Pacific Theater.</label>
-                        </div>
-                        <div class="checkpoint-q" style="display:none;">
-                            <p class="first-p">2. Which sudden event forced Vice President Harry S. Truman into the presidency during the final weeks of the war?</p>
-                            <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-8')"> A) The resignation of the current administration.</label>
-                            <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-8')"> B) The death of President Franklin D. Roosevelt.</label>
-                            <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-8')"> C) An emergency national election held in 1945.</label>
-                            <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-8')"> D) The signing of the unconditional surrender on V-E Day.</label>
-                        </div>
-                        <div style="margin-top:15px;">
-                            <span class="cp-indicator" style="color:var(--color-steel-nib); font-size:0.9rem; margin-right:15px;"></span>
-                            <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-8', -1)">&#8592; Previous</button>
-                            <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-8', 1)">Next Question &#8594;</button>
-                        </div>
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-2')"><span style="position: relative; z-index: 1;">← Previous Section</span></button>
+                        <button class="action-btn" id="btn-next-sec-3" onclick="switchTab('sec-4')"><span style="position: relative; z-index: 1;">Next Section →</span></button>
                     </div>
                 </div>
-                
-                <div class="bottom-nav">
-                    <button class="action-btn" onclick="switchTab('sec-1')">&larr; Previous</button>
-                    <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4')" disabled>🔒 Answer Checkpoints to Continue</button>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Section 4 -->
-        <section id="sec-4" class="chapter-section">
-            <div class="content-wrapper">
-                <div class="content-block">
-                    <h2>Social History: American Experience</h2>
-                    
-                    <h3>The G.I. Experience: From Kasserine to the Elbe</h3>
-                    
-                    <h4>The Experience</h4>
-                    <p class="first-p">For the average American soldier, or "G.I." (short for Government Issue), World War II was an experience of radical transformation. The soldiers who landed in North Africa in 1942 were often soft, inexperienced, and poorly equipped. They had been raised during the Great Depression, and many had never traveled more than a few miles from their home towns. By 1945, those who survived had become part of the most efficient and lethal military machine in history. They lived in "foxholes," endured the "trench foot" caused by the freezing mud of the Italian mountains, and faced the terrifying "88s"—the highly effective German multi-purpose artillery guns.</p>
-                    <p>The social experience of the G.I. was one of intense brotherhood and shared suffering. In the infantry, distinctions of class and ethnicity often melted away under the pressure of combat. However, the military remained a reflection of a divided America; it was strictly segregated by race. Despite this, the service of millions of Americans across the <strong>European Theater</strong> created a shared sense of national purpose. The G.I.s were not just soldiers; they were the faces of American democracy to the liberated people of Europe. They handed out Hershey bars and cigarettes, but they also witnessed the horrific aftermath of Nazi rule. As they moved into Germany, they were the first to encounter the victims of a regime built on hatred—an experience that provided a grim moral justification for every mile they had marched and every comrade they had lost.</p>
+            <!-- Section 4: Social History -->
+            <section id="sec-4" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Social History | American Experience</h2>
+                        
+                        <h4>The G.I. Experience | From Kasserine to the Elbe</h4>
 
-                    <h4>Historical Significance</h4>
-                    <p class="first-p">The experience of the G.I. in Europe had a profound impact on post-war American society. The "G.I. Bill," passed in 1944, provided millions of returning veterans with the opportunity for college educations and low-interest home loans, fueling the growth of the American middle class and the suburbs in the 1950s. Furthermore, the experience of fighting for "freedom" abroad while living in a segregated military at home led many African American and Latino veterans to return with a new determination to fight for civil rights in the United States. The "Greatest Generation" did not just win a war; they returned to reshape the social and economic landscape of the nation they had served.</p>
+                        <h5>The Experience</h5>
+                        <p class="first-p">For the average American soldier, or "G.I." (short for Government Issue), World War II was an experience of radical transformation. The soldiers who landed in North Africa in 1942 were often soft, inexperienced, and poorly equipped. They had been raised during the Great Depression, and many had never traveled more than a few miles from their home towns. By 1945, those who survived had become part of the most efficient and lethal military machine in history. They lived in "foxholes," endured the "trench foot" caused by the freezing mud of the Italian mountains, and faced the terrifying "88s"—the highly effective German multi-purpose artillery guns.</p>
 
-                    <div class="visual-wrapper">
-                        <img src="assets/Visual_2.png" class="visual-img" alt="Illustration of American G.I.s in a winter foxhole" />
-                        <p class="caption-text">The grueling reality of front-line combat forged an intense brotherhood among infantrymen, stripping away many civilian distinctions of class and background under the pressure of survival. While fighting to liberate Europe from fascist dictatorships, these citizen-soldiers endured extreme physical and psychological hardships that profoundly shaped their generation and fueled demands for social and economic progress upon their return home.</p>
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" class="visual-img" alt="G.I.s in Foxhole" onerror="this.style.display='none'">
+                            <p class="caption-text">The grueling reality of front-line combat forged an intense brotherhood among infantrymen, stripping away many civilian distinctions of class and background under the pressure of survival. While fighting to liberate Europe from fascist dictatorships, these citizen-soldiers endured extreme physical and psychological hardships that profoundly shaped their generation and fueled demands for social and economic progress upon their return home.</p>
+                        </div>
+
+                        <p>The social experience of the G.I. was one of intense brotherhood and shared suffering. In the infantry, distinctions of class and ethnicity often melted away under the pressure of combat. However, the military remained a reflection of a divided America; it was strictly segregated by race. Despite this, the service of millions of Americans across the <strong>European Theater</strong> created a shared sense of national purpose. The G.I.s were not just soldiers; they were the faces of American democracy to the liberated people of Europe. They handed out Hershey bars and cigarettes, but they also witnessed the horrific aftermath of Nazi rule. As they moved into Germany, they were the first to encounter the victims of a regime built on hatred—an experience that provided a grim moral justification for every mile they had marched and every comrade they had lost.</p>
+
+                        <h5>Historical Significance</h5>
+                        <p class="first-p">The experience of the G.I. in Europe had a profound impact on post-war American society. The "G.I. Bill," passed in 1944, provided millions of returning veterans with the opportunity for college educations and low-interest home loans, fueling the growth of the American middle class and the suburbs in the 1950s. Furthermore, the experience of fighting for "freedom" abroad while living in a segregated military at home led many African American and Latino veterans to return with a new determination to fight for civil rights in the United States. The "Greatest Generation" did not just win a war; they returned to reshape the social and economic landscape of the nation they had served.</p>
+
+                        <div class="question-box" style="margin-top: 3rem; background: #F3F5F9; padding: 25px; border: 1px solid var(--border-faint);">
+                            <h5 style="color: var(--highlight-red) !important; margin-bottom: 1rem !important;">Perspective Questions</h5>
+                            
+                            <p><strong>Analyze the Imagery:</strong> Why did the image of the "G.I." (Government Issue) become such a powerful symbol of American democracy during the war? How did this image contrast with the highly disciplined, goose-stepping imagery of the Nazi military?</p>
+                            <textarea id="pq_1" class="textarea-dark mb-6" placeholder="Type your response here..."></textarea>
+
+                            <p><strong>Compare Viewpoints:</strong> Contrast the experience of an African American soldier in the <strong>Tuskegee Airmen</strong> with that of a white infantryman in Patton’s Third Army. How did their shared goal of defeating fascism highlight the contradictions of American democracy at home?</p>
+                            <textarea id="pq_2" class="textarea-dark mb-6" placeholder="Type your response here..."></textarea>
+
+                            <p><strong>Evaluate Strategy:</strong> Why was the "G.I. Bill" considered an essential part of the war strategy for the post-war era? Consider how the government’s investment in its soldiers was intended to prevent a return to the economic instability of the Great Depression.</p>
+                            <textarea id="pq_3" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                        </div>
                     </div>
 
-                    <div class="question-box">
-                        <p class="first-p"><strong>Analyze the Imagery:</strong> Why did the image of the "G.I." (Government Issue) become such a powerful symbol of American democracy during the war? How did this image contrast with the highly disciplined, goose-stepping imagery of the Nazi military?</p>
-                        <textarea id="pq_1" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                    </div>
-
-                    <div class="question-box">
-                        <p class="first-p"><strong>Compare Viewpoints:</strong> Contrast the experience of an African American soldier in the <strong>Tuskegee Airmen</strong> with that of a white infantryman in Patton’s Third Army. How did their shared goal of defeating fascism highlight the contradictions of American democracy at home?</p>
-                        <textarea id="pq_2" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                    </div>
-
-                    <div class="question-box">
-                        <p class="first-p"><strong>Evaluate Strategy:</strong> Why was the "G.I. Bill" considered an essential part of the war strategy for the post-war era? Consider how the government’s investment in its soldiers was intended to prevent a return to the economic instability of the Great Depression.</p>
-                        <textarea id="pq_3" class="textarea-dark" placeholder="Enter your response here..."></textarea>
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-3')"><span style="position: relative; z-index: 1;">← Previous Section</span></button>
+                        <button class="action-btn" id="btn-next-sec-4" onclick="switchTab('sec-5')"><span style="position: relative; z-index: 1;">Next Section →</span></button>
                     </div>
                 </div>
-                
-                <div class="bottom-nav">
-                    <button class="action-btn" onclick="switchTab('sec-2')">&larr; Previous</button>
-                    <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5')">Next Section &rarr;</button>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Section 5 -->
-        <section id="sec-5" class="chapter-section">
-            <div class="content-wrapper">
-                <div class="content-block">
-                    <h2>Vocabulary Activity</h2>
-                    
-                    <p class="first-p">Read the following historical narrative summarizing the chapter's events. Fill in the numbered blanks using the correct term from the Word Bank. Each term is used exactly once.</p>
+            <!-- Section 5: Vocabulary Activity -->
+            <section id="sec-5" class="chapter-section">
+                <div class="content-wrapper">
+                    <div class="content-block">
+                        <h2>Vocabulary Activity</h2>
+                        
+                        <div class="word-bank">
+                            <span class="word-pill">European Theater</span>
+                            <span class="word-pill">Dwight D. Eisenhower</span>
+                            <span class="word-pill">Operation Torch</span>
+                            <span class="word-pill">D-Day (Operation Overlord)</span>
+                            <span class="word-pill">Battle of the Bulge</span>
+                            <span class="word-pill">George S. Patton</span>
+                            <span class="word-pill">Tuskegee Airmen</span>
+                            <span class="word-pill">V-E Day</span>
+                            <span class="word-pill">Harry S. Truman</span>
+                        </div>
 
-                    <div class="word-bank">
-                        <span class="word-pill">European Theater</span>
-                        <span class="word-pill">Dwight D. Eisenhower</span>
-                        <span class="word-pill">Operation Torch</span>
-                        <span class="word-pill">D-Day (Operation Overlord)</span>
-                        <span class="word-pill">Battle of the Bulge</span>
-                        <span class="word-pill">George S. Patton</span>
-                        <span class="word-pill">Tuskegee Airmen</span>
-                        <span class="word-pill">V-E Day</span>
-                        <span class="word-pill">Harry S. Truman</span>
+                        <div class="cloze-narrative">
+                            <p class="first-p">Following the attack on Pearl Harbor, President Roosevelt and Prime Minister Churchill decided to prioritize the 1. <input type="text" class="cloze-input" data-answer="European Theater">, believing Nazi Germany posed a more significant existential threat to global security than Japan. The first major American offensive in the West was 2. <input type="text" class="cloze-input" data-answer="Operation Torch">, an amphibious invasion of North Africa intended to secure the Mediterranean and help troops gain combat experience. This campaign was overseen by General 3. <input type="text" class="cloze-input" data-answer="Dwight D. Eisenhower">, who demonstrated exceptional skill in unifying British and American military forces. After early setbacks, the offensive spirit of the U.S. Army was restored by the highly disciplined General 4. <input type="text" class="cloze-input" data-answer="George S. Patton">, whose "speed and violence of action" pushed the Axis forces back in the desert. In the skies above, the Allied strategic bombing campaign was valiantly supported by the 5. <input type="text" class="cloze-input" data-answer="Tuskegee Airmen">, an elite group of African American pilots who proved their critics wrong by skillfully protecting bomber crews deep into enemy territory.</p>
+
+                            <p>The turning point of the war occurred on June 6, 1944, with the massive amphibious invasion of Normandy, known as 6. <input type="text" class="cloze-input" data-answer="D-Day (Operation Overlord)">. The Allies broke through German defenses and raced across the French countryside, but Hitler launched a desperate winter counteroffensive through the Ardennes Forest that became known as the 7. <input type="text" class="cloze-input" data-answer="Battle of the Bulge">. The Americans fiercely held the line, eventually crushing the German reserves. As the Allies closed in on Berlin, the sudden death of Franklin D. Roosevelt meant that Vice President 8. <input type="text" class="cloze-input" data-answer="Harry S. Truman"> abruptly assumed the presidency, vowing to demand the unconditional surrender of the Axis powers. Finally, on May 8, 1945, the world celebrated 9. <input type="text" class="cloze-input" data-answer="V-E Day">, marking the official end of the devastating conflict in Europe.</p>
+                        </div>
                     </div>
 
-                    <p class="first-p" style="line-height: 2.4;">
-                        Following the attack on Pearl Harbor, President Roosevelt and Prime Minister Churchill decided to prioritize the 1. <input type="text" class="cloze-input" />, believing Nazi Germany posed a more significant existential threat to global security than Japan. The first major American offensive in the West was 2. <input type="text" class="cloze-input" />, an amphibious invasion of North Africa intended to secure the Mediterranean and help troops gain combat experience. This campaign was overseen by General 3. <input type="text" class="cloze-input" />, who demonstrated exceptional skill in unifying British and American military forces. After early setbacks, the offensive spirit of the U.S. Army was restored by the highly disciplined General 4. <input type="text" class="cloze-input" />, whose "speed and violence of action" pushed the Axis forces back in the desert. In the skies above, the Allied strategic bombing campaign was valiantly supported by the 5. <input type="text" class="cloze-input" />, an elite group of African American pilots who proved their critics wrong by skillfully protecting bomber crews deep into enemy territory.
-                    </p>
-                    <p style="line-height: 2.4;">
-                        The turning point of the war occurred on June 6, 1944, with the massive amphibious invasion of Normandy, known as 6. <input type="text" class="cloze-input" />. The Allies broke through German defenses and raced across the French countryside, but Hitler launched a desperate winter counteroffensive through the Ardennes Forest that became known as the 7. <input type="text" class="cloze-input" />. The Americans fiercely held the line, eventually crushing the German reserves. As the Allies closed in on Berlin, the sudden death of Franklin D. Roosevelt meant that Vice President 8. <input type="text" class="cloze-input" /> abruptly assumed the presidency, vowing to demand the unconditional surrender of the Axis powers. Finally, on May 8, 1945, the world celebrated 9. <input type="text" class="cloze-input" />, marking the official end of the devastating conflict in Europe.
-                    </p>
+                    <div class="bottom-nav">
+                        <button class="action-btn" onclick="switchTab('sec-4')"><span style="position: relative; z-index: 1;">← Previous Section</span></button>
+                        <button class="action-btn" onclick="finishChapter()"><span style="position: relative; z-index: 1;">Finish Assignment ✓</span></button>
+                    </div>
                 </div>
-                
-                <div class="bottom-nav">
-                    <button class="action-btn" onclick="switchTab('sec-3')">&larr; Previous</button>
-                    <button class="action-btn" style="background: var(--color-gold); color: var(--color-navy-deep);" onclick="finishChapter()">Finished</button>
-                </div>
-            </div>
-        </section>
-    </main>
-</div>
+            </section>
+        </main>
+    </div>
 
-<script>
-    /* Background Management */
-    const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
-    let bgIndex = 0;
-    
-    function rotateBackground() {
-        if (bgImages.length === 0) return;
-        const bgEl = document.getElementById('bg-slideshow');
-        if (!bgEl) return;
-        bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
-        bgIndex = (bgIndex + 1) % bgImages.length;
-    }
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        rotateBackground();
-        setInterval(rotateBackground, 10000); 
-    });
+    <script>
+        /* Background Management */
+        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+        let bgIndex = 0;
 
-    /* Navigation */
-    function switchTab(id, btnId = null, scrollTarget = null) {
-        document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
-        document.getElementById(id).classList.add('active-section');
-        
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
-        
-        const activeBtnId = btnId || ('nav-' + id);
-        const activeBtn = document.getElementById(activeBtnId);
-        if (activeBtn) {
-            activeBtn.classList.add('active-nav');
-        }
-        
-        if (scrollTarget) {
-            setTimeout(() => {
-                const target = document.getElementById(scrollTarget);
-                if(target) {
-                    const offset = 40;
-                    const bodyRect = document.body.getBoundingClientRect().top;
-                    const elementRect = target.getBoundingClientRect().top;
-                    const elementPosition = elementRect - bodyRect;
-                    const offsetPosition = elementPosition - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                }
-            }, 50);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        saveProgress();
-    }
-
-    /* Data Collection & Export */
-    function collectAssignmentData(isFinal) {
-        const studentName = document.getElementById('student-name').value || "Unknown_Student";
-        const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
-        const now = new Date().toLocaleDateString();
-
-        const assignmentData = {
-            assignmentTitle: "Interactive Chapter 15.3 - The European Theater",
-            studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
-            responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
-        };
-
-        // Gather Visual Analysis Answers
-        for(let i=1; i<=20; i++) {
-            let el = document.getElementById('va_' + i);
-            if(el) {
-                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Student Question:', '').trim() : 'Visual ' + i;
-                assignmentData.responses.visualAnalysis[qText] = el.value.trim();
-            }
+        function rotateBackground() {
+            if (bgImages.length === 0) return;
+            const bgEl = document.getElementById('bg-slideshow');
+            if (!bgEl) return;
+            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+            bgIndex = (bgIndex + 1) % bgImages.length;
         }
 
-        // Gather Checkpoint Answers
-        for(let i=1; i<=30; i++) {
-            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-            if(inputs.length > 0) {
-                let checked = document.querySelector('input[name="cp' + i + '"]:checked');
-                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
-            }
-        }
-
-        // Gather Perspective Questions
-        for(let i=1; i<=10; i++) {
-            let el = document.getElementById('pq_' + i);
-            if(el) {
-                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
-            }
-        }
-
-        // Gather Cloze Activity Answers
-        document.querySelectorAll('.cloze-input').forEach((input, index) => {
-            assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateBackground();
+            setInterval(rotateBackground, 10000);
+            initCheckpoints();
         });
 
-        return assignmentData;
-    }
-
-    function triggerDownload(data, filename) {
-        const dataStr = JSON.stringify(data, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function downloadProgress() {
-        const data = collectAssignmentData(false);
-        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        triggerDownload(data, `Chapter_Progress_${safeName}.json`);
-    }
-
-    function finishChapter() {
-        const dateField = document.getElementById('completion-date');
-        const now = new Date().toLocaleDateString();
-        if(dateField) dateField.value = now;
-
-        const data = collectAssignmentData(true);
-        const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        triggerDownload(data, `Chapter_Export_${safeName}.json`);
-
-        alert('Upload JSON file to Canvas');
-        switchTab('sec-1', 'nav-sec-1');
-    }
-
-    /* Loading Progress */
-    function loadProgress(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const loadedData = JSON.parse(e.target.result);
-                
-                // Restore ID Panel and Burn In
-                const nameInput = document.getElementById('student-name');
-                const periodInput = document.getElementById('student-period');
-                
-                if (loadedData.studentInfo) {
-                    if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
-                        nameInput.value = loadedData.studentInfo.name;
-                        nameInput.setAttribute('readonly', 'true');
-                        nameInput.style.opacity = '0.7'; 
+        /* Navigation */
+        function switchTab(id, btnId = null, scrollTarget = null) {
+            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            const activeBtnId = btnId || ('nav-' + id);
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if(target) {
+                        const offset = 40;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                     }
-                    if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
-                        periodInput.value = loadedData.studentInfo.period;
-                        periodInput.setAttribute('disabled', 'true');
-                        periodInput.style.opacity = '0.7'; 
-                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            saveProgress();
+        }
+
+        /* Data Collection */
+        function collectAssignmentData(isFinal) {
+            const studentName = document.getElementById('student-name').value || "Unknown_Student";
+            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+            const now = new Date().toLocaleDateString();
+
+            const assignmentData = {
+                assignmentTitle: "Interactive Chapter 15.3 - The European Theater",
+                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+            };
+
+            for(let i=1; i<=10; i++) {
+                let el = document.getElementById('va_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Student Question:', '').trim() : 'Visual ' + i;
+                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
                 }
+            }
 
-                if (loadedData.responses) {
-                    if (loadedData.responses.visualAnalysis) {
-                        for(let i=1; i<=20; i++) {
-                            let el = document.getElementById('va_' + i);
-                            if(el) {
-                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Student Question:', '').trim() : 'Visual ' + i;
-                                if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
-                            }
-                        }
-                    }
-                    
-                    if (loadedData.responses.checkpoints) {
-                        for(let i=1; i<=30; i++) {
-                            let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-                            if(inputs.length > 0) {
-                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                                let savedVal = loadedData.responses.checkpoints[qText];
-                                if (savedVal && savedVal !== "No Answer") {
-                                    let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
-                                    if(radio) radio.checked = true;
-                                }
-                            }
-                        }
-                    }
+            for(let i=1; i<=16; i++) {
+                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
+                if(inputs.length > 0) {
+                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
+                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+                }
+            }
 
-                    if (loadedData.responses.perspectiveQuestions) {
-                        for(let i=1; i<=10; i++) {
-                            let el = document.getElementById('pq_' + i);
-                            if(el) {
-                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
-                            }
-                        }
-                    }
+            for(let i=1; i<=3; i++) {
+                let el = document.getElementById('pq_' + i);
+                if(el) {
+                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
+                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+                }
+            }
 
-                    if (loadedData.responses.clozeActivity) {
-                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
-                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
-                            if (savedVal) input.value = savedVal;
+            document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
+            });
+
+            return assignmentData;
+        }
+
+        function triggerDownload(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadProgress() {
+            const data = collectAssignmentData(false);
+            const safeName = data.studentInfo.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\_]/g, '');
+            triggerDownload(data, `${safeName}_Progress_Ch15_3.json`);
+        }
+
+        function finishChapter() {
+            const dateField = document.getElementById('completion-date');
+            const now = new Date().toLocaleDateString();
+            if(dateField) dateField.value = now;
+            const data = collectAssignmentData(true);
+            const safeName = data.studentInfo.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\_]/g, '');
+            triggerDownload(data, `${safeName}_Ch15_3.json`);
+            alert('Progress saved. Upload JSON file to Canvas');
+            switchTab('sec-1', 'nav-sec-1');
+        }
+
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    if (loadedData.studentInfo) {
+                        document.getElementById('student-name').value = loadedData.studentInfo.name;
+                        document.getElementById('student-period').value = loadedData.studentInfo.period;
+                    }
+                    if (loadedData.responses) {
+                        // Visual Analysis
+                        Object.keys(loadedData.responses.visualAnalysis).forEach(q => {
+                            const tex = Array.from(document.querySelectorAll('.textarea-dark')).find(t => t.previousElementSibling && t.previousElementSibling.innerText.includes(q));
+                            if(tex) tex.value = loadedData.responses.visualAnalysis[q];
+                        });
+                        // Checkpoints
+                        Object.keys(loadedData.responses.checkpoints).forEach(q => {
+                            const val = loadedData.responses.checkpoints[q];
+                            const cpQs = Array.from(document.querySelectorAll('.checkpoint-q')).find(container => container.querySelector('p').innerText.includes(q));
+                            if(cpQs && val !== "No Answer") {
+                                const radio = cpQs.querySelector(`input[value="${val}"]`);
+                                if(radio) radio.checked = true;
+                            }
+                        });
+                        // Perspective
+                        Object.keys(loadedData.responses.perspectiveQuestions).forEach(q => {
+                            const tex = Array.from(document.querySelectorAll('.textarea-dark')).find(t => t.previousElementSibling && t.previousElementSibling.innerText.includes(q));
+                            if(tex) tex.value = loadedData.responses.perspectiveQuestions[q];
+                        });
+                        // Cloze
+                        Object.keys(loadedData.responses.clozeActivity).forEach((key, idx) => {
+                            const input = document.querySelectorAll('.cloze-input')[idx];
+                            if(input) input.value = loadedData.responses.clozeActivity[key];
                         });
                     }
-                }
-                
+                    initCheckpoints();
+                    alert('Progress loaded!');
+                } catch (err) { alert('Error loading file.'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function saveProgress() { console.log('Memory updated.'); }
+
+        function resetProgress() {
+            if(confirm('Reset all progress?')) {
+                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
                 initCheckpoints();
-                alert('Progress loaded successfully!');
-                
-            } catch (err) {
-                console.error(err);
-                alert('Error loading progress file. Please make sure it is a valid JSON file.');
+                switchTab('sec-1', 'nav-sec-1');
             }
-        };
-        reader.readAsText(file);
-        event.target.value = '';
-    }
+        }
 
-    /* Save & Reset Logic */
-    function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
-    function resetProgress() {
-        if(confirm('Are you sure you want to reset all progress?')) {
-            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
-            document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        /* Checkpoint System */
+        const TOTAL_CHECKPOINTS = 8;
+        function initCheckpoints() {
+            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) updateCpUI(`cp-block-${i}`);
+            checkSectionUnlock();
+        }
+
+        function updateCpUI(blockId) {
+            const block = document.getElementById(blockId);
+            if(!block) return;
+            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+            const questions = block.querySelectorAll('.checkpoint-q');
+            const indicator = block.querySelector('.cp-indicator');
+            const prevBtn = block.querySelector('.cp-prev-btn');
+            const nextBtn = block.querySelector('.cp-next-btn');
             
-            // Un-burn ID panel fields
-            const nameInput = document.getElementById('student-name');
-            const periodInput = document.getElementById('student-period');
-            nameInput.removeAttribute('readonly');
-            nameInput.style.opacity = '1';
-            periodInput.removeAttribute('disabled');
-            periodInput.style.opacity = '1';
+            questions.forEach((q, idx) => q.style.display = (idx === currentIndex) ? 'block' : 'none');
+            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-flex';
+            
+            if(nextBtn) {
+                const currentQ = questions[currentIndex];
+                const answered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+                const span = nextBtn.querySelector('span');
 
-            document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
-            initCheckpoints();
-            switchTab('sec-1', 'nav-sec-1');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    /* Checkpoint Management */
-    const TOTAL_CHECKPOINTS = 8; 
-    
-    function initCheckpoints() {
-        for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
-        checkSectionUnlock();
-    }
-    
-    function updateCpUI(blockId) {
-        const block = document.getElementById(blockId);
-        if(!block) return;
-        const currentIndex = parseInt(block.getAttribute('data-current') || '0');
-        const questions = block.querySelectorAll('.checkpoint-q');
-        const indicator = block.querySelector('.cp-indicator');
-        const prevBtn = block.querySelector('.cp-prev-btn');
-        const nextBtn = block.querySelector('.cp-next-btn');
-
-        questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
-        if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
-        if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
-
-        if(nextBtn) {
-            const currentQ = questions[currentIndex];
-            const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
-            if (currentIndex === questions.length - 1) {
-                if (isAnswered) {
-                    nextBtn.innerText = "Checkpoint Completed ✓";
-                    nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
-                    nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
+                if (currentIndex === questions.length - 1) {
+                    if (answered) {
+                        span.innerText = "Checkpoint Completed ✓";
+                        nextBtn.disabled = true;
+                        nextBtn.style.background = "var(--accent-navy)";
+                        nextBtn.style.color = "#fff";
+                    } else {
+                        span.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true;
+                    }
                 } else {
-                    nextBtn.innerText = "Finish Checkpoint";
-                    nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
-                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                    span.innerText = "Next Question →";
+                    nextBtn.disabled = !answered;
                 }
+            }
+            checkSectionUnlock();
+        }
+
+        function navigateCp(blockId, dir) {
+            const block = document.getElementById(blockId);
+            let idx = parseInt(block.getAttribute('data-current') || '0') + dir;
+            block.setAttribute('data-current', idx);
+            updateCpUI(blockId);
+        }
+
+        function handleRadioChange(blockId) { updateCpUI(blockId); saveProgress(); }
+
+        function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+
+        function setNavButtonState(btnId, enabled) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            const span = btn.querySelector('span');
+            btn.disabled = !enabled;
+            if (enabled) {
+                span.innerHTML = 'Next Section →';
+                btn.style.opacity = '1';
             } else {
-                nextBtn.innerText = "Next Question \u2192";
-                nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
-                if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; } 
-                else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+                span.innerHTML = '🔒 Answer Checkpoints to Continue';
+                btn.style.opacity = '0.5';
             }
         }
-        checkSectionUnlock();
-    }
-    
-    function navigateCp(blockId, dir) {
-        const block = document.getElementById(blockId);
-        let currentIndex = parseInt(block.getAttribute('data-current') || '0');
-        const questions = block.querySelectorAll('.checkpoint-q');
-        currentIndex += dir;
-        if (currentIndex < 0) currentIndex = 0;
-        if (currentIndex >= questions.length) currentIndex = questions.length - 1;
-        block.setAttribute('data-current', currentIndex);
-        updateCpUI(blockId);
-    }
-    
-    function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
-    function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
-    
-    function setNavButtonState(btnId, enabled) {
-        const btn = document.getElementById(btnId);
-        if (!btn) return;
-        if (enabled) {
-            btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-            btn.innerHTML = 'Next Section &rarr;'; btn.style.borderColor = 'var(--color-gold)';
-        } else {
-            btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
-            btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
+
+        function checkSectionUnlock() {
+            setNavButtonState('btn-next-sec-1', true);
+            setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8'));
+            setNavButtonState('btn-next-sec-3', isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12') && isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
+            setNavButtonState('btn-next-sec-4', true);
         }
-    }
-    
-    function checkSectionUnlock() {
-        setNavButtonState('btn-next-sec-1', true); 
-        
-        // Section 2 requires Checkpoints 1-4 (cp1 to cp8)
-        setNavButtonState('btn-next-sec-2', 
-            isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4') && 
-            isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8')
-        );
-        
-        // Section 3 requires Checkpoints 5-8 (cp9 to cp16)
-        setNavButtonState('btn-next-sec-3', 
-            isAnswered('cp9') && isAnswered('cp10') && isAnswered('cp11') && isAnswered('cp12') && 
-            isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16')
-        );
-
-        // Section 4 has no checkpoints, unlocks immediately once in the section.
-        setNavButtonState('btn-next-sec-4', true);
-    }
-
-    // Initialize on load
-    window.onload = initCheckpoints;
-</script>
+    </script>
 </body>
 </html>
