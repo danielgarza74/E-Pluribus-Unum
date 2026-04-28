@@ -3,185 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 1.2 - Dissolving the Bands</title>
+    <title>Chapter 1.2 | Dissolving the Bands</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
         :root {
-            --color-navy-deep: #0B162A;
-            --color-cream: #F5F1E6;
-            --color-navy: #1E3A5F;
-            --color-steel-nib: #6C7A89;
-            --color-gold: #C5A009;
-            --color-gold-light: #e0b810; 
-            --color-wax-red: #A63A3A;
-            --font-heading: 'Times New Roman', serif;
-            --font-body: 'Arial', sans-serif;
-            --font-ui: 'Verdana', sans-serif;
+            --bg-beige: #F5F1E6;
+            --text-ink: #0B162A;
+            --accent-navy: #1E3A5F;
+            --accent-green: #6C7A89;
+            --highlight-red: #C5A009;
+
+            --bg-panel: #FFFFFF;
+            --bg-panel-hover: #F1ECE2;
+            --border-faint: rgba(197, 160, 9, 0.2); 
+            --border-strong: #C5A009;
+            --navy-faint: rgba(30, 58, 95, 0.15);
+
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Cormorant Garamond', serif;
+            --font-ui: 'Cinzel', serif;
         }
 
         * { box-sizing: border-box; }
-        html, body { overflow-x: hidden; margin: 0; padding: 0; }
-        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
         
-        /* Background Effects */
-        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
-        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
-        
-        /* Layout Architecture */
-        .app-container { display: flex; position: relative; z-index: 2; }
-        
-        /* Left Navigation Panel */
-        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
-        .side-nav::-webkit-scrollbar { display: none; }
-        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
-        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
-        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
-        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
-        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
-        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
-        
-        /* Main Content Area */
-        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
-        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
-        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
-        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
-        
-        @media (max-width: 1024px) {
-            .side-nav { display: none; }
-            .main-content { margin-left: 0; }
-            .content-wrapper { padding: 30px 20px; }
-            .content-block { padding: 2rem; }
+        body { 
+            font-family: var(--font-body); 
+            background-color: var(--accent-green); 
+            color: var(--text-ink); 
+            line-height: 1.7; 
+            font-size: 1.25rem; 
+            background-image: radial-gradient(circle at top center, rgba(30, 58, 95, 0.15) 0%, transparent 40%);
+            min-height: 100vh;
         }
         
-        /* Typography */
-        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
-        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
-        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
-        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        /* Subtle background watermark effect as requested in prompt */
+        #bg-slideshow { 
+            position: fixed; inset: 0; z-index: 0; pointer-events: none; 
+            background-size: cover; background-position: center; 
+            transition: background-image 1.5s ease-in-out; 
+            opacity: 0.12; 
+            filter: grayscale(100%) contrast(150%);
+        }
+        
+        .app-container { display: flex; position: relative; z-index: 2; }
+        
+        .side-nav { 
+            position: fixed; top: 0; left: 0; bottom: 0; width: 280px; 
+            background: var(--bg-panel); 
+            border-right: 1px solid var(--border-faint); 
+            display: flex; flex-direction: column; padding: 2rem 1.5rem; 
+            z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; 
+        }
+        .side-nav::-webkit-scrollbar { display: none; }
+        
+        .nav-title { 
+            font-family: var(--font-heading); color: var(--highlight-red); font-size: 1.1rem; 
+            margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.15em; 
+            border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; font-weight: 600;
+        }
+        
+        .nav-links { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; }
+        
+        .nav-btn { 
+            background: transparent; border: none; border-left: 3px solid transparent; 
+            color: var(--text-ink); text-align: left; padding: 12px 15px; 
+            font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; 
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; 
+        }
+        
+        .nav-btn.active-nav { 
+            background: rgba(197, 160, 9, 0.05); 
+            border-left: 3px solid var(--highlight-red); 
+            color: var(--highlight-red); 
+            font-weight: 600;
+        }
+        
+        .nav-btn:hover:not(.active-nav) { background: rgba(30, 58, 95, 0.3); border-left-color: var(--navy-faint); }
+        
+        .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+        
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
+        .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
+        
+        .chapter-hero {
+            background-color: var(--accent-navy);
+            color: var(--bg-beige);
+            padding: 3rem 2rem 2.25rem;
+            position: relative;
+            text-align: center;
+            border-bottom: 3px solid var(--highlight-red);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-eyebrow { font-family: var(--font-heading); font-size: 0.85rem; letter-spacing: 0.2em; color: rgba(245, 241, 230, 0.6); text-transform: uppercase; margin-bottom: 0.75rem; z-index: 2; }
+        .hero-title { font-family: var(--font-heading); font-size: clamp(1.5rem, 3vw, 2.6rem); font-weight: 700; color: var(--bg-beige); margin: 0 auto 0.75rem; max-width: 850px; line-height: 1.15; letter-spacing: 0.05em; z-index: 2; }
+        .hero-subtitle { font-family: var(--font-body); font-size: 1.05rem; font-style: italic; color: rgba(245, 241, 230, 0.85); max-width: 700px; margin: 0 auto 1.5rem; font-weight: 400; line-height: 1.6; z-index: 2; }
+        .hero-footer { font-family: var(--font-heading); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--highlight-red); z-index: 2; }
+        
+        .content-block { 
+            background: var(--bg-panel); 
+            border: 1px solid var(--highlight-red); 
+            padding: 3rem; margin-bottom: 3rem; display: flow-root; 
+            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .content-block::after { content: ''; position: absolute; inset: 6px; border: 1px solid var(--border-faint); pointer-events: none; }
+        
+        @media (max-width: 1024px) { .side-nav { display: none; } .main-content { margin-left: 0; } }
+        
+        h2 { font-family: var(--font-heading); color: var(--accent-navy) !important; font-size: 2.8rem !important; line-height: 1.2; margin-bottom: 2rem !important; font-weight: 700; text-align: center; border-bottom: 2px double var(--border-faint); padding-bottom: 1rem; }
+        h3 { font-family: var(--font-heading); color: var(--accent-green) !important; font-size: 2.2rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; font-weight: 600; }
+        h4 { font-family: var(--font-heading); color: #2B2D31 !important; font-size: 1.6rem !important; line-height: 1.4; margin-bottom: 1rem !important; margin-top: 2.5rem !important; font-weight: 600; border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        h5 { font-family: var(--font-heading); color: var(--highlight-red) !important; font-size: 1.35rem !important; font-weight: 700; margin-top: 2rem !important; margin-bottom: 1rem !important; }
+        p { margin-bottom: 1.5rem; font-size: 1.25rem; }
         p:not(.first-p) { text-indent: 2.5em; }
         .first-p { text-indent: 0 !important; }
-        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.25rem; color: var(--accent-green); }
+        li { margin-bottom: 0.5rem; }
+        strong { color: var(--text-ink); font-weight: 600; }
         
-        /* UI Elements */
-        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
-        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
-        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
-        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-faint); position: relative; }
+        .id-panel label { display: block; font-family: var(--font-heading); font-size: 0.85rem; color: var(--accent-green); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .id-panel input, .id-panel select { width: 100%; background: var(--bg-beige); border: 1px solid var(--navy-faint); color: var(--text-ink); padding: 12px; font-family: var(--font-body); font-size: 1.15rem; transition: border 0.3s; }
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--highlight-red); }
         
-        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
-        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
+        .textarea-dark { width: 100%; background: var(--bg-beige); border: 1px solid var(--navy-faint); color: var(--text-ink); padding: 1.5rem; min-height: 120px; font-family: var(--font-body); font-size: 1.2rem; resize: vertical; transition: border 0.3s; }
+        .textarea-dark:focus { outline: none; border-color: var(--highlight-red); }
         
-        /* Prominent Default Spotlights (Stacked) */
-        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
-        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
-        .spotlight-content { display: block; margin-top: 20px; }
-        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0 !important; }
-        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
-        .spotlight-why strong { color: var(--color-gold); }
+        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 25px; border: 1px solid var(--highlight-red); clear: both; position: relative; }
+        .spotlight-wrapper::after { content: ''; position: absolute; inset: 6px; border: 1px solid var(--border-faint); pointer-events: none; }
+        .spotlight-wrapper img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; position: relative; z-index: 1;}
+        .spotlight-content { display: block; margin-top: 20px; position: relative; z-index: 1; }
+        .spotlight-caption { font-size: 1.05rem; text-align: left; margin-bottom: 15px; font-style: italic; color: var(--accent-green); line-height: 1.5; text-indent: 0 !important; }
+        .spotlight-why { font-size: 1.15rem; color: var(--text-ink); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
+        .spotlight-why strong { color: var(--highlight-red); font-family: var(--font-heading); font-size: 1.1em; letter-spacing: 0.05em; }
         
-        /* Portrait Spotlights (Side-by-Side) */
         .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
-        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
+        .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; }
         .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
         .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
         
-        /* Full Sized Visuals (Restored) */
-        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
-        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
-        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
-        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 20px; border: 1px solid var(--border-faint); clear: both; }
+        .visual-img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; }
+        .caption-text { font-style: italic; font-size: 1.05rem; color: var(--accent-green); margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+        .question-box { border-left: 3px solid var(--highlight-red); padding-left: 1.5rem; margin-top: 1.5rem; }
+        .question-box p { text-indent: 0 !important; }
         
-        @media (max-width: 768px) {
-            .id-panel { grid-template-columns: 1fr; }
-            .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
-            .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
-        }
-        
-        /* Compact Checkpoint System */
-        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
-        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 1px dashed var(--highlight-red); background: var(--bg-panel); clear: both; position: relative; }
+        .checkpoint-block h3 { margin-top: 0 !important; font-size: 1.6rem !important; }
         .checkpoint-q { animation: fadeIn 0.4s ease-out; }
-        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
-        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
-        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
-        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
+        .checkpoint-q p.first-p { font-size: 1.15rem; line-height: 1.5; margin-bottom: 1rem; color: var(--text-ink); font-weight: 600; }
+        .checkpoint-q .checklist-item { 
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; 
+            padding: 10px 15px; background: var(--bg-panel); border: 1px solid var(--navy-faint); 
+            transition: all 0.2s; font-size: 1.1rem; line-height: 1.3; color: var(--text-ink);
+        }
+        .checkpoint-q .checklist-item:hover { background: var(--bg-panel-hover); border-color: var(--highlight-red); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--highlight-red); flex-shrink: 0; }
         
-        /* Cloze Specific */
-        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
-        .word-pill { background: rgba(30, 58, 95, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
-        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
-        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: var(--bg-panel); border: 1px solid var(--border-faint); margin-bottom: 2rem; }
+        .word-pill { background: transparent; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 18px; font-size: 0.9rem; font-weight: 600; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.05em; }
+        .cloze-input { background: transparent; border: none; border-bottom: 2px solid var(--highlight-red); color: var(--highlight-red); padding: 0 8px; font-size: 1.25rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); font-weight: bold; transition: all 0.2s; }
+        .cloze-input:focus { outline: none; border-bottom-color: var(--text-ink); color: var(--text-ink); }
         
-        /* Buttons & Navigation */
-        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
-        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
-        .action-btn:disabled { transform: none !important; }
-        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .action-btn { 
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.85rem 1.75rem; font-family: var(--font-heading); font-weight: 600; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem;
+            transition: all 0.4s ease; background: transparent; color: var(--highlight-red); 
+            border: 1px solid var(--highlight-red); width: 100%; position: relative; overflow: hidden;
+        }
+        .action-btn::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--highlight-red); opacity: 0; transition: opacity 0.4s ease; }
+        .action-btn:hover:not(:disabled) { color: #fff; border-color: var(--highlight-red); box-shadow: 0 0 20px rgba(197, 160, 9, 0.2); transform: translateY(-2px); }
+        .action-btn:hover:not(:disabled)::before { opacity: 1; z-index: -1; }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; color: var(--accent-green); border-color: var(--navy-faint); transform: none !important; }
+        
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid var(--border-faint); margin-top: 3rem; gap: 20px; clear: both; position: relative; z-index: 10;}
         .bottom-nav .action-btn { width: auto; }
+        
         .chapter-section { display: none; }
         .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+
     <div id="bg-slideshow"></div>
-    
+
     <div class="app-container">
-        <!-- Sidebar Navigation -->
         <nav class="side-nav">
             <div class="nav-title">Table of Contents</div>
             <div class="nav-links">
-                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
-                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. The Taxation Crisis</button>
-                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. Paranoia, Protest, and Violence</button>
-                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The Road to Revolution</button>
-                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. TURNING POINTS | Common Sense</button>
-                <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Vocabulary Activity</button>
+                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1', 'nav-sec-1')">Start Page</button>
+                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2', 'nav-sec-2')">I. The Taxation Crisis</button>
+                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3', 'nav-sec-3')">II. Paranoia, Protest, and Violence</button>
+                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4', 'nav-sec-4')">III. The Road to Revolution</button>
+                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5', 'nav-sec-5')">IV. Turning Points</button>
+                <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6', 'nav-sec-6')">V. Vocabulary Activity</button>
             </div>
             
             <div class="nav-actions">
-                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
-                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
-                    Load Progress
+                <button class="action-btn" onclick="downloadProgress()"><span style="position: relative; z-index: 1;">Save Progress</span></button>
+                <label class="action-btn" style="text-align: center; cursor: pointer; display: flex; margin-bottom: 0;">
+                    <span style="position: relative; z-index: 1;">Load Progress</span>
                     <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
                 </label>
-                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
+                <button class="action-btn" onclick="resetProgress()"><span style="position: relative; z-index: 1;">Reset Progress</span></button>
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="main-content">
-            
             <!-- SECTION 1: START PAGE -->
             <section id="sec-1" class="chapter-section active-section">
-                <img class="hero-banner-flush" src="assets/Header%20Banner%20Chapter%201.2.png" alt="Chapter 1.2 Banner">
+                <div class="chapter-hero">
+                    <div class="hero-eyebrow">CHAPTER 1 | SECTION 2</div>
+                    <h1 class="hero-title">DISSOLVING THE BANDS | THE BREAKDOWN OF BRITISH AUTHORITY</h1>
+                    <p class="hero-subtitle">How did the colonists' grievances shift from restoring their rights as Englishmen to demanding universal natural rights?</p>
+                    <div class="hero-footer">E PLURIBUS UNUM | UNIT 1 &middot; THE FORGING OF A NATION | CHAPTER 1 &middot; ROOTS OF THE REPUBLIC</div>
+                </div>
+                
                 <div class="content-wrapper">
-                    
                     <div class="id-panel">
                         <div>
-                            <label for="student-name">Student Name</label>
-                            <input type="text" id="student-name" placeholder="Enter your full name">
+                            <label>Student Name</label>
+                            <input type="text" id="student-name" placeholder="Enter Full Name">
                         </div>
                         <div>
-                            <label for="student-period">Class Period</label>
+                            <label>Class Period</label>
                             <select id="student-period">
-                                <option value="" disabled selected>Select...</option>
-                                <option value="1">Period 1</option>
-                                <option value="2">Period 2</option>
-                                <option value="3">Period 3</option>
-                                <option value="4">Period 4</option>
-                                <option value="6">Period 6</option>
-                                <option value="7">Period 7</option>
+                                <option value="" disabled selected>Select</option>
+                                <option>1st Period</option>
+                                <option>2nd Period</option>
+                                <option>3rd Period</option>
+                                <option>4th Period</option>
+                                <option>5th Period</option>
+                                <option>6th Period</option>
+                                <option>7th Period</option>
                             </select>
                         </div>
                         <div>
-                            <label for="completion-date">Date</label>
-                            <input type="text" id="completion-date" readonly placeholder="Auto-fills on Finish">
+                            <label>Date Completed</label>
+                            <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
                         </div>
                     </div>
 
@@ -196,29 +270,29 @@
                         </ul>
 
                         <h3>Key Terms</h3>
-                        <p><strong>Salutary Neglect</strong> | <strong>French and Indian War</strong> | <strong>Proclamation of 1763</strong> | <strong>Sugar Act</strong> | <strong>Stamp Act</strong> | <strong>Patrick Henry</strong> | <strong>Virtual Representation</strong> | <strong>Sons and Daughters of Liberty</strong> | <strong>Townshend Acts</strong> | <strong>Boston Massacre</strong> | <strong>Boston Tea Party</strong> | <strong>Intolerable Acts</strong> | <strong>Quebec Act</strong> | <strong>First Continental Congress</strong> | <strong>Lexington and Concord</strong> | <strong>Olive Branch Petition</strong> | <strong>Lord Dunmore’s Proclamation</strong> | <strong>Common Sense</strong> | <strong>Natural Rights</strong> | <strong>Social Contract</strong></p>
+                        <p class="first-p"><strong>Salutary Neglect</strong> | <strong>French and Indian War</strong> | <strong>Proclamation of 1763</strong> | <strong>Sugar Act</strong> | <strong>Stamp Act</strong> | <strong>Patrick Henry</strong> | <strong>Virtual Representation</strong> | <strong>Sons and Daughters of Liberty</strong> | <strong>Townshend Acts</strong> | <strong>Boston Massacre</strong> | <strong>Boston Tea Party</strong> | <strong>Intolerable Acts</strong> | <strong>Quebec Act</strong> | <strong>First Continental Congress</strong> | <strong>Lexington and Concord</strong> | <strong>Olive Branch Petition</strong> | <strong>Lord Dunmore’s Proclamation</strong> | <strong>Common Sense</strong> | <strong>Natural Rights</strong> | <strong>Social Contract</strong></p>
 
                         <h4>Introduction | From Patriots to Revolutionaries</h4>
                         <p class="first-p">Following the conclusion of the French and Indian War, American colonists were fiercely loyal subjects of the British Crown, celebrating their shared victory and the expanding empire. However, Great Britain's subsequent attempts to reorganize its territories and manage massive war debt quickly shattered this patriotic unity. Over the course of just thirteen years, the imperial relationship rapidly deteriorated from peaceful autonomy under the unofficial policy of "Salutary Neglect" to open, armed rebellion. This chapter explores the ideological and political breakdown of British authority, tracing how colonial grievances evolved from localized disputes over taxation to a radical, continental demand for universal human liberty and independence.</p>
 
                         <div class="visual-wrapper">
-                            <img class="visual-img" src="assets/Visual_1.png" alt="Historical illustration of colonists tearing down King George III statue">
-                            <p class="caption-text">The aftermath of the French and Indian War initially brought a surge of patriotic loyalty to the British Crown, which rapidly dissolved into armed rebellion over the following thirteen years due to deep ideological and political fractures.</p>
+                            <img src="assets/Visual_1.png" alt="Statue of King George III" class="visual-img" onerror="this.style.display='none'">
+                            <p class="caption-text first-p">The aftermath of the French and Indian War initially brought a surge of patriotic loyalty to the British Crown, which rapidly dissolved into armed rebellion over the following thirteen years due to deep ideological and political fractures.</p>
                             <div class="question-box">
-                                <label>Analysis Question: What factors might cause a population to completely reverse its allegiance to a national leader in just over a decade?</label>
-                                <textarea id="va_1" class="textarea-dark" placeholder="Enter your analysis here..."></textarea>
+                                <p><strong>Analysis Question:</strong> What factors might cause a population to completely reverse its allegiance to a national leader in just over a decade?</p>
+                                <textarea id="va_1" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="bottom-nav">
-                        <div></div>
-                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">Next Section &rarr;</button>
+                        <div class="bottom-nav">
+                            <div></div>
+                            <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 2: The Taxation Crisis -->
+            <!-- SECTION I: THE TAXATION CRISIS -->
             <section id="sec-2" class="chapter-section">
                 <div class="content-wrapper">
                     <div class="content-block">
@@ -227,33 +301,28 @@
 
                         <h4>The End of Neglect and the Rise of Suspicion</h4>
                         <p class="first-p">In 1763, the American colonists were arguably the most patriotic subjects in the British Empire. They had just fought alongside British Redcoats to defeat the French in the <strong>French and Indian War</strong> (Seven Years’ War), securing the North American continent for the Crown. Bonfires were lit in Philadelphia and Boston to celebrate the victory; statues were erected to honor King George III. Yet, within thirteen years, these same colonists would be tearing down those statues and melting them into bullets to shoot at the King’s soldiers.</p>
-                        <p>To understand this rapid descent from patriotism to revolution, one must look beyond the standard explanation of "taxation without representation." The break was not merely financial; it was constitutional and ideological. For generations, the colonies had operated under an unwritten policy known as <strong>Salutary Neglect</strong>. Because Britain was preoccupied with European wars and internal politics, it allowed the colonies to largely govern themselves. Colonial assemblies levied their own taxes, paid their own governors, and passed their own laws with minimal interference from London. This autonomy convinced Americans that they possessed the same rights and privileges as Englishmen living in Britain.</p>
-                        <p>The victory in 1763 changed everything. The war had doubled Britain’s national debt and vastly expanded its empire. To manage this new territory and pay down the debt, the British government decided it needed to reorganize the empire. The era of Salutary Neglect was over; the era of centralized control had begun.</p>
 
                         <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_1.png" alt="The Proclamation Line of 1763">
+                            <img src="assets/Spotlight_1.png" alt="Proclamation of 1763 Map" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">A 1763 British imperial map showing the settlement boundary along the Appalachian Mountains.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Proclamation of 1763 marked the end of the unwritten policy of "Salutary Neglect" by imposing centralized control over colonial movement. It alienated land speculators and veterans of the French and Indian War who felt betrayed by the Crown’s refusal to allow settlement on lands they had fought to secure.</p>
+                                <p class="spotlight-caption first-p">A 1763 British imperial map showing the settlement boundary along the Appalachian Mountains.</p>
+                                <p class="spotlight-why first-p"><strong>The Proclamation Line of 1763:</strong> The Proclamation of 1763 marked the end of the unwritten policy of "Salutary Neglect" by imposing centralized control over colonial movement. It alienated land speculators and veterans of the French and Indian War who felt betrayed by the Crown’s refusal to allow settlement on lands they had fought to secure.</p>
                                 <div class="question-box">
-                                    <label>How did the establishment of this settlement boundary reflect the broader shift in British policy from colonial autonomy to centralized imperial control?</label>
-                                    <textarea id="pq_1" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                    <p><strong>Spotlight Question:</strong> How did the establishment of this settlement boundary reflect the broader shift in British policy from colonial autonomy to centralized imperial control?</p>
+                                    <textarea id="pq_1" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                                 </div>
                             </div>
                         </div>
 
+                        <p class="first-p">To understand this rapid descent from patriotism to revolution, one must look beyond the standard explanation of "taxation without representation." The break was not merely financial; it was constitutional and ideological. For generations, the colonies had operated under an unwritten policy known as <strong>Salutary Neglect</strong>. Because Britain was preoccupied with European wars and internal politics, it allowed the colonies to largely govern themselves. Colonial assemblies levied their own taxes, paid their own governors, and passed their own laws with minimal interference from London. This autonomy convinced Americans that they possessed the same rights and privileges as Englishmen living in Britain.</p>
+                        <p class="first-p">The victory in 1763 changed everything. The war had doubled Britain’s national debt and vastly expanded its empire. To manage this new territory and pay down the debt, the British government decided it needed to reorganize the empire. The era of Salutary Neglect was over; the era of centralized control had begun.</p>
                         <p class="first-p">The first shock came with the <strong>Proclamation of 1763</strong>. To prevent further costly wars with Native Americans, King George III drew a line down the Appalachian Mountains and forbade settlers from moving west. For colonists who had shed blood to conquer that land, this was a betrayal. It seemed as though the Crown was prioritizing the interests of Native Americans and fur traders over the land-hungry settlers. Wealthy speculators, including George Washington and Thomas Jefferson, saw their potential fortunes in western lands vanish with the stroke of a royal pen.</p>
 
-                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                        <div id="cp-block-1" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-1', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-1', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
                                 <p class="first-p">1. How did the policy of Salutary Neglect influence the American colonies' perspective on their relationship with Britain?</p>
                                 <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) It made them dependent on British military protection for daily operations.</label>
@@ -261,71 +330,72 @@
                                 <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) It convinced colonists that they were a separate nation from the British Empire.</label>
                                 <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) It forced them to adopt the same taxation systems used in London.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
+                            <div class="checkpoint-q" style="display: none;">
                                 <p class="first-p">2. Why did many American colonists view the Proclamation of 1763 as a betrayal?</p>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-1')"> A) It forced them to pay back debts from the French and Indian War immediately.</label>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="B" onchange="handleRadioChange('cp-block-1')"> B) It required them to provide housing for British soldiers in their private homes.</label>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-1')"> C) It prohibited them from settling in lands they had fought to win from the French.</label>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-1')"> D) It allowed French citizens to remain in the Ohio River Valley.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-1', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-1', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>Taxation and Representation</h4>
                         <p class="first-p">The political crisis began in earnest with the <strong>Sugar Act</strong> of 1764 and, more explosively, the <strong>Stamp Act</strong> of 1765. The Stamp Act was the first direct tax ever imposed on the colonies by Parliament. It required a government stamp on all paper goods—legal documents, newspapers, playing cards, and almanacs.</p>
-                        <p>The reaction was furious and immediate. The issue was not that the tax was expensive; it was actually quite low. The issue was <em>power</em>. Colonial leaders argued that under the British constitution, a man’s property could not be taken from him without his consent. Since the colonists did not vote for members of Parliament, they argued, Parliament had no right to tax them. Their slogan, "No Taxation Without Representation," was a defense of their status as free Englishmen.</p>
 
-                        <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_2.png" alt="British Revenue Stamp">
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_2.png" alt="Stamp Act Revenue Stamp" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">An embossed official stamp used to collect taxes on legal documents and newspapers under the 1765 Stamp Act.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Stamp Act was the first direct tax imposed on the internal commerce of the colonies, triggering a constitutional crisis over the nature of consent. It led to the rejection of "virtual representation" and established the principle that only locally elected representatives had the authority to tax the colonists.</p>
-                                <div class="question-box">
-                                    <label>Why did the implementation of a physical government stamp on everyday paper goods lead to a continental rather than localized political crisis?</label>
-                                    <textarea id="pq_2" class="textarea-dark" placeholder="Type your response here..."></textarea>
-                                </div>
+                                <p class="spotlight-caption first-p">An embossed official stamp used to collect taxes on legal documents and newspapers under the 1765 Stamp Act.</p>
+                                <p class="spotlight-why first-p"><strong>British Revenue Stamp:</strong> The Stamp Act was the first direct tax imposed on the internal commerce of the colonies, triggering a constitutional crisis over the nature of consent. It led to the rejection of "virtual representation" and established the principle that only locally elected representatives had the authority to tax the colonists.</p>
+                            </div>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> Why did the implementation of a physical government stamp on everyday paper goods lead to a continental rather than localized political crisis?</p>
+                                <textarea id="pq_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
 
+                        <p class="first-p">The reaction was furious and immediate. The issue was not that the tax was expensive; it was actually quite low. The issue was <em>power</em>. Colonial leaders argued that under the British constitution, a man’s property could not be taken from him without his consent. Since the colonists did not vote for members of Parliament, they argued, Parliament had no right to tax them. Their slogan, "No Taxation Without Representation," was a defense of their status as free Englishmen.</p>
                         <p class="first-p">Resistance was not limited to the streets of Boston. In Virginia, a young lawyer named <strong>Patrick Henry</strong> electrified the House of Burgesses with a series of resolutions against the Stamp Act. Henry argued that Virginians enjoyed all the privileges of Britons and could only be taxed by their own representatives. When he cried, "Caesar had his Brutus, Charles the First his Cromwell, and George the Third may profit by their example," he was accused of treason. His reply—"If this be treason, make the most of it"—signaled that the crisis was continental, not local.</p>
-                        <p>British officials dismissed these arguments with the theory of <strong>Virtual Representation</strong>. They claimed that members of Parliament represented the interests of the entire empire, not just the district that elected them. Therefore, the colonists <em>were</em> represented, virtually, just like the citizens of Manchester or Birmingham who also could not vote. Americans rejected this logic. They believed in "actual representation"—that a representative must be chosen by the people he serves and be directly accountable to them.</p>
+                        <p class="first-p">British officials dismissed these arguments with the theory of <strong>Virtual Representation</strong>. They claimed that members of Parliament represented the interests of the entire empire, not just the district that elected them. Therefore, the colonists <em>were</em> represented, virtually, just like the citizens of Manchester or Birmingham who also could not vote. Americans rejected this logic. They believed in "actual representation"—that a representative must be chosen by the people he serves and be directly accountable to them.</p>
 
-                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                        <div id="cp-block-2" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-2', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-2', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. What was the primary constitutional objection colonists had to the Stamp Act?</p>
+                                <p class="first-p">3. What was the primary constitutional objection colonists had to the Stamp Act?</p>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-2')"> A) The cost of the stamps was too high for most common laborers to afford.</label>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="B" onchange="handleRadioChange('cp-block-2')"> B) The act targeted only the wealthy elite, leaving the poor unprotected.</label>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-2')"> C) Parliament lacked the authority to tax colonists who had no direct vote in the body.</label>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-2')"> D) The tax revenue was being sent to France instead of staying in the colonies.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. How did the British concept of "virtual representation" differ from the colonial demand for "actual representation"?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">4. How did the British concept of "virtual representation" differ from the colonial demand for "actual representation"?</p>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-2')"> A) Virtual representation argued that all subjects were represented by the King alone.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-2')"> B) Actual representation required that every individual citizen vote on every law.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-2')"> C) Virtual representation claimed Parliament represented the interests of the entire empire regardless of voting status.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-2')"> D) Actual representation argued that only the British King could levy taxes on his subjects.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-2', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-2', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')">&larr; Previous</button>
-                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">Next Section &rarr;</button>
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')" disabled><span style="position: relative; z-index: 1;">🔒 Answer Checkpoints to Continue</span></button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 3: Paranoia, Protest, and Violence -->
+            <!-- SECTION II: PARANOIA, PROTEST, AND VIOLENCE -->
             <section id="sec-3" class="chapter-section">
                 <div class="content-wrapper">
                     <div class="content-block">
@@ -334,150 +404,144 @@
 
                         <h4>From Conspiracy to Escalation</h4>
                         <p class="first-p">The escalating crisis revealed a terrifying possibility to the colonists: if Parliament could take one penny of their property without their consent, it could take everything. Influenced by radical British political writers known as the "Commonwealthmen" or "Real Whigs," Americans began to see these taxes not as mistakes, but as evidence of a deliberate conspiracy. These writers taught that power was aggressive and encroaching; it was a predator that naturally sought to destroy liberty. The symptoms of this corruption were clear to anyone who knew Roman history: a standing army in peacetime, the appointment of corrupt officials, and the bypass of local laws. Through this lens, the Stamp Act was not a tax; it was the first chain of slavery. This paranoid style of politics meant that every British action was interpreted as a sinister plot, making compromise nearly impossible.</p>
-                        <p>With diplomatic solutions seemingly off the table, this deep-seated fear quickly translated into organized, physical defiance. Fueled by the belief that their liberties were under imminent threat, resistance to the Stamp Act mobilized the colonies as never before. A secretive group known as the Sons of Liberty formed in Boston and New York to coordinate opposition. They were not polite debaters; they were street fighters. They intimidated tax collectors, burned effigies, and organized boycotts of British goods. Crucially, women joined the resistance through the Daughters of Liberty. They organized "spinning bees" to produce homespun cloth, allowing the colonies to boycott British textiles. Wearing rough, American-made clothes became a badge of honor and a symbol of virtue, while wearing fine British silk became a sign of moral corruption. This politicized the household; the simple act of buying tea or cloth became a political statement. The economic pressure worked.</p>
 
                         <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_3.png" alt="The Edenton Tea Party">
+                            <img src="assets/Spotlight_3.png" alt="Edenton Tea Party" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">A 1775 satirical mezzotint depicting North Carolina women pledging to boycott British tea and textiles.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Daughters of Liberty transformed the domestic household into a site of political resistance through "spinning bees" and non-consumption agreements. By producing homespun cloth and refusing British goods, colonial women demonstrated that the resistance movement had moved beyond urban street protests into every household.</p>
+                                <p class="spotlight-caption first-p">A 1775 satirical mezzotint depicting North Carolina women pledging to boycott British tea and textiles.</p>
+                                <p class="spotlight-why first-p"><strong>The Edenton Tea Party:</strong> The Daughters of Liberty transformed the domestic household into a site of political resistance through "spinning bees" and non-consumption agreements. By producing homespun cloth and refusing British goods, colonial women demonstrated that the resistance movement had moved beyond urban street protests into every household.</p>
                             </div>
                             <div class="question-box">
-                                <label>How did the participation of women in economic boycotts change the social and political impact of the resistance against the Townshend Acts?</label>
-                                <textarea id="pq_3" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                <p><strong>Spotlight Question:</strong> How did the participation of women in economic boycotts change the social and political impact of the resistance against the Townshend Acts?</p>
+                                <textarea id="pq_3" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
 
+                        <p class="first-p">With diplomatic solutions seemingly off the table, this deep-seated fear quickly translated into organized, physical defiance. Fueled by the belief that their liberties were under imminent threat, resistance to the Stamp Act mobilized the colonies as never before. A secretive group known as the <strong>Sons of Liberty</strong> formed in Boston and New York to coordinate opposition. They were not polite debaters; they were street fighters. They intimidated tax collectors, burned effigies, and organized boycotts of British goods. Crucially, women joined the resistance through the <strong>Daughters of Liberty</strong>. They organized "spinning bees" to produce homespun cloth, allowing the colonies to boycott British textiles. Wearing rough, American-made clothes became a badge of honor and a symbol of virtue, while wearing fine British silk became a sign of moral corruption. This politicized the household; the simple act of buying tea or cloth became a political statement. The economic pressure worked.</p>
                         <p class="first-p">British merchants, losing money due to the boycotts, lobbied Parliament to repeal the Stamp Act in 1766. However, the repeal was a strategic retreat, not a surrender. Parliament immediately passed the Declaratory Act, asserting its absolute right to bind the colonies "in all cases whatsoever." The conflict had not been resolved; it had been postponed. In 1767, Parliament tried again with the Townshend Acts, placing duties on glass, lead, paint, paper, and tea. Again, the colonists boycotted; again, tensions rose. To enforce order, Britain dispatched 4,000 troops to occupy Boston, a city of only 16,000 people. The presence of a standing army in peacetime—a traditional sign of tyranny—inflamed the population.</p>
 
-                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                        <div id="cp-block-3" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-3', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-3', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. How did the Daughters of Liberty contribute to the resistance against British taxation?</p>
+                                <p class="first-p">5. How did the Daughters of Liberty contribute to the resistance against British taxation?</p>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-3')"> A) By serving as armed guards for colonial assemblies.</label>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="B" onchange="handleRadioChange('cp-block-3')"> B) By organizing boycotts and producing homespun cloth to replace British imports.</label>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-3')"> C) By petitioning the King directly for the right to vote in local elections.</label>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-3')"> D) By smuggling tea from the Dutch into southern ports.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. What was the significance of the Declaratory Act of 1766?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">6. What was the significance of the Declaratory Act of 1766?</p>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-3')"> A) It officially recognized the colonies as independent states.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-3')"> B) It granted the colonies actual representation in the British Parliament.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-3')"> C) It asserted Parliament's absolute authority to pass laws for the colonies in all cases.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-3')"> D) It prohibited the British army from being stationed in colonial cities during peacetime.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-3', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-3', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>The Boston Massacre</h4>
                         <p class="first-p">By early 1770, the presence of British troops in Boston had become increasingly volatile, exacerbated by fierce competition for jobs between local laborers and poorly paid, off-duty British soldiers seeking extra work. On the snowy night of March 5, 1770, the tension snapped. A crowd of Bostonians began taunting a squad of British sentries guarding the Customs House, throwing snowballs, ice, and rocks. Confused and panicked, the soldiers fired into the crowd, killing five civilians. Among the dead was Crispus Attucks, a sailor of African and Native American ancestry who is often cited as the first casualty of the Revolution.</p>
-                        <p>The event could have been viewed as a tragic riot. Instead, Samuel Adams and other patriot leaders seized upon it as a masterpiece of propaganda, quickly labeling it the "Boston Massacre". Paul Revere produced a highly inaccurate but deeply effective engraving showing a line of redcoats firing a synchronized volley into a peaceful, unarmed crowd, with a bloodthirsty British officer waving his sword. Copies of the print circulated rapidly throughout the colonies, convincing many Americans that the British army was there not to protect them, but to butcher them.</p>
 
                         <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_4.png" alt="Revere’s Boston Massacre Engraving">
+                            <img src="assets/Spotlight_4.png" alt="Boston Massacre Engraving" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">Paul Revere’s sensationalized 1770 engraving of British troops firing on a crowd of Bostonians.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> Patriot leaders utilized this engraving as a propaganda tool to frame a chaotic riot as a premeditated slaughter of innocent civilians. The circulation of this image confirmed colonial fears that a standing army in peacetime was a deliberate tool of tyranny designed to suppress liberty.</p>
+                                <p class="spotlight-caption first-p">Paul Revere’s sensationalized 1770 engraving of British troops firing on a crowd of Bostonians.</p>
+                                <p class="spotlight-why first-p"><strong>Revere’s Boston Massacre Engraving:</strong> Patriot leaders utilized this engraving as a propaganda tool to frame a chaotic riot as a premeditated slaughter of innocent civilians. The circulation of this image confirmed colonial fears that a standing army in peacetime was a deliberate tool of tyranny designed to suppress liberty.</p>
                             </div>
                             <div class="question-box">
-                                <label>How did the widespread distribution of Revere’s specific portrayal of the event on King Street help unify colonial sentiment against the British military presence?</label>
-                                <textarea id="pq_4" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                <p><strong>Spotlight Question:</strong> How did the widespread distribution of Revere’s specific portrayal of the event on King Street help unify colonial sentiment against the British military presence?</p>
+                                <textarea id="pq_4" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
 
-                        <p class="first-p">Despite the fierce public outrage and the flurry of propaganda, the British soldiers were put on trial. In a surprising move, they were defended in court by John Adams, a devoted patriot and cousin of Samuel Adams. John Adams despised the presence of the British army but believed strongly in the rule of law, arguing that the soldiers had acted in self-defense against a dangerous, "motley rabble" and an unruly mob. He wanted to demonstrate to the world that Massachusetts was governed by justice, not mob violence. His defense was largely successful: seven of the soldiers were acquitted, while two were convicted of the lesser charge of manslaughter, branded on the thumb, and released.</p>
+                        <p class="first-p">The event could have been viewed as a tragic riot. Instead, Samuel Adams and other patriot leaders seized upon it as a masterpiece of propaganda, quickly labeling it the "Boston Massacre". Paul Revere produced a highly inaccurate but deeply effective engraving showing a line of redcoats firing a synchronized volley into a peaceful, unarmed crowd, with a bloodthirsty British officer waving his sword. Copies of the print circulated rapidly throughout the colonies, convincing many Americans that the British army was there not to protect them, but to butcher them.</p>
+                        <p class="first-p">Despite the fierce public outrage and the flurry of propaganda, the British soldiers were put on trial. In a surprising move, they were defended in court by <strong>John Adams</strong>, a devoted patriot and cousin of Samuel Adams. John Adams despised the presence of the British army but believed strongly in the rule of law, arguing that the soldiers had acted in self-defense against a dangerous, "motley rabble" and an unruly mob. He wanted to demonstrate to the world that Massachusetts was governed by justice, not mob violence. His defense was largely successful: seven of the soldiers were acquitted, while two were convicted of the lesser charge of manslaughter, branded on the thumb, and released.</p>
 
-                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                        <div id="cp-block-4" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-4', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-4', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. Why did Paul Revere’s engraving of the Boston Massacre serve as effective propaganda?</p>
+                                <p class="first-p">7. Why did Paul Revere’s engraving of the Boston Massacre serve as effective propaganda?</p>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-4')"> A) It provided a perfectly neutral account of the events for future historians.</label>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="B" onchange="handleRadioChange('cp-block-4')"> B) It depicted the British soldiers as unprovoked aggressors firing on a peaceful crowd.</label>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-4')"> C) It honored the British soldiers for their bravery during a difficult riot.</label>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-4')"> D) It encouraged colonists to join the British army to restore order in the city.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. What was John Adams’ primary motivation for defending the British soldiers involved in the massacre?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">8. What was John Adams’ primary motivation for defending the British soldiers involved in the massacre?</p>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-4')"> A) He secretly supported the King and wanted to stop the independence movement.</label>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="B" onchange="handleRadioChange('cp-block-4')"> B) He hoped to be appointed as a high-ranking official in the British government.</label>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-4')"> C) He wanted to demonstrate that the colonies were governed by the rule of law rather than mob violence.</label>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-4')"> D) He was forced to take the case by the British military governor of Boston.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-4', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-4', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>The Tea Party and the Intolerable Acts</h4>
                         <p class="first-p">By 1773, Parliament had repealed all the Townshend duties except one: the tax on tea. That year, Parliament passed the Tea Act to bail out the struggling East India Company, giving it a monopoly on the American tea trade. Even with the tax, this tea was cheaper than smuggled Dutch tea. Parliament assumed the colonists would buy the cheaper tea and implicitly accept the tax.</p>
-                        <p>They miscalculated. The colonists saw the cheap tea as a trap—a bribe to trick them into surrendering their principles. On December 16, 1773, the Sons of Liberty, thinly disguised as Mohawk Indians, boarded three ships in Boston Harbor and smashed 342 chests of tea, dumping the contents into the water. This was the <strong>Boston Tea Party</strong>.</p>
 
                         <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_5.png" alt="The Destruction of Tea in Boston Harbor">
+                            <img src="assets/Spotlight_5.png" alt="Boston Tea Party Lithograph" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">A lithograph depicting the Sons of Liberty dumping British East India Company tea into the water in 1773.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Boston Tea Party was a direct rejection of the Tea Act, which the colonists viewed as a bribe to trick them into accepting parliamentary taxation. This act of defiance triggered the "Intolerable Acts," which aimed to crush Massachusetts but instead united the colonies in a shared defense of their rights.</p>
+                                <p class="spotlight-caption first-p">A lithograph depicting the Sons of Liberty dumping British East India Company tea into the water in 1773.</p>
+                                <p class="spotlight-why first-p"><strong>The Destruction of Tea in Boston Harbor:</strong> The Boston Tea Party was a direct rejection of the Tea Act, which the colonists viewed as a bribe to trick them into accepting parliamentary taxation. This act of defiance triggered the "Intolerable Acts," which aimed to crush Massachusetts but instead united the colonies in a shared defense of their rights.</p>
                                 <div class="question-box">
-                                    <label>What was the relationship between the Destruction of Tea in 1773 and the subsequent meeting of the First Continental Congress?</label>
-                                    <textarea id="pq_5" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                    <p><strong>Spotlight Question:</strong> What was the relationship between the Destruction of Tea in 1773 and the subsequent meeting of the First Continental Congress?</p>
+                                    <textarea id="pq_5" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                                 </div>
                             </div>
                         </div>
 
+                        <p class="first-p">They miscalculated. The colonists saw the cheap tea as a trap—a bribe to trick them into surrendering their principles. On December 16, 1773, the Sons of Liberty, thinly disguised as Mohawk Indians, boarded three ships in Boston Harbor and smashed 342 chests of tea, dumping the contents into the water. This was the <strong>Boston Tea Party</strong>.</p>
                         <p class="first-p">King George III was furious. "The die is now cast," he wrote. "The colonies must either submit or triumph." Parliament retaliated with the Coercive Acts of 1774, which Americans called the <strong>Intolerable Acts</strong>. These laws were designed to crush Boston and serve as a warning to the other colonies. The port of Boston was closed until the tea was paid for; the Massachusetts charter was revoked, placing the colony under military rule; and a new Quartering Act allowed soldiers to be housed in private buildings.</p>
-                        <p>Compounding the fear was the <strong>Quebec Act</strong>, passed at the same time. This act expanded the borders of the Catholic province of Quebec into the Ohio Valley—land claimed by Virginia and Pennsylvania—and granted religious toleration to Catholics. To the Protestant colonists, who grew up on stories of Catholic tyranny, this looked like a deliberate attempt by Parliament to surround the free Protestant colonies with a "Popish" threat.</p>
-                        <p>The Intolerable Acts backfired. Instead of isolating Massachusetts, they united the colonies. If Britain could revoke the charter of Massachusetts, no colony was safe. In September 1774, delegates from twelve colonies met in Philadelphia for the <strong>First Continental Congress</strong>. They endorsed the "Suffolk Resolves," which declared the Intolerable Acts unconstitutional and called for a general boycott of British trade and the formation of militias for defense. The logic of revolution was moving from argument to armed resistance.</p>
+                        <p class="first-p">Compounding the fear was the <strong>Quebec Act</strong>, passed at the same time. This act expanded the borders of the Catholic province of Quebec into the Ohio Valley—land claimed by Virginia and Pennsylvania—and granted religious toleration to Catholics. To the Protestant colonists, who grew up on stories of Catholic tyranny, this looked like a deliberate attempt by Parliament to surround the free Protestant colonies with a "Popish" threat.</p>
+                        <p class="first-p">The Intolerable Acts backfired. Instead of isolating Massachusetts, they united the colonies. If Britain could revoke the charter of Massachusetts, no colony was safe. In September 1774, delegates from twelve colonies met in Philadelphia for the <strong>First Continental Congress</strong>. They endorsed the "Suffolk Resolves," which declared the Intolerable Acts unconstitutional and called for a general boycott of British trade and the formation of militias for defense. The logic of revolution was moving from argument to armed resistance.</p>
 
-                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                        <div id="cp-block-5" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-5', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-5', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. How did the colonists interpret the Tea Act of 1773?</p>
+                                <p class="first-p">9. How did the colonists interpret the Tea Act of 1773?</p>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-5')"> A) As a helpful economic measure that lowered the cost of living for everyone.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-5')"> B) As a "trap" designed to trick them into accepting Parliament's right to tax them.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-5')"> C) As a way to protect colonial tea merchants from foreign competition.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-5')"> D) As a sign that Britain was finally ready to grant them independence.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. What was the main intended purpose of the Coercive (Intolerable) Acts?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">10. What was the main intended purpose of the Coercive (Intolerable) Acts?</p>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-5')"> A) To encourage further westward expansion beyond the Appalachian Mountains.</label>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="B" onchange="handleRadioChange('cp-block-5')"> B) To reward loyalist merchants for their support during the tea boycotts.</label>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-5')"> C) To punish Massachusetts and reassert British control after the Boston Tea Party.</label>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-5')"> D) To promote religious toleration between Protestants and Catholics in the colonies.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-5', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-5', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')">&larr; Previous</button>
-                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">Next Section &rarr;</button>
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')" disabled><span style="position: relative; z-index: 1;">🔒 Answer Checkpoints to Continue</span></button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 4: The Road to Revolution -->
+            <!-- SECTION III: THE ROAD TO REVOLUTION -->
             <section id="sec-4" class="chapter-section">
                 <div class="content-wrapper">
                     <div class="content-block">
@@ -486,192 +550,194 @@
 
                         <h4>The Shift to Independence</h4>
                         <p class="first-p">In April 1775, the "cold war" turned hot. British troops marched from Boston to Concord to seize a cache of colonial gunpowder. They were met by local militiamen (Minutemen) at Lexington Green. A shot rang out—no one knows who fired it—and the "Shot Heard 'Round the World" began the War of Independence at <strong>Lexington and Concord</strong>.</p>
-                        <p>Yet, strangely, even after blood was spilled at Lexington, Concord, and Bunker Hill, most colonists were not fighting for independence. They were fighting for a "redress of grievances." They claimed to be loyal subjects of the King, fighting against his corrupt ministers and Parliament. They toasted the King’s health at dinner and then went out to shoot at his soldiers.</p>
 
                         <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_6.png" alt="The Battle of Lexington">
+                            <img src="assets/Spotlight_6.png" alt="Battle of Lexington Engraving" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">A contemporary engraving of the first armed confrontation between British Regulars and colonial Minutemen.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The skirmish at Lexington and Concord marked the transition from constitutional debate to open military conflict. Even after this "Shot Heard 'Round the World," the Continental Congress attempted to maintain loyalty through the Olive Branch Petition before being forced toward full independence.</p>
+                                <p class="spotlight-caption first-p">A contemporary engraving of the first armed confrontation between British Regulars and colonial Minutemen.</p>
+                                <p class="spotlight-why first-p"><strong>The Battle of Lexington:</strong> The skirmish at Lexington and Concord marked the transition from constitutional debate to open military conflict. Even after this "Shot Heard 'Round the World," the Continental Congress attempted to maintain loyalty through the Olive Branch Petition before being forced toward full independence.</p>
                                 <div class="question-box">
-                                    <label>How did the violence at Lexington and Concord change the nature of the colonists' arguments for the "rights of Englishmen"?</label>
-                                    <textarea id="pq_6" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                    <p><strong>Spotlight Question:</strong> How did the violence at Lexington and Concord change the nature of the colonists' arguments for the "rights of Englishmen"?</p>
+                                    <textarea id="pq_6" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                                 </div>
                             </div>
                         </div>
 
+                        <p class="first-p">Yet, strangely, even after blood was spilled at Lexington, Concord, and Bunker Hill, most colonists were not fighting for independence. They were fighting for a "redress of grievances." They claimed to be loyal subjects of the King, fighting against his corrupt ministers and Parliament. They toasted the King’s health at dinner and then went out to shoot at his soldiers.</p>
                         <p class="first-p">This hesitation was formalized in the <strong>Olive Branch Petition</strong> (July 1775), sent by the Continental Congress to King George III. It affirmed American loyalty and begged the King to intervene to stop the bloodshed. The King refused to even read it. Instead, he declared the colonies to be in a state of "open and avowed rebellion."</p>
 
-                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                        <div id="cp-block-6" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-6', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-6', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. How did King George III respond to the Olive Branch Petition?</p>
+                                <p class="first-p">11. How did King George III respond to the Olive Branch Petition?</p>
                                 <label class="checklist-item"><input type="radio" name="cp11" value="A" onchange="handleRadioChange('cp-block-6')"> A) He offered to remove all taxes if the colonists stopped fighting.</label>
                                 <label class="checklist-item"><input type="radio" name="cp11" value="B" onchange="handleRadioChange('cp-block-6')"> B) He ignored the petition and declared the colonies to be in open rebellion.</label>
                                 <label class="checklist-item"><input type="radio" name="cp11" value="C" onchange="handleRadioChange('cp-block-6')"> C) He invited colonial leaders to London to negotiate a new constitution.</label>
                                 <label class="checklist-item"><input type="radio" name="cp11" value="D" onchange="handleRadioChange('cp-block-6')"> D) He ordered his ministers to resign to satisfy the colonists' demands.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-6', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-6', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>The Southern Turning Point: Lord Dunmore's Proclamation</h4>
                         <p class="first-p">While Boston radicals pushed aggressively for war, many wealthy Southern planters remained deeply hesitant to break fully with Great Britain. That delicate balance changed in November 1775, when Lord Dunmore (John Murray), the royal governor of Virginia, issued a controversial proclamation. Seeking to quickly suppress the growing rebellion, Dunmore offered freedom to any enslaved person who escaped their rebel masters and took up arms for the British King.</p>
-                        <p>Dunmore acted quickly on this promise, organizing hundreds of escaped slaves into a loyalist force that became known as the "Ethiopian Regiment". In a stark visual challenge to the Southern social hierarchy, members of this regiment were reportedly outfitted with uniforms bearing the provocative motto "Liberty to Slaves".</p>
 
                         <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_7.png" alt="Lord Dunmore’s Emancipation Proclamation">
+                            <img src="assets/Spotlight_7.png" alt="Dunmore's Proclamation Broadside" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">The 1775 official broadside offering freedom to enslaved people who escaped rebel masters to serve the King.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> Lord Dunmore’s Proclamation radicalized Southern planters by threatening the foundation of the Southern economy and social order. It pushed hesitant Southerners into the revolutionary camp by confirming their fears that the British military would sponsor slave insurrections to maintain imperial control.</p>
+                                <p class="spotlight-caption first-p">The 1775 official broadside offering freedom to enslaved people who escaped rebel masters to serve the King.</p>
+                                <p class="spotlight-why first-p"><strong>Lord Dunmore’s Emancipation Proclamation:</strong> Lord Dunmore’s Proclamation radicalized Southern planters by threatening the foundation of the Southern economy and social order. It pushed hesitant Southerners into the revolutionary camp by confirming their fears that the British military would sponsor slave insurrections to maintain imperial control.</p>
                             </div>
                             <div class="question-box">
-                                <label>How did the British offer of freedom to the enslaved change the revolutionary goals of Southern planters compared to their earlier focus on constitutional taxation?</label>
-                                <textarea id="pq_7" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                <p><strong>Spotlight Question:</strong> How did the British offer of freedom to the enslaved change the revolutionary goals of Southern planters compared to their earlier focus on constitutional taxation?</p>
+                                <textarea id="pq_7" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
 
+                        <p class="first-p">Dunmore acted quickly on this promise, organizing hundreds of escaped slaves into a loyalist force that became known as the "Ethiopian Regiment". In a stark visual challenge to the Southern social hierarchy, members of this regiment were reportedly outfitted with uniforms bearing the provocative motto "Liberty to Slaves".</p>
                         <p class="first-p">Lord Dunmore's Proclamation absolutely terrified the South. It confirmed the planters' absolute worst nightmare: that the British would actively sponsor a slave insurrection to crush them. The decree outraged prominent Virginia slaveholders, including George Washington, as it signaled that the British military was willing to completely upend the Southern economy and social order to win the war.</p>
-                        <p>Suddenly, the abstract, Northern fight for constitutional "liberty" became intertwined with a deeply pragmatic Southern fight to preserve the institution of slavery against British interference. In a profound historical irony, the British attempt to use emancipation as a localized weapon of war ultimately backfired, galvanizing the Southern aristocracy and uniting them firmly with the radical North in the final push for absolute independence.</p>
+                        <p class="first-p">Suddenly, the abstract, Northern fight for constitutional "liberty" became intertwined with a deeply pragmatic Southern fight to preserve the institution of slavery against British interference. In a profound historical irony, the British attempt to use emancipation as a localized weapon of war ultimately backfired, galvanizing the Southern aristocracy and uniting them firmly with the radical North in the final push for absolute independence.</p>
 
-                        <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                        <div id="cp-block-7" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-7', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-7', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. What did Lord Dunmore’s Proclamation offer to enslaved people in Virginia?</p>
+                                <p class="first-p">12. What did Lord Dunmore’s Proclamation offer to enslaved people in Virginia?</p>
                                 <label class="checklist-item"><input type="radio" name="cp12" value="A" onchange="handleRadioChange('cp-block-7')"> A) Freedom if they agreed to return to Africa immediately.</label>
                                 <label class="checklist-item"><input type="radio" name="cp12" value="B" onchange="handleRadioChange('cp-block-7')"> B) Land in the Ohio Valley if they remained loyal to their masters.</label>
                                 <label class="checklist-item"><input type="radio" name="cp12" value="C" onchange="handleRadioChange('cp-block-7')"> C) Freedom if they escaped their rebel masters and fought for the British Crown.</label>
                                 <label class="checklist-item"><input type="radio" name="cp12" value="D" onchange="handleRadioChange('cp-block-7')"> D) A share of the profits from the British tea trade.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. Why did Dunmore’s Proclamation push many hesitant Southern planters toward independence?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">13. Why did Dunmore’s Proclamation push many hesitant Southern planters toward independence?</p>
                                 <label class="checklist-item"><input type="radio" name="cp13" value="A" onchange="handleRadioChange('cp-block-7')"> A) They were inspired by the British commitment to universal human rights.</label>
                                 <label class="checklist-item"><input type="radio" name="cp13" value="B" onchange="handleRadioChange('cp-block-7')"> B) They feared the British would use slave insurrections to destroy the Southern social order.</label>
                                 <label class="checklist-item"><input type="radio" name="cp13" value="C" onchange="handleRadioChange('cp-block-7')"> C) They wanted to join the "Ethiopian Regiment" to fight against the North.</label>
                                 <label class="checklist-item"><input type="radio" name="cp13" value="D" onchange="handleRadioChange('cp-block-7')"> D) They hoped to gain more enslaved workers from British territories.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-7', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-7', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>Common Sense</h4>
-                        <p class="first-p">The man who shattered the remaining psychological attachment to Britain was a recent immigrant named Thomas Paine. In January 1776, he published a pamphlet titled <strong>Common Sense</strong>. Unlike the learned essays of John Adams or Thomas Jefferson, which quoted Latin legal texts, Paine wrote in the language of the common people.</p>
-                        <p>Paine attacked the root of the problem: the King himself. He argued that it was absurd for an island to rule a continent. He described King George not as a father figure, but as a "Royal Brute." Most importantly, he argued that the colonists’ goal should not be reconciliation, but independence. He shifted the argument from the "rights of Englishmen" (which were based on history and tradition) to <strong>Natural Rights</strong> (which were God-given and universal).</p>
+                        <p class="first-p">The man who shattered the remaining psychological attachment to Britain was a recent immigrant named <strong>Thomas Paine</strong>. In January 1776, he published a pamphlet titled <strong>Common Sense</strong>. Unlike the learned essays of John Adams or Thomas Jefferson, which quoted Latin legal texts, Paine wrote in the language of the common people.</p>
 
                         <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_8.png" alt="Title Page of Common Sense">
+                            <img src="assets/Spotlight_8.png" alt="Common Sense Title Page" onerror="this.style.display='none'">
                             <div class="spotlight-content">
-                                <p class="spotlight-caption">The frontispiece of Thomas Paine’s 1776 pamphlet that called for a total break with the British monarchy.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> Paine’s pamphlet used plain, direct language to dismantle the psychological and traditional ties the colonists felt toward King George III. By articulating a vision of America as an "asylum for mankind" based on republican principles, he shifted the public conversation from reconciliation to independence.</p>
+                                <p class="spotlight-caption first-p">The frontispiece of Thomas Paine’s 1776 pamphlet that called for a total break with the British monarchy.</p>
+                                <p class="spotlight-why first-p"><strong>Title Page of Common Sense:</strong> Paine’s pamphlet used plain, direct language to dismantle the psychological and traditional ties the colonists felt toward King George III. By articulating a vision of America as an "asylum for mankind" based on republican principles, he shifted the public conversation from reconciliation to independence.</p>
                             </div>
                             <div class="question-box">
-                                <label>Why was Paine’s decision to attack the concept of monarchy itself, rather than just Parliament, critical to shifting colonial public opinion toward independence?</label>
-                                <textarea id="pq_8" class="textarea-dark" placeholder="Type your response here..."></textarea>
+                                <p><strong>Spotlight Question:</strong> Why was Paine’s decision to attack the concept of monarchy itself, rather than just Parliament, critical to shifting colonial public opinion toward independence?</p>
+                                <textarea id="pq_8" class="textarea-dark" placeholder="Type your answer here..."></textarea>
                             </div>
                         </div>
 
+                        <p class="first-p">Paine attacked the root of the problem: the King himself. He argued that it was absurd for an island to rule a continent. He described King George not as a father figure, but as a "Royal Brute." Most importantly, he argued that the colonists’ goal should not be reconciliation, but independence. He shifted the argument from the "rights of Englishmen" (which were based on history and tradition) to <strong>Natural Rights</strong> (which were God-given and universal).</p>
                         <p class="first-p"><em>Common Sense</em> was a sensation, selling over 100,000 copies in a few months. It was read in taverns, workshops, and army camps. Paine provided the intellectual permission for Americans to break with the monarchy. He articulated a vision of America not as a British outpost, but as an "asylum for mankind," a new type of nation based on republican principles.</p>
 
-                        <div class="checkpoint-block" id="cp-block-8" data-current="0">
+                        <div id="cp-block-8" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-8', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-8', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. What ideological shift did Thomas Paine advocate in his pamphlet?</p>
+                                <p class="first-p">14. What ideological shift did Thomas Paine advocate in his pamphlet?</p>
                                 <label class="checklist-item"><input type="radio" name="cp14" value="A" onchange="handleRadioChange('cp-block-8')"> A) He argued for a return to the policy of Salutary Neglect.</label>
                                 <label class="checklist-item"><input type="radio" name="cp14" value="B" onchange="handleRadioChange('cp-block-8')"> B) He urged the colonists to petition the King for better representation in Parliament.</label>
                                 <label class="checklist-item"><input type="radio" name="cp14" value="C" onchange="handleRadioChange('cp-block-8')"> C) He shifted the goal from protecting the "rights of Englishmen" to demanding "natural rights."</label>
                                 <label class="checklist-item"><input type="radio" name="cp14" value="D" onchange="handleRadioChange('cp-block-8')"> D) He claimed that the colonies should seek an alliance with the French monarchy.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-8', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-8', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
                         <h4>The Declaration of Independence</h4>
                         <p class="first-p">By the summer of 1776, the Continental Congress in Philadelphia could no longer ignore the reality of war. On July 2, 1776, the Congress voted for independence. Two days later, on July 4, they approved the document explaining why.</p>
-                        <p>The <strong>Declaration of Independence</strong>, drafted primarily by Thomas Jefferson, is not just a breakup letter to Great Britain; it is a statement of political philosophy. The preamble distills the Enlightenment thinking of John Locke into a revolutionary formula:</p>
+
+                        <div class="spotlight-wrapper portrait">
+                            <img src="assets/Spotlight_9.png" alt="Declaration of Independence" onerror="this.style.display='none'">
+                            <div class="spotlight-content">
+                                <p class="spotlight-caption first-p">The official parchment document drafted by Thomas Jefferson and approved on July 4, 1776.</p>
+                                <p class="spotlight-why first-p"><strong>The Declaration of Independence:</strong> The Declaration finalized the intellectual break with Britain by appealing to universal "Natural Rights" rather than just the "rights of Englishmen". It established the radical principles of equality and the "consent of the governed" as the only legitimate foundations for government.</p>
+                            </div>
+                            <div class="question-box">
+                                <p><strong>Spotlight Question:</strong> How did the appeal to "laws of nature and of nature's God" fundamentally change the legal and moral justification for the American Revolution?</p>
+                                <textarea id="pq_9" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
+
+                        <p class="first-p">The <strong>Declaration of Independence</strong>, drafted primarily by Thomas Jefferson, is not just a breakup letter to Great Britain; it is a statement of political philosophy. The preamble distills the Enlightenment thinking of John Locke into a revolutionary formula:</p>
                         <ul>
                             <li><strong>Natural Rights:</strong> "All men are created equal" and possess "unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness."</li>
                             <li><strong>Social Contract:</strong> Governments are created to protect these rights and derive their power from the "consent of the governed."</li>
                             <li><strong>Right of Revolution:</strong> If a government fails to protect these rights, "it is the Right of the People to alter or to abolish it."</li>
                         </ul>
-
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_9.png" alt="The Declaration of Independence">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">The official parchment document drafted by Thomas Jefferson and approved on July 4, 1776.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The Declaration finalized the intellectual break with Britain by appealing to universal "Natural Rights" rather than just the "rights of Englishmen". It established the radical principles of equality and the "consent of the governed" as the only legitimate foundations for government.</p>
-                            </div>
-                            <div class="question-box">
-                                <label>How did the appeal to "laws of nature and of nature's God" fundamentally change the legal and moral justification for the American Revolution?</label>
-                                <textarea id="pq_9" class="textarea-dark" placeholder="Type your response here..."></textarea>
-                            </div>
-                        </div>
-
                         <p class="first-p">The bulk of the document is a list of grievances against King George III—accusing him of dissolving legislatures, obstructing justice, keeping standing armies, and cutting off trade. By focusing on the King, Jefferson confirmed what Paine had argued: the monarch was the villain.</p>
-                        <p>The Declaration marked the final transformation of the colonial mind. The colonists were no longer arguing about the Magna Carta or the British Constitution. They were appealing to the "laws of nature and of nature's God." This shift had profound consequences. By declaring that "all men are created equal," the Founders established a standard by which they—and all future generations—would be judged.</p>
-                        <p>The irony, of course, was that the man who wrote those words enslaved over 600 people during his lifetime. The Declaration ignored women, Native Americans, and enslaved Africans, many of whom were fighting on both sides of the war. This "American Paradox"—the simultaneous rise of liberty and slavery—was the flaw in the foundation. The logic of revolution was universal, but its application was limited. It would take centuries of struggle to force the nation to live up to the promise made in 1776.</p>
+                        <p class="first-p">The Declaration marked the final transformation of the colonial mind. The colonists were no longer arguing about the Magna Carta or the British Constitution. They were appealing to the "laws of nature and of nature's God." This shift had profound consequences. By declaring that "all men are created equal," the Founders established a standard by which they—and all future generations—would be judged.</p>
+                        <p class="first-p">The irony, of course, was that the man who wrote those words enslaved over 600 people during his lifetime. The Declaration ignored women, Native Americans, and enslaved Africans, many of whom were fighting on both sides of the war. This "American Paradox"—the simultaneous rise of liberty and slavery—was the flaw in the foundation. The logic of revolution was universal, but its application was limited. It would take centuries of struggle to force the nation to live up to the promise made in 1776.</p>
 
-                        <div class="checkpoint-block" id="cp-block-9" data-current="0">
+                        <div id="cp-block-9" class="checkpoint-block" data-current="0">
                             <h3>Checkpoint</h3>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                <span class="cp-indicator" style="color:var(--color-steel-nib); font-family:var(--font-ui); font-size:0.9rem;"></span>
-                                <div>
-                                    <button class="action-btn cp-prev-btn" style="width:auto; padding:5px 10px; font-size:0.8rem; margin-right:10px;" onclick="navigateCp('cp-block-9', -1)">&larr; Previous</button>
-                                    <button class="action-btn cp-next-btn" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="navigateCp('cp-block-9', 1)">Next &rarr;</button>
-                                </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--accent-navy); letter-spacing: 0.1em; text-transform: uppercase;"></span>
                             </div>
-                            
                             <div class="checkpoint-q">
-                                <p class="first-p">1. According to the Declaration of Independence, what is the primary purpose of government?</p>
+                                <p class="first-p">15. According to the Declaration of Independence, what is the primary purpose of government?</p>
                                 <label class="checklist-item"><input type="radio" name="cp15" value="A" onchange="handleRadioChange('cp-block-9')"> A) To ensure that all citizens contribute equally to the national debt.</label>
                                 <label class="checklist-item"><input type="radio" name="cp15" value="B" onchange="handleRadioChange('cp-block-9')"> B) To protect the unalienable natural rights of the people.</label>
                                 <label class="checklist-item"><input type="radio" name="cp15" value="C" onchange="handleRadioChange('cp-block-9')"> C) To maintain a strong standing army for imperial expansion.</label>
                                 <label class="checklist-item"><input type="radio" name="cp15" value="D" onchange="handleRadioChange('cp-block-9')"> D) To enforce the traditional laws established by the British monarchy.</label>
                             </div>
-
-                            <div class="checkpoint-q" style="display:none;">
-                                <p class="first-p">2. Why did Thomas Jefferson focus the grievances in the Declaration specifically on King George III?</p>
+                            <div class="checkpoint-q" style="display: none;">
+                                <p class="first-p">16. Why did Thomas Jefferson focus the grievances in the Declaration specifically on King George III?</p>
                                 <label class="checklist-item"><input type="radio" name="cp16" value="A" onchange="handleRadioChange('cp-block-9')"> A) Because the King was the only person in Britain who supported the colonists.</label>
                                 <label class="checklist-item"><input type="radio" name="cp16" value="B" onchange="handleRadioChange('cp-block-9')"> B) To prove that the British Parliament had no actual power in the empire.</label>
                                 <label class="checklist-item"><input type="radio" name="cp16" value="C" onchange="handleRadioChange('cp-block-9')"> C) To confirm the argument that the monarchy itself was the source of tyranny.</label>
                                 <label class="checklist-item"><input type="radio" name="cp16" value="D" onchange="handleRadioChange('cp-block-9')"> D) To convince the King to fire his corrupt ministers and end the war.</label>
                             </div>
+                            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                                <button class="action-btn cp-prev-btn" onclick="navigateCp('cp-block-9', -1)" style="display: none; width: auto;"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                                <button class="action-btn cp-next-btn" onclick="navigateCp('cp-block-9', 1)" disabled style="width: auto;"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')">&larr; Previous</button>
-                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">Next Section &rarr;</button>
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')" disabled><span style="position: relative; z-index: 1;">🔒 Answer Checkpoints to Continue</span></button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 5: TURNING POINTS | Common Sense -->
+            <!-- SECTION IV: TURNING POINTS -->
             <section id="sec-5" class="chapter-section">
                 <div class="content-wrapper">
                     <div class="content-block">
                         <h2>TURNING POINTS | Common Sense</h2>
-                        
                         <h4>The Pamphlet That Changed the World</h4>
                         <p class="first-p">By January 1776, the American colonies were in a bizarre state of limbo. Blood had already been spilled at Lexington, Concord, and Bunker Hill. The Continental Army was besieging British-held Boston. Yet, astonishingly, most colonists—and even many delegates in the Continental Congress—were still toasting King George III at dinner. They believed they were fighting a ministerial conspiracy, not the Crown itself, and hoped for reconciliation.</p>
+
+                        <div class="visual-wrapper">
+                            <img src="assets/Visual_2.png" alt="Common Sense vs Crown Scale" class="visual-img" onerror="this.style.display='none'">
+                            <p class="caption-text first-p">Accessible, radical literature can serve as a definitive tipping point in historical conflicts, bridging the gap between conservative resistance to taxation and the profound conceptual leap required to forge a entirely new nation.</p>
+                            <div class="question-box">
+                                <p><strong>Visual Analysis 2:</strong> In the context of the visual metaphor of the scale, why might a simple pamphlet hold more "weight" than the historical traditions of a centuries-old monarchy?</p>
+                                <textarea id="va_2" class="textarea-dark" placeholder="Type your answer here..."></textarea>
+                            </div>
+                        </div>
 
                         <h5>The Moment</h5>
                         <p class="first-p">The rebellion lacked a clear end goal. The "rights of Englishmen" argument was running out of steam, but the idea of independence was terrifying. It meant treason, loss of British protection, and economic uncertainty. The movement needed an intellectual push to bridge the gap between resisting taxes and declaring a new nation.</p>
@@ -690,357 +756,119 @@
                         <h5>Why It Matters</h5>
                         <p class="first-p">Without <em>Common Sense</em>, the Declaration of Independence might never have been written—or at least, not in 1776. Paine transformed a conservative tax revolt into a radical crusade for human liberty. He taught Americans that their cause was not just local, but universal: "The cause of America is in a great measure the cause of all mankind."</p>
 
-                        <div class="visual-wrapper">
-                            <img class="visual-img" src="assets/Visual_2.png" alt="A comparative scale weighing Common Sense against the Rights of Englishmen">
-                            <p class="caption-text">Accessible, radical literature can serve as a definitive tipping point in historical conflicts, bridging the gap between conservative resistance to taxation and the profound conceptual leap required to forge a entirely new nation.</p>
+                        <div class="question-box" style="margin-top: 3rem; background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-faint);">
+                            <p><strong>Trace the Cause:</strong> How did Thomas Paine’s specific arguments in Common Sense directly address and dismantle the colonists' lingering fears about separating from Great Britain?</p>
+                            <textarea id="tp_1" class="textarea-dark" placeholder="Your response..."></textarea>
+
+                            <p style="margin-top: 1.5rem;"><strong>Analyze the Rhetoric:</strong> Why was Paine’s decision to write in the "language of the streets," rather than the formal style of the educated elite, critical to the success of the revolutionary movement?</p>
+                            <textarea id="tp_2" class="textarea-dark" placeholder="Your response..."></textarea>
+
+                            <p style="margin-top: 1.5rem;"><strong>Compare Viewpoints:</strong> Paine argued that "society in every state is a blessing, but government even in its best state is but a necessary evil." How does this perspective on government compare to the earlier Puritan view of government as a divine institution meant to enforce moral order?</p>
+                            <textarea id="tp_3" class="textarea-dark" placeholder="Your response..."></textarea>
                         </div>
 
-                        <!-- Standalone Question Block -->
-                        <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 8px;">
-                            <h4 style="margin-top: 0 !important;">Analytical Questions</h4>
-                            
-                            <label style="display:block; margin-bottom:10px; margin-top:20px;"><strong>Trace the Cause</strong> How did Thomas Paine’s specific arguments in <em>Common Sense</em> directly address and dismantle the colonists' lingering fears about separating from Great Britain?</label>
-                            <textarea id="pq_10" class="textarea-dark" style="margin-bottom:25px;"></textarea>
-                            
-                            <label style="display:block; margin-bottom:10px;"><strong>Analyze the Rhetoric</strong> Why was Paine’s decision to write in the "language of the streets," rather than the formal style of the educated elite, critical to the success of the revolutionary movement?</label>
-                            <textarea id="pq_11" class="textarea-dark" style="margin-bottom:25px;"></textarea>
-
-                            <label style="display:block; margin-bottom:10px;"><strong>Compare Viewpoints</strong> Paine argued that "society in every state is a blessing, but government even in its best state is but a necessary evil." How does this perspective on government compare to the earlier Puritan view of government as a divine institution meant to enforce moral order?</label>
-                            <textarea id="pq_12" class="textarea-dark"></textarea>
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <button class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
                         </div>
-
-                    </div>
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')">&larr; Previous</button>
-                        <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6', 'nav-sec-6')">Next Section &rarr;</button>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 6: Vocabulary Activity -->
+            <!-- SECTION V: VOCABULARY -->
             <section id="sec-6" class="chapter-section">
                 <div class="content-wrapper">
                     <div class="content-block">
                         <h2>Vocabulary Activity</h2>
-                        <p class="first-p">Read the passage below and fill in the missing terms using the word bank provided. Each term is used exactly once.</p>
-
                         <div class="word-bank">
-                            <div class="word-pill">Salutary Neglect</div>
-                            <div class="word-pill">Stamp Act</div>
-                            <div class="word-pill">Virtual Representation</div>
-                            <div class="word-pill">Intolerable Acts</div>
-                            <div class="word-pill">Common Sense</div>
+                            <span class="word-pill">Salutary Neglect</span>
+                            <span class="word-pill">Virtual Representation</span>
+                            <span class="word-pill">Intolerable Acts</span>
+                            <span class="word-pill">Common Sense</span>
+                            <span class="word-pill">Natural Rights</span>
+                            <span class="word-pill">Social Contract</span>
+                        </div>
+                        <div style="line-height: 2.5; padding: 1.5rem; background: var(--bg-panel); border: 1px solid var(--border-faint);">
+                            <p class="first-p">For generations, the American colonies thrived under a policy of <input type="text" class="cloze-input" id="c1" placeholder="---">, which allowed for significant local self-governance. This autonomy was threatened when Parliament claimed the right to tax the colonies under the theory of <input type="text" class="cloze-input" id="c2" placeholder="---">. In response to the Boston Tea Party, Britain passed the punitive <input type="text" class="cloze-input" id="c3" placeholder="---">, which served to unify the colonies. Thomas Paine’s influential pamphlet, <input type="text" class="cloze-input" id="c4" placeholder="---">, urged colonists to break with the monarchy. Finally, the Declaration of Independence articulated the belief in universal <input type="text" class="cloze-input" id="c5" placeholder="---"> and the concept of the <input type="text" class="cloze-input" id="c6" placeholder="---">, stating that government exists by the consent of the governed.</p>
                         </div>
 
-                        <p style="line-height: 2.5;">
-                            Before 1763, the American colonies enjoyed a long period of <input type="text" class="cloze-input" placeholder="Term 1">, where Britain largely ignored their internal affairs and allowed colonial assemblies to govern themselves. However, massive imperial debts led Parliament to pass the <input type="text" class="cloze-input" placeholder="Term 2"> in 1765, which placed an unprecedented direct tax on all paper goods. Colonists fiercely rejected the British constitutional argument of <input type="text" class="cloze-input" placeholder="Term 3">, insisting instead that only actual elected leaders had the authority to levy taxes. Tensions escalated, and after the Boston Tea Party, Parliament punished Massachusetts with sweeping, punitive measures known as the <input type="text" class="cloze-input" placeholder="Term 4">. Finally, in early 1776, Thomas Paine published his revolutionary pamphlet <input type="text" class="cloze-input" placeholder="Term 5">, shattering the colonists' lingering loyalty to the King and shifting the conversation toward full independence.
-                        </p>
-                    </div>
-                    
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')">&larr; Previous</button>
-                        <button class="action-btn" style="background: var(--color-navy); border-color: var(--color-gold); color: var(--color-gold);" onclick="finishChapter()">Finished</button>
+                        <div class="bottom-nav">
+                            <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <button class="action-btn" onclick="finishChapter()" style="background: var(--highlight-red); color: white;"><span style="position: relative; z-index: 1;">Finish Assignment &check;</span></button>
+                        </div>
                     </div>
                 </div>
             </section>
-
         </main>
     </div>
 
     <script>
-        /* Background Management */
-        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
+        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png', 'assets/bg_5.png', 'assets/bg_6.png'];
         let bgIndex = 0;
         function rotateBackground() {
-            if (bgImages.length === 0) return;
             const bgEl = document.getElementById('bg-slideshow');
-            if (!bgEl) return;
-            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
-            bgIndex = (bgIndex + 1) % bgImages.length;
+            if (bgEl) {
+                bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+                bgIndex = (bgIndex + 1) % bgImages.length;
+            }
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            rotateBackground();
-            setInterval(rotateBackground, 10000);
-            initCheckpoints();
-        });
+        setInterval(rotateBackground, 10000);
+        rotateBackground();
 
-        /* Navigation */
-        function switchTab(id, btnId = null, scrollTarget = null) {
+        function switchTab(id, btnId) {
             document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
             document.getElementById(id).classList.add('active-section');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
-            
-            const activeBtnId = btnId || ('nav-' + id);
-            const activeBtn = document.getElementById(activeBtnId);
-            if (activeBtn) {
-                activeBtn.classList.add('active-nav');
-            }
-            
-            if (scrollTarget) {
-                setTimeout(() => {
-                    const target = document.getElementById(scrollTarget);
-                    if(target) {
-                        const offset = 40;
-                        const bodyRect = document.body.getBoundingClientRect().top;
-                        const elementRect = target.getBoundingClientRect().top;
-                        const elementPosition = elementRect - bodyRect;
-                        const offsetPosition = elementPosition - offset;
-                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                    }
-                }, 50);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            saveProgress();
+            document.getElementById(btnId).classList.add('active-nav');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            checkSectionUnlock();
         }
-
-        /* Data Collection & Export */
-        function collectAssignmentData(isFinal) {
-            const studentName = document.getElementById('student-name').value || "Unknown_Student";
-            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
-            const now = new Date().toLocaleDateString();
-            
-            const assignmentData = {
-                assignmentTitle: "Interactive Chapter 1.2 - Dissolving the Bands",
-                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
-                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
-            };
-
-            // Gather Visual Analysis Answers
-            for(let i=1; i<=20; i++) {
-                let el = document.getElementById('va_' + i);
-                if(el) {
-                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
-                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
-                }
-            }
-            
-            // Gather Checkpoint Answers
-            for(let i=1; i<=30; i++) {
-                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-                if(inputs.length > 0) {
-                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
-                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
-                }
-            }
-            
-            // Gather Perspective Questions
-            for(let i=1; i<=20; i++) {
-                let el = document.getElementById('pq_' + i);
-                if(el) {
-                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
-                }
-            }
-            
-            // Gather Cloze Activity Answers
-            document.querySelectorAll('.cloze-input').forEach((input, index) => {
-                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
-            });
-            
-            return assignmentData;
-        }
-
-        function triggerDownload(data, filename) {
-            const dataStr = JSON.stringify(data, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function downloadProgress() {
-            const data = collectAssignmentData(false);
-            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
-            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
-        }
-
-        function finishChapter() {
-            const dateField = document.getElementById('completion-date');
-            const now = new Date().toLocaleDateString();
-            if(dateField) dateField.value = now;
-            
-            const data = collectAssignmentData(true);
-            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
-            triggerDownload(data, `Chapter_Export_${safeName}.json`);
-            alert('Upload JSON file to Canvas');
-            switchTab('sec-1', 'nav-sec-1');
-        }
-
-        /* Loading Progress */
-        function loadProgress(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const loadedData = JSON.parse(e.target.result);
-                    
-                    const nameInput = document.getElementById('student-name');
-                    const periodInput = document.getElementById('student-period');
-                    
-                    if (loadedData.studentInfo) {
-                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
-                            nameInput.value = loadedData.studentInfo.name;
-                            nameInput.setAttribute('readonly', 'true');
-                            nameInput.style.opacity = '0.7'; 
-                        }
-                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
-                            periodInput.value = loadedData.studentInfo.period;
-                            periodInput.setAttribute('disabled', 'true');
-                            periodInput.style.opacity = '0.7'; 
-                        }
-                    }
-
-                    if (loadedData.responses) {
-                        if (loadedData.responses.visualAnalysis) {
-                            for(let i=1; i<=20; i++) {
-                                let el = document.getElementById('va_' + i);
-                                if(el) {
-                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
-                                    if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
-                                }
-                            }
-                        }
-                        
-                        if (loadedData.responses.checkpoints) {
-                            for(let i=1; i<=30; i++) {
-                                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-                                if(inputs.length > 0) {
-                                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                                    let savedVal = loadedData.responses.checkpoints[qText];
-                                    if (savedVal && savedVal !== "No Answer") {
-                                        let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
-                                        if(radio) radio.checked = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (loadedData.responses.perspectiveQuestions) {
-                            for(let i=1; i<=20; i++) {
-                                let el = document.getElementById('pq_' + i);
-                                if(el) {
-                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                                    if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
-                                }
-                            }
-                        }
-
-                        if (loadedData.responses.clozeActivity) {
-                            document.querySelectorAll('.cloze-input').forEach((input, index) => {
-                                let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
-                                if (savedVal) input.value = savedVal;
-                            });
-                        }
-                    }
-
-                    initCheckpoints();
-                    alert('Progress loaded successfully!');
-                } catch (err) {
-                    console.error(err);
-                    alert('Error loading progress file. Please make sure it is a valid JSON file.');
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        /* Save & Reset Logic */
-        function saveProgress() { 
-            console.log('Progress stored in memory. Click Save Progress to download.'); 
-        }
-        
-        function resetProgress() {
-            if(confirm('Are you sure you want to reset all progress?')) {
-                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
-                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
-                
-                const nameInput = document.getElementById('student-name');
-                const periodInput = document.getElementById('student-period');
-                nameInput.removeAttribute('readonly');
-                nameInput.style.opacity = '1';
-                periodInput.removeAttribute('disabled');
-                periodInput.style.opacity = '1';
-                
-                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
-                initCheckpoints();
-                switchTab('sec-1', 'nav-sec-1');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        /* Checkpoint Management */
-        const TOTAL_CHECKPOINTS = 9; 
 
         function initCheckpoints() {
-            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { 
-                updateCpUI(`cp-block-${i}`); 
-            }
+            for(let i=1; i<=9; i++) { updateCpUI(`cp-block-${i}`); }
             checkSectionUnlock();
         }
 
         function updateCpUI(blockId) {
             const block = document.getElementById(blockId);
             if(!block) return;
-            
             const currentIndex = parseInt(block.getAttribute('data-current') || '0');
             const questions = block.querySelectorAll('.checkpoint-q');
             const indicator = block.querySelector('.cp-indicator');
             const prevBtn = block.querySelector('.cp-prev-btn');
             const nextBtn = block.querySelector('.cp-next-btn');
             
-            questions.forEach((q, idx) => { 
-                q.style.display = (idx === currentIndex) ? 'block' : 'none'; 
-            });
-            
+            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
             if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
-            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
+            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-flex';
             
             if(nextBtn) {
                 const currentQ = questions[currentIndex];
-                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
-                
+                const radioInput = currentQ.querySelector('input[type="radio"]');
+                const isAnswered = document.querySelector(`input[name="${radioInput.name}"]:checked`) !== null;
+                const span = nextBtn.querySelector('span');
+
                 if (currentIndex === questions.length - 1) {
                     if (isAnswered) {
-                        nextBtn.innerText = "Checkpoint Completed \u2713";
-                        nextBtn.style.borderColor = "var(--color-navy)"; 
-                        nextBtn.style.color = "var(--color-cream)"; 
-                        nextBtn.style.backgroundColor = "var(--color-navy)";
-                        nextBtn.disabled = true; 
-                        nextBtn.style.cursor = 'default'; 
-                        nextBtn.style.opacity = '1';
+                        span.innerText = "Checkpoint Completed ✓";
+                        nextBtn.style.backgroundColor = "var(--accent-navy)";
+                        nextBtn.style.borderColor = "var(--accent-navy)";
+                        nextBtn.style.color = "white";
+                        nextBtn.disabled = true;
                     } else {
-                        nextBtn.innerText = "Finish Checkpoint";
-                        nextBtn.disabled = true; 
-                        nextBtn.style.opacity = '0.5'; 
-                        nextBtn.style.cursor = 'not-allowed';
-                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
-                        nextBtn.style.color = "var(--color-gold)"; 
-                        nextBtn.style.borderColor = "var(--color-gold)";
+                        span.innerText = "Finish Checkpoint";
+                        nextBtn.disabled = true;
+                        nextBtn.style.opacity = '0.5';
+                        nextBtn.style.backgroundColor = "transparent";
+                        nextBtn.style.color = "var(--highlight-red)";
                     }
                 } else {
-                    nextBtn.innerText = "Next Question \u2192";
-                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; 
-                    nextBtn.style.color = "var(--color-gold)"; 
-                    nextBtn.style.borderColor = "var(--color-gold)";
-                    
-                    if (isAnswered) { 
-                        nextBtn.disabled = false; 
-                        nextBtn.style.opacity = '1'; 
-                        nextBtn.style.cursor = 'pointer'; 
-                    } else { 
-                        nextBtn.disabled = true; 
-                        nextBtn.style.opacity = '0.5'; 
-                        nextBtn.style.cursor = 'not-allowed'; 
-                    }
+                    span.innerText = "Next Question \u2192";
+                    nextBtn.disabled = !isAnswered;
+                    nextBtn.style.opacity = isAnswered ? '1' : '0.5';
+                    nextBtn.style.backgroundColor = "transparent";
+                    nextBtn.style.color = "var(--highlight-red)";
+                    nextBtn.style.borderColor = "var(--highlight-red)";
                 }
             }
             checkSectionUnlock();
@@ -1048,51 +876,78 @@
 
         function navigateCp(blockId, dir) {
             const block = document.getElementById(blockId);
-            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
-            const questions = block.querySelectorAll('.checkpoint-q');
-            
-            currentIndex += dir;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex >= questions.length) currentIndex = questions.length - 1;
-            
-            block.setAttribute('data-current', currentIndex);
+            let cur = parseInt(block.getAttribute('data-current') || '0');
+            block.setAttribute('data-current', cur + dir);
             updateCpUI(blockId);
         }
 
-        function handleRadioChange(blockId) { 
-            saveProgress(); 
-            updateCpUI(blockId); 
-        }
+        function handleRadioChange(blockId) { updateCpUI(blockId); }
+        function isAns(n) { return document.querySelector(`input[name="${n}"]:checked`) !== null; }
 
-        function isAnswered(name) { 
-            return document.querySelector(`input[name="${name}"]:checked`) !== null; 
-        }
-
-        function setNavButtonState(btnId, enabled) {
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
-            if (enabled) {
-                btn.removeAttribute('disabled'); 
-                btn.style.opacity = '1'; 
-                btn.style.cursor = 'pointer';
-                btn.innerHTML = 'Next Section &rarr;'; 
-                btn.style.borderColor = 'var(--color-gold)';
-            } else {
-                btn.setAttribute('disabled', 'true'); 
-                btn.style.opacity = '0.5'; 
-                btn.style.cursor = 'not-allowed';
-                btn.innerHTML = '&#128274; Answer Checkpoints to Continue'; 
-                btn.style.borderColor = 'var(--color-steel-nib)';
+        function checkSectionUnlock() {
+            const b2 = document.getElementById('btn-next-sec-2');
+            if(b2) {
+                const s1 = isAns('cp1') && isAns('cp2') && isAns('cp3') && isAns('cp4');
+                b2.disabled = !s1;
+                b2.querySelector('span').innerText = s1 ? "Next Section \u2192" : "🔒 Answer Checkpoints to Continue";
+            }
+            const b3 = document.getElementById('btn-next-sec-3');
+            if(b3) {
+                const s2 = isAns('cp5') && isAns('cp6') && isAns('cp7') && isAns('cp8') && isAns('cp9') && isAns('cp10');
+                b3.disabled = !s2;
+                b3.querySelector('span').innerText = s2 ? "Next Section \u2192" : "🔒 Answer Checkpoints to Continue";
+            }
+            const b4 = document.getElementById('btn-next-sec-4');
+            if(b4) {
+                const s3 = isAns('cp11') && isAns('cp12') && isAns('cp13') && isAns('cp14') && isAns('cp15') && isAns('cp16');
+                b4.disabled = !s3;
+                b4.querySelector('span').innerText = s3 ? "Next Section \u2192" : "🔒 Answer Checkpoints to Continue";
             }
         }
 
-        function checkSectionUnlock() {
-            setNavButtonState('btn-next-sec-1', true);
-            setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2') && isAnswered('cp3') && isAnswered('cp4'));
-            setNavButtonState('btn-next-sec-3', isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7') && isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10'));
-            setNavButtonState('btn-next-sec-4', isAnswered('cp11') && isAnswered('cp12') && isAnswered('cp13') && isAnswered('cp14') && isAnswered('cp15') && isAnswered('cp16'));
-            setNavButtonState('btn-next-sec-5', true); // Open to vocabulary
+        function downloadProgress() {
+            const data = {
+                studentName: document.getElementById('student-name').value,
+                period: document.getElementById('student-period').value,
+                date: document.getElementById('completion-date').value,
+                responses: {}
+            };
+            document.querySelectorAll('textarea, .cloze-input').forEach(el => { if(el.id) data.responses[el.id] = el.value; });
+            document.querySelectorAll('input[type="radio"]:checked').forEach(el => data.responses[el.name] = el.value);
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Ch1_2_Progress_${data.studentName || 'Student'}.json`;
+            a.click();
         }
+
+        function loadProgress(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = JSON.parse(e.target.result);
+                document.getElementById('student-name').value = data.studentName || '';
+                document.getElementById('student-period').value = data.studentPeriod || data.period || '';
+                for(let k in data.responses) {
+                    const el = document.getElementById(k);
+                    if(el) el.value = data.responses[k];
+                    const r = document.querySelector(`input[name="${k}"][value="${data.responses[k]}"]`);
+                    if(r) r.checked = true;
+                }
+                initCheckpoints();
+            };
+            reader.readAsText(file);
+        }
+
+        function resetProgress() { if(confirm("Reset all progress?")) location.reload(); }
+        function finishChapter() { 
+            document.getElementById('completion-date').value = new Date().toLocaleDateString();
+            downloadProgress(); 
+            alert("Assignment finished and progress saved."); 
+        }
+        
+        window.onload = initCheckpoints;
     </script>
 </body>
 </html>
