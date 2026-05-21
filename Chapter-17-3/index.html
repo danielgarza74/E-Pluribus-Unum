@@ -3,246 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 17.3 | Fear at Home</title>
+    <title>Chapter 17 | Section 3: Fear at Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-navy-deep: #262B2E;
-            --color-cream: #E8F1EE;
-            --color-navy: #4F8C8D;
-            --color-steel-nib: #C96B3B;
-            --color-gold: #D7D94C;
-            --color-gold-light: #EAEA8A;
-            --color-wax-red: #A63A3A;
-            --font-heading: 'Times New Roman', serif;
-            --font-body: 'Arial', sans-serif;
-            --font-ui: 'Verdana', sans-serif;
+            /* Map from Chapter Color Scheme */
+            --bg-beige: #E8F1EE;
+            --text-ink: #262B2E;
+            --accent-navy: #4F8C8D;
+            --accent-green: #C96B3B;
+            --highlight-red: #D7D94C;
+
+            /* Derived shades for UI depth */
+            --bg-panel: #FFFFFF;
+            --bg-panel-hover: #F7F3EC;
+            --border-faint: rgba(197, 160, 9, 0.2);
+            --border-strong: var(--highlight-red);
+            --navy-faint: rgba(30, 58, 95, 0.15);
+
+            /* Fonts from elegant archive */
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Cormorant Garamond', serif;
+            --font-ui: 'Cinzel', serif;
         }
 
         * { box-sizing: border-box; }
-        html, body { overflow-x: hidden; margin: 0; padding: 0; }
-        body { font-family: var(--font-body); background-color: var(--color-navy-deep); color: var(--color-cream); line-height: 1.8; font-size: 1.15rem; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
         
-        /* Background Effects */
-        #bg-slideshow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: cover; background-position: center; transition: background-image 1.5s ease-in-out; }
-        body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.75) 100%); z-index: 1; pointer-events: none; }
-        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-beige);
+            color: var(--text-ink);
+            line-height: 1.7;
+            font-size: 1.25rem;
+            background-image: radial-gradient(circle at top center, rgba(30, 58, 95, 0.15) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        /* Background Effects (Subtle watermark style) */
+        #bg-slideshow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-size: cover; background-position: center;
+            transition: background-image 1.5s ease-in-out;
+            opacity: 0.12;
+            filter: grayscale(100%) contrast(150%);
+        }
+
         /* Layout Architecture */
         .app-container { display: flex; position: relative; z-index: 2; }
-        
+
         /* Left Navigation Panel */
-        .side-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); border-right: 1px solid rgba(212,160,23,0.3); display: flex; flex-direction: column; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .side-nav {
+            position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-faint);
+            display: flex; flex-direction: column; padding: 2rem 1.5rem;
+            z-index: 100; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
+        }
         .side-nav::-webkit-scrollbar { display: none; }
-        .nav-title { font-family: var(--font-heading); color: var(--color-gold); font-size: 1.3rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(212,160,23,0.2); padding-bottom: 0.5rem; }
-        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
-        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--color-cream); text-align: left; padding: 10px 12px; font-family: var(--font-ui); cursor: pointer; transition: all 0.3s; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
-        .nav-btn.active-nav { background: rgba(212,160,23,0.15); border: 1px solid var(--color-gold); color: var(--color-gold); }
-        .nav-btn:hover:not(.active-nav) { background: rgba(255,255,255,0.05); }
+
+        .nav-title {
+            font-family: var(--font-heading); color: var(--highlight-red); font-size: 1.1rem;
+            margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.15em;
+            border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; font-weight: 600;
+        }
+
+        .nav-links { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; }
+
+        .nav-btn {
+            background: transparent; border: none; border-left: 3px solid transparent;
+            color: var(--text-ink); text-align: left; padding: 12px 15px;
+            font-family: var(--font-ui); cursor: pointer; transition: all 0.3s;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+
+        .nav-btn.active-nav {
+            background: rgba(197, 160, 9, 0.05);
+            border-left: 3px solid var(--highlight-red);
+            color: var(--highlight-red);
+            font-weight: 600;
+        }
+
+        .nav-btn:hover:not(.active-nav) { background: rgba(30, 58, 95, 0.3); border-left-color: var(--navy-faint); }
+
         .nav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
-        
+
         /* Main Content Area */
         .main-content { flex: 1; margin-left: 280px; min-height: 100vh; display: flex; flex-direction: column; }
-        .hero-banner-flush { width: 100%; height: auto; display: block; border-bottom: 2px solid var(--color-gold); margin-top: 0; }
         .content-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px; width: 100%; flex-grow: 1; }
-        .content-block { background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); display: flow-root; }
-        
+
+        /* Hero Header */
+        .chapter-hero {
+            background-color: var(--accent-navy);
+            color: var(--bg-beige);
+            padding: 3rem 2rem 2.25rem;
+            position: relative;
+            text-align: center;
+            border-bottom: 3px solid var(--highlight-red);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            color: rgba(245, 241, 230, 0.6);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.6rem);
+            font-weight: 700;
+            color: var(--bg-beige);
+            margin: 0 auto 0.75rem;
+            max-width: 850px;
+            line-height: 1.15;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: rgba(245, 241, 230, 0.85);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            font-weight: 400;
+            line-height: 1.6;
+            z-index: 2;
+        }
+
+        .hero-footer {
+            font-family: var(--font-heading);
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--highlight-red);
+            z-index: 2;
+        }
+
+        /* Elegant Content Blocks (Archive Cards style) */
+        .content-block {
+            background: var(--bg-panel);
+            border: 1px solid var(--highlight-red);
+            padding: 3rem; margin-bottom: 3rem; display: flow-root;
+            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .content-block::after {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border: 1px solid var(--border-faint);
+            pointer-events: none;
+        }
+
         @media (max-width: 1024px) {
             .side-nav { display: none; }
             .main-content { margin-left: 0; }
             .content-wrapper { padding: 30px 20px; }
             .content-block { padding: 2rem; }
         }
-        
+
         /* Typography */
-        h2 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 3rem !important; line-height: 1.2; margin-bottom: 2rem !important; margin-top: 0; font-weight: bold; }
-        h3 { font-family: var(--font-heading); color: var(--color-gold) !important; font-size: 2.25rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; margin-top: 2.5rem !important; font-weight: bold; }
-        h4 { font-family: var(--font-heading); color: var(--color-cream) !important; font-size: 1.75rem !important; line-height: 1.3; margin-bottom: 1.25rem !important; margin-top: 2rem !important; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-        h5 { font-family: var(--font-heading); color: var(--color-steel-nib) !important; font-size: 1.35rem !important; line-height: 1.3; margin-bottom: 1rem !important; margin-top: 2rem !important; font-weight: bold; }
-        p { margin-bottom: 1.5rem; font-size: 1.15rem; }
+        h2 { font-family: var(--font-heading); color: var(--accent-navy) !important; font-size: 2.8rem !important; line-height: 1.2; margin-bottom: 2rem !important; font-weight: 700; text-align: center; border-bottom: 2px double var(--border-faint); padding-bottom: 1rem; }
+        h3 { font-family: var(--font-heading); color: var(--accent-green) !important; font-size: 2.2rem !important; line-height: 1.3; margin-bottom: 1.5rem !important; font-weight: 600; }
+        h4 { font-family: var(--font-heading); color: #2B2D31 !important; font-size: 1.6rem !important; line-height: 1.4; margin-bottom: 1rem !important; margin-top: 2.5rem !important; font-weight: 600; border-bottom: 1px solid var(--border-faint); padding-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        h5 { font-family: var(--font-heading); color: var(--highlight-red) !important; font-size: 1.35rem !important; font-weight: 700; margin-top: 2rem !important; margin-bottom: 1rem !important; }
+
+        p { margin-bottom: 1.5rem; font-size: 1.25rem; }
         p:not(.first-p) { text-indent: 2.5em; }
         .first-p { text-indent: 0 !important; }
-        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
-        
+
+        ul { list-style-type: square; margin-left: 2em; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.25rem; color: var(--accent-green); }
+        li { margin-bottom: 0.5rem; }
+        strong { color: var(--text-ink); font-weight: 600; }
+
         /* UI Elements */
-        .id-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .id-panel label { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-steel-nib); margin-bottom: 5px; text-transform: uppercase; }
-        .id-panel input, .id-panel select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; }
-        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--color-gold); }
-        .id-panel input[readonly] { opacity: 0.7; cursor: not-allowed; }
-        .textarea-dark { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--color-steel-nib); color: var(--color-cream); padding: 1.5rem; border-radius: 4px; min-height: 120px; font-family: var(--font-body); font-size: 1.1rem; resize: vertical; }
-        .textarea-dark:focus { outline: none; border-color: var(--color-gold); }
-        
-        /* Prominent Default Spotlights (Stacked) */
-        .spotlight-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 8px; border: 2px solid var(--color-gold); clear: both; }
-        .spotlight-wrapper img { width: 100%; height: auto; border: 2px solid var(--color-gold-light); border-radius: 4px; display: block; }
-        .spotlight-content { display: block; margin-top: 20px; }
-        .spotlight-caption { font-size: 0.95rem; text-align: left; margin-bottom: 15px; font-style: italic; color: #ddd; line-height: 1.5; text-indent: 0 !important; }
-        .spotlight-why { font-size: 1.05rem; color: var(--color-cream); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
-        .spotlight-why strong { color: var(--color-gold); }
-        
+        .id-panel {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 2rem;
+            background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-faint); position: relative;
+        }
+
+        .id-panel label { display: block; font-family: var(--font-heading); font-size: 0.85rem; color: var(--accent-green); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+
+        .id-panel input, .id-panel select {
+            width: 100%; background: var(--bg-beige); border: 1px solid var(--navy-faint);
+            color: var(--text-ink); padding: 12px; font-family: var(--font-body); font-size: 1.15rem; transition: border 0.3s;
+        }
+
+        .id-panel input:focus, .id-panel select:focus { outline: none; border-color: var(--highlight-red); }
+        .id-panel input[readonly] { opacity: 0.6; cursor: not-allowed; }
+
+        .textarea-dark {
+            width: 100%; background: var(--bg-beige); border: 1px solid var(--navy-faint);
+            color: var(--text-ink); padding: 1.5rem; min-height: 120px; font-family: var(--font-body);
+            font-size: 1.2rem; resize: vertical; transition: border 0.3s;
+        }
+
+        .textarea-dark:focus { outline: none; border-color: var(--highlight-red); }
+
+        /* Prominent Default Spotlights */
+        .spotlight-wrapper {
+            width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 25px;
+            border: 1px solid var(--highlight-red); clear: both; position: relative;
+        }
+
+        .spotlight-wrapper::after {
+            content: ''; position: absolute; inset: 6px; border: 1px solid var(--border-faint); pointer-events: none;
+        }
+
+        .spotlight-wrapper img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; position: relative; z-index: 1;}
+
+        .spotlight-content { display: block; margin-top: 20px; position: relative; z-index: 1; }
+
+        .spotlight-caption { font-size: 1.05rem; text-align: left; margin-bottom: 15px; font-style: italic; color: var(--accent-green); line-height: 1.5; text-indent: 0 !important; }
+
+        .spotlight-why { font-size: 1.15rem; color: var(--text-ink); margin-bottom: 20px; line-height: 1.6; text-indent: 0 !important; }
+
+        .spotlight-why strong { color: var(--highlight-red); font-family: var(--font-heading); font-size: 1.1em; letter-spacing: 0.05em; }
+
         /* Portrait Spotlights (Side-by-Side) */
         .spotlight-wrapper.portrait { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
         .spotlight-wrapper.portrait img { width: auto; flex: 0 1 40%; min-width: 250px; max-width: 100%; max-height: 500px; object-fit: contain; margin-top: 0; }
         .spotlight-wrapper.portrait .spotlight-content { flex: 1 1 50%; min-width: 250px; margin-top: 0; display: flex; flex-direction: column; }
         .spotlight-wrapper.portrait .question-box { flex: 1 1 100%; margin-top: 10px; }
-        
-        /* Full Sized Visuals (Restored) */
-        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); clear: both; }
-        .visual-img { width: 100%; height: auto; border-radius: 4px; border: 2px solid var(--color-gold-light); display: block; }
-        .caption-text { font-style: italic; font-size: 0.95rem; color: #ddd; margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
-        .question-box { border-left: 4px solid var(--color-gold); padding-left: 1.5rem; margin-top: 1.5rem; }
-        
+
+        /* Full Sized Visuals */
+        .visual-wrapper { width: 100%; margin: 2.5rem 0; background: var(--bg-panel); padding: 20px; border: 1px solid var(--border-faint); clear: both; }
+        .visual-img { width: 100%; height: auto; border: 1px solid var(--accent-green); display: block; }
+        .caption-text { font-style: italic; font-size: 1.05rem; color: var(--accent-green); margin-top: 15px; line-height: 1.5; text-indent: 0 !important; }
+
+        .question-box { border-left: 3px solid var(--highlight-red); padding-left: 1.5rem; margin-top: 1.5rem; }
+        .question-box p { text-indent: 0 !important; }
+
         @media (max-width: 768px) {
             .id-panel { grid-template-columns: 1fr; }
             .spotlight-wrapper.portrait { flex-direction: column; align-items: stretch; }
             .spotlight-wrapper.portrait img { max-width: 100%; max-height: none; width: 100%; }
+            .chapter-hero { padding: 2.25rem 1.5rem 1.75rem; }
         }
-        
+
         /* Compact Checkpoint System */
-        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 2px dashed rgba(212,160,23,0.4); border-radius: 8px; background: rgba(0,0,0,0.2); clear: both; }
-        .checkpoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        @media (max-width: 768px) { .checkpoint-grid { grid-template-columns: 1fr; } }
-        .checkpoint-q { animation: fadeIn 0.4s ease-out; }
-        .checkpoint-q p.first-p { font-size: 1rem; line-height: 1.4; margin-bottom: 0.75rem; color: var(--color-cream); }
-        .checkpoint-q .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; font-size: 0.9rem; line-height: 1.3; }
-        .checkpoint-q .checklist-item:hover { background: rgba(0,0,0,0.4); border-color: rgba(212,160,23,0.3); }
-        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--color-gold); flex-shrink: 0; }
-        
+        .checkpoint-block { margin-top: 3rem; margin-bottom: 2rem; padding: 25px; border: 1px dashed var(--highlight-red); background: var(--bg-panel); clear: both; position: relative; }
+        .checkpoint-block h3 { margin-top: 0 !important; font-size: 1.6rem !important; }
+        .checkpoint-grid { display: block; width: 100%; }
+        .checkpoint-q { animation: fadeIn 0.4s ease-out; width: 100%; }
+        .checkpoint-q p.first-p { font-size: 1.15rem; line-height: 1.5; margin-bottom: 1rem; color: var(--text-ink); font-weight: 600; font-family: var(--font-body); }
+        .checkpoint-q .checklist-item {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer;
+            padding: 10px 15px; background: var(--bg-panel); border: 1px solid var(--navy-faint);
+            transition: all 0.2s; font-size: 1.1rem; line-height: 1.3; color: var(--text-ink);
+        }
+        .checkpoint-q .checklist-item:hover { background: var(--bg-panel-hover); border-color: var(--highlight-red); }
+        .checkpoint-q .checklist-item input[type="radio"] { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--highlight-red); flex-shrink: 0; }
+
         /* Cloze Specific */
-        .word-bank { display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem; background: rgba(0,0,0,0.3); border: 1px dashed var(--color-steel-nib); border-radius: 8px; margin-bottom: 2rem; }
-        .word-pill { background: rgba(63, 107, 75, 0.5); border: 1px solid var(--color-navy); color: var(--color-cream); padding: 8px 18px; border-radius: 25px; font-size: 1rem; font-weight: bold; }
-        .cloze-input { background: rgba(0,0,0,0.5); border: none; border-bottom: 2px solid var(--color-gold); color: var(--color-gold-light); padding: 4px 8px; font-size: 1.15rem; text-align: center; width: 180px; margin: 0 5px; font-family: var(--font-body); border-radius: 2px; transition: all 0.2s; }
-        .cloze-input:focus { outline: none; border-bottom-color: white; background: rgba(0,0,0,0.8); }
-        
+        .word-bank {
+            display: flex; flex-wrap: wrap; gap: 12px; padding: 1.5rem;
+            background: var(--bg-panel); border: 1px solid var(--border-faint); margin-bottom: 2rem;
+        }
+        .word-pill {
+            background: transparent; border: 1px solid var(--accent-green);
+            color: var(--accent-green); padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .cloze-input {
+            background: transparent; border: none; border-bottom: 2px solid var(--highlight-red);
+            color: var(--highlight-red); padding: 0 8px; font-size: 1.25rem; text-align: center;
+            width: 180px; margin: 0 5px; font-family: var(--font-body); font-weight: bold; transition: all 0.2s;
+        }
+        .cloze-input:focus { outline: none; border-bottom-color: var(--text-ink); color: var(--text-ink); }
+
         /* Buttons & Navigation */
-        .action-btn { padding: 10px 20px; border-radius: 4px; font-family: var(--font-ui); font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s; background: rgba(0,0,0,0.5); color: var(--color-gold); border: 1.5px solid var(--color-gold); width: 100%; }
-        .action-btn:hover:not(:disabled) { background: var(--color-gold); color: var(--color-navy-deep); transform: translateY(-2px); }
-        .action-btn:disabled { transform: none !important; }
-        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(212,160,23,0.3); margin-top: 3rem; gap: 20px; clear: both; }
+        .action-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.85rem 1.75rem; font-family: var(--font-heading); font-weight: 600;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem;
+            transition: all 0.4s ease; background: transparent; color: var(--highlight-red);
+            border: 1px solid var(--highlight-red); width: 100%; position: relative; overflow: hidden;
+        }
+        .action-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--highlight-red); opacity: 0; transition: opacity 0.4s ease;
+        }
+        .action-btn:hover:not(:disabled) {
+            color: #fff; border-color: var(--highlight-red); box-shadow: 0 0 20px rgba(197, 160, 9, 0.2);
+            transform: translateY(-2px);
+        }
+        .action-btn:hover:not(:disabled)::before { opacity: 1; z-index: -1; }
+        .action-btn:disabled {
+            opacity: 0.5; cursor: not-allowed; color: var(--accent-green); border-color: var(--navy-faint); transform: none !important;
+        }
+
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 2rem; border-top: 1px solid var(--border-faint); margin-top: 3rem; gap: 20px; clear: both; position: relative; z-index: 10;}
         .bottom-nav .action-btn { width: auto; }
-        
+
         .chapter-section { display: none; }
         .chapter-section.active-section { display: block; animation: fadeIn 0.6s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="bg-slideshow"></div>
+<div id="bg-slideshow"></div>
 
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <nav class="side-nav">
-            <div class="nav-title">Table of Contents</div>
-            <div class="nav-links">
-                <button id="nav-sec-1" class="nav-btn active-nav" onclick="switchTab('sec-1')">Start Page</button>
-                <button id="nav-sec-2" class="nav-btn" onclick="switchTab('sec-2')">I. Government Loyalty and the Roots of Paranoia</button>
-                <button id="nav-sec-3" class="nav-btn" onclick="switchTab('sec-3')">II. Cultural Purges and High-Profile Espionage</button>
-                <button id="nav-sec-4" class="nav-btn" onclick="switchTab('sec-4')">III. The Rise and Fall of a Demagogue</button>
-                <button id="nav-sec-5" class="nav-btn" onclick="switchTab('sec-5')">IV. Voices of the Era | HUAC & The Red Scare</button>
-                <button id="nav-sec-6" class="nav-btn" onclick="switchTab('sec-6')">V. Vocabulary Activity</button>
+<div class="app-container">
+    
+    <!-- Left Navigation -->
+    <nav class="side-nav">
+        <div class="nav-title">Table of Contents</div>
+        <div class="nav-links">
+            <button class="nav-btn active-nav" id="nav-sec-1" onclick="switchTab('sec-1')">Start Page</button>
+            <button class="nav-btn" id="nav-sec-2" onclick="switchTab('sec-2')">I. Government Loyalty and the Roots of Paranoia</button>
+            <button class="nav-btn" id="nav-sec-3" onclick="switchTab('sec-3')">II. Cultural Purges and High-Profile Espionage</button>
+            <button class="nav-btn" id="nav-sec-4" onclick="switchTab('sec-4')">III. The Rise and Fall of a Demagogue</button>
+            <button class="nav-btn" id="nav-sec-5" onclick="switchTab('sec-5')">IV. Voices of the Era | HUAC & The Red Scare</button>
+            <button class="nav-btn" id="nav-sec-6" onclick="switchTab('sec-6')">V. Vocabulary Activity</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" onclick="downloadProgress()"><span style="position: relative; z-index: 1;">Save Progress</span></button>
+            <label class="action-btn" style="text-align: center; cursor: pointer; display: flex; margin-bottom: 0;">
+                <span style="position: relative; z-index: 1;">Load Progress</span>
+                <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
+            </label>
+            <button class="action-btn" onclick="resetProgress()"><span style="position: relative; z-index: 1;">Reset Progress</span></button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- SECTION 1: START PAGE -->
+        <section id="sec-1" class="chapter-section active-section">
+            <div class="chapter-hero">
+                <div class="hero-eyebrow">CHAPTER 17 | SECTION 3</div>
+                <div class="hero-title">FEAR AT HOME</div>
+                <div class="hero-subtitle">How did the intense fear of communist subversion fuel a domestic "Red Scare" that compromised civil liberties and political norms?</div>
+                <div class="hero-footer">E PLURIBUS UNUM | UNIT 6 · THE POSTWAR ORDER & THE POLITICS OF PROTEST| CHAPTER 17 · THE COLD WAR & THE AFFLUENT SOCIETY</div>
             </div>
-            
-            <div class="nav-actions">
-                <button class="action-btn" onclick="downloadProgress()">Save Progress</button>
-                <label class="action-btn" style="text-align: center; cursor: pointer; display: block; margin-bottom: 0;">
-                    Load Progress
-                    <input type="file" accept=".json" style="display: none;" onchange="loadProgress(event)">
-                </label>
-                <button class="action-btn" onclick="resetProgress()">Reset Progress</button>
-            </div>
-        </nav>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            
-            <!-- SECTION 1: START PAGE -->
-            <section id="sec-1" class="chapter-section active-section">
-                <img src="assets/Header%20Banner%20Chapter%2017.3.png" alt="Chapter Header Banner" class="hero-banner-flush">
-                
-                <div class="content-wrapper">
-                    <div class="id-panel">
-                        <div>
-                            <label for="student-name">Student Name</label>
-                            <input type="text" id="student-name" placeholder="Enter your full name">
-                        </div>
-                        <div>
-                            <label for="student-period">Class Period</label>
-                            <select id="student-period">
-                                <option value="">Select...</option>
-                                <option value="1">Period 1</option>
-                                <option value="2">Period 2</option>
-                                <option value="3">Period 3</option>
-                                <option value="4">Period 4</option>
-                                <option value="6">Period 6</option>
-                                <option value="7">Period 7</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="completion-date">Date Completed</label>
-                            <input type="text" id="completion-date" readonly placeholder="Auto-filled on finish">
-                        </div>
+            <div class="content-wrapper">
+                <div class="id-panel">
+                    <div>
+                        <label>Student Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name">
                     </div>
-
-                    <div class="content-block">
-                        <h3>Core Objectives</h3>
-                        <ul>
-                            <li>Analyze the methods used by the House Un-American Activities Committee (HUAC) to investigate perceived disloyalty in the entertainment industry.</li>
-                            <li>Evaluate the impact of McCarthyism on American society and the factors that led to Senator McCarthy’s rise and eventual censure.</li>
-                            <li>Contrast the legal realities of the Alger Hiss and Rosenberg cases with the broader hysteria generated by spy trials.</li>
-                        </ul>
-
-                        <h3>Key Terms</h3>
-                        <p class="first-p">Red Scare | HUAC (House Un-American Activities Committee) | Hollywood Ten | Blacklist | Alger Hiss | Ethel and Julius Rosenberg | Senator Joseph McCarthy | McCarthyism | Margaret Chase Smith | McCarran Internal Security Act | Loyalty Review Board | Army-McCarthy Hearings</p>
-
-                        <h4>Introduction | The Shadow of Suspicion</h4>
-                        <p class="first-p">During the late 1940s and early 1950s, the Cold War evolved from a distant foreign policy conflict into a terrifying domestic reality that gripped the American psyche. As communist forces advanced globally and the Soviet Union demonstrated nuclear capabilities, deep-seated anxieties gave way to widespread paranoia within the United States. Politicians and government institutions aggressively sought to root out perceived internal subversion, frequently sacrificing traditional civil liberties in the name of national security. This intense era of suspicion ruined thousands of careers, compromised political norms, and left a lingering scar of conformity on American society for a generation.</p>
-
-                        <div class="visual-wrapper">
-                            <img src="assets/Visual_1.png" alt="Visual 1" class="visual-img">
-                            <p class="caption-text">The transition from a distant international conflict into acute domestic paranoia led the federal government to implement sweeping internal security programs that increasingly prioritized ideological conformity over the preservation of traditional civil liberties.</p>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Visual Analysis Question:</strong> How did geopolitical setbacks during the early Cold War alter the relationship between American citizens and their government regarding civil liberties?</p>
-                                <textarea id="va_1" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
-                        </div>
+                    <div>
+                        <label>Class Period</label>
+                        <select id="student-period">
+                            <option value="">Select...</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="6">Period 6</option>
+                            <option value="7">Period 7</option>
+                        </select>
                     </div>
-
-                    <div class="bottom-nav">
-                        <div></div>
-                        <button id="btn-next-sec-1" class="action-btn" onclick="switchTab('sec-2')">Next Section &rarr;</button>
+                    <div>
+                        <label>Date Completed</label>
+                        <input type="text" id="completion-date" readonly placeholder="Auto-fills on finish">
                     </div>
                 </div>
-            </section>
 
-            <!-- SECTION 2: Government Loyalty and the Roots of Paranoia -->
-            <section id="sec-2" class="chapter-section">
-                <div class="content-wrapper">
-                    <div class="content-block">
-                        <h2>Government Loyalty and the Roots of Paranoia</h2>
-                        <p class="first-p">As the Soviet threat loomed large, domestic anxiety mutated into a paralyzing fear that communist spies had infiltrated the highest levels of the United States government. In response to intense political pressure and partisan accusations of being "soft on communism," the Truman administration and Congress enacted aggressive internal security measures that frequently bypassed standard legal protections. These efforts, while ostensibly aimed at ensuring national loyalty, severely compromised the fundamental civil liberties of American citizens, punished individuals for their political opinions, and set a dangerous precedent for government overreach.</p>
+                <div class="content-block">
+                    <h4>Core Objectives</h4>
+                    <ul>
+                        <li>Analyze the methods used by the House Un-American Activities Committee (HUAC) to investigate perceived disloyalty in the entertainment industry.</li>
+                        <li>Evaluate the impact of McCarthyism on American society and the factors that led to Senator McCarthy’s rise and eventual censure.</li>
+                        <li>Contrast the legal realities of the Alger Hiss and Rosenberg cases with the broader hysteria generated by spy trials.</li>
+                    </ul>
 
-                        <h4>The Origins of the Second Red Scare</h4>
-                        <p class="first-p">During the late 1940s and early 1950s, the Cold War was not merely a distant foreign policy issue; it was a terrifying reality that fundamentally altered the psychological climate within the United States. As the Soviet Union tightened its iron grip on Eastern Europe and successfully tested its own atomic bomb, and as communist forces seized control of mainland China, a profound wave of anxiety swept across the American public. This anxiety was rooted in the very real geopolitical setbacks the United States was facing abroad, but it quickly mutated into a paralyzing domestic paranoia. Many Americans began to believe that the nation's foreign policy failures could not simply be the result of Soviet strength or complex international dynamics. Instead, they suspected that the government had been infiltrated by a hidden network of communist spies and sympathizers who were actively working to sabotage the United States from the inside. This period of intense, widespread anti-communist hysteria became known as the second <strong>Red Scare</strong>.</p>
-                        
-                        <p>The political atmosphere in Washington, D.C., was highly volatile, and politicians from both major parties quickly realized the power of anti-communist rhetoric. Republican leaders repeatedly accused the Democratic administration of President Harry S. Truman of being "soft on communism," suggesting that the president was ignoring a massive internal security threat. To deflect these accusations and demonstrate his unwavering commitment to national security, President Truman took aggressive executive action. In March 1947, he issued an executive order establishing the Federal Employee Loyalty Program, which included the creation of the <strong>Loyalty Review Board</strong>. The purpose of this board was to investigate every single federal employee and dismiss those who were found to be disloyal to the United States government.</p>
+                    <h4>Key Terms</h4>
+                    <p class="first-p" style="color: var(--accent-navy); font-weight: bold; font-family: var(--font-heading); font-size: 1rem;">Red Scare | HUAC (House Un-American Activities Committee) | Hollywood Ten | Blacklist | Alger Hiss | Ethel and Julius Rosenberg | Senator Joseph McCarthy | McCarthyism | Margaret Chase Smith | McCarran Internal Security Act | Loyalty Review Board | Army-McCarthy Hearings</p>
 
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_1.png" alt="Federal Employee Loyalty Program">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">In 1947, President Harry S. Truman issued an executive order establishing a loyalty program for all federal employees.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The implementation of the Loyalty Review Board represented an aggressive early effort to identify communist subversion within the government, setting a precedent that prioritized ideological conformity over routine civil liberties.</p>
-                            </div>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the establishment of the Loyalty Review Board impact the standard legal protections afforded to federal employees under investigation?</p>
-                                <textarea id="va_2" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
+                    <h4>Introduction | The Shadow of Suspicion</h4>
+                    <p class="first-p">During the late 1940s and early 1950s, the Cold War evolved from a distant foreign policy conflict into a terrifying domestic reality that gripped the American psyche. As communist forces advanced globally and the Soviet Union demonstrated nuclear capabilities, deep-seated anxieties gave way to widespread paranoia within the United States. Politicians and government institutions aggressively sought to root out perceived internal subversion, frequently sacrificing traditional civil liberties in the name of national security. This intense era of suspicion ruined thousands of careers, compromised political norms, and left a lingering scar of conformity on American society for a generation.</p>
+                    
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_1.png" alt="Visual 1" class="visual-img" onerror="this.style.display='none'">
+                        <p class="caption-text">The transition from a distant international conflict into acute domestic paranoia led the federal government to implement sweeping internal security programs that increasingly prioritized ideological conformity over the preservation of traditional civil liberties.</p>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Analysis Question:</p>
+                            <p class="first-p">How did geopolitical setbacks during the early Cold War alter the relationship between American citizens and their government regarding civil liberties?</p>
+                            <textarea class="textarea-dark" id="va_1" placeholder="Type your analysis here..."></textarea>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="checkpoint-block" id="cp-block-1" data-current="0">
-                            <h3>Checkpoint</h3>
+                <div class="bottom-nav">
+                    <div></div>
+                    <button class="action-btn" id="btn-next-sec-1" onclick="switchTab('sec-2')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Government Loyalty and the Roots of Paranoia -->
+        <section id="sec-2" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Government Loyalty and the Roots of Paranoia</h2>
+                    <p class="first-p">As the Soviet threat loomed large, domestic anxiety mutated into a paralyzing fear that communist spies had infiltrated the highest levels of the United States government. In response to intense political pressure and partisan accusations of being "soft on communism," the Truman administration and Congress enacted aggressive internal security measures that frequently bypassed standard legal protections. These efforts, while ostensibly aimed at ensuring national loyalty, severely compromised the fundamental civil liberties of American citizens, punished individuals for their political opinions, and set a dangerous precedent for government overreach.</p>
+
+                    <h4>The Origins of the Second Red Scare</h4>
+                    <p class="first-p">During the late 1940s and early 1950s, the Cold War was not merely a distant foreign policy issue; it was a terrifying reality that fundamentally altered the psychological climate within the United States. As the Soviet Union tightened its iron grip on Eastern Europe and successfully tested its own atomic bomb, and as communist forces seized control of mainland China, a profound wave of anxiety swept across the American public. This anxiety was rooted in the very real geopolitical setbacks the United States was facing abroad, but it quickly mutated into a paralyzing domestic paranoia. Many Americans began to believe that the nation's foreign policy failures could not simply be the result of Soviet strength or complex international dynamics. Instead, they suspected that the government had been infiltrated by a hidden network of communist spies and sympathizers who were actively working to sabotage the United States from the inside. This period of intense, widespread anti-communist hysteria became known as the second <strong>Red Scare</strong>.</p>
+                    
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_1.png" alt="Spotlight 1" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">In 1947, President Harry S. Truman issued an executive order establishing a loyalty program for all federal employees.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The implementation of the Loyalty Review Board represented an aggressive early effort to identify communist subversion within the government, setting a precedent that prioritized ideological conformity over routine civil liberties.</p>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                            <p class="first-p">How did the establishment of the Loyalty Review Board impact the standard legal protections afforded to federal employees under investigation?</p>
+                            <textarea class="textarea-dark" id="pq_1" placeholder="Type your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p>The political atmosphere in Washington, D.C., was highly volatile, and politicians from both major parties quickly realized the power of anti-communist rhetoric. Republican leaders repeatedly accused the Democratic administration of President Harry S. Truman of being "soft on communism," suggesting that the president was ignoring a massive internal security threat. To deflect these accusations and demonstrate his unwavering commitment to national security, President Truman took aggressive executive action. In March 1947, he issued an executive order establishing the Federal Employee Loyalty Program, which included the creation of the <strong>Loyalty Review Board</strong>. The purpose of this board was to investigate every single federal employee and dismiss those who were found to be disloyal to the United States government.</p>
+
+                    <!-- Checkpoint 1 -->
+                    <div class="checkpoint-block" id="cp-block-1" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">1. What was a primary motivation behind President Truman's establishment of the Federal Employee Loyalty Program in 1947?</p>
                                 <label class="checklist-item"><input type="radio" name="cp1" value="A" onchange="handleRadioChange('cp-block-1')"> A) To deflect Republican accusations that his administration was "soft on communism."</label>
@@ -250,32 +444,36 @@
                                 <label class="checklist-item"><input type="radio" name="cp1" value="C" onchange="handleRadioChange('cp-block-1')"> C) To identify and deport Soviet immigrants who had recently entered the United States.</label>
                                 <label class="checklist-item"><input type="radio" name="cp1" value="D" onchange="handleRadioChange('cp-block-1')"> D) To reward federal employees who demonstrated exceptional patriotism.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-1', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-1', 1)"></button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-1', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-1', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                        </div>
+                    </div>
+
+                    <h4>Legislating Loyalty</h4>
+                    <p class="first-p">The implementation of the Loyalty Review Board profoundly compromised traditional American civil liberties. Over the next four years, government agents investigated more than three million federal employees. Employees who were suspected of harboring communist sympathies were brought before loyalty boards for intense questioning. However, the procedures used by these boards completely abandoned the standard legal protections afforded to American citizens. The accused were not allowed to see the evidence against them, nor were they permitted to know the identities of their accusers. Often, the evidence consisted of anonymous tips, rumors, or the fact that an employee had previously belonged to a perfectly legal political organization that was later deemed "subversive" by the attorney general. Over two hundred federal employees were fired as security risks, and thousands more chose to resign rather than face the humiliation and potential ruin of an investigation.</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_2.png" alt="Spotlight 2" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">The United States Capitol served as the center of sweeping anti-communist legislation such as the 1950 McCarran Internal Security Act.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The passage of the McCarran Act over President Truman’s veto demonstrated how intensely anti-communist fear permeated Congress, leading lawmakers to enact laws that fundamentally restricted freedom of speech and political association.</p>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                                <p class="first-p">What does the overriding of President Truman’s veto of the McCarran Internal Security Act reveal about congressional priorities during the early 1950s?</p>
+                                <textarea class="textarea-dark" id="pq_2" placeholder="Type your response here..."></textarea>
                             </div>
                         </div>
+                    </div>
 
-                        <h4>Legislating Loyalty</h4>
-                        <p class="first-p">The implementation of the Loyalty Review Board profoundly compromised traditional American civil liberties. Over the next four years, government agents investigated more than three million federal employees. Employees who were suspected of harboring communist sympathies were brought before loyalty boards for intense questioning. However, the procedures used by these boards completely abandoned the standard legal protections afforded to American citizens. The accused were not allowed to see the evidence against them, nor were they permitted to know the identities of their accusers. Often, the evidence consisted of anonymous tips, rumors, or the fact that an employee had previously belonged to a perfectly legal political organization that was later deemed "subversive" by the attorney general. Over two hundred federal employees were fired as security risks, and thousands more chose to resign rather than face the humiliation and potential ruin of an investigation.</p>
-                        
-                        <p>Despite Truman's aggressive loyalty program, many conservative lawmakers in Congress felt that the executive branch was still not doing enough to root out communist subversion. In 1950, Congress passed the <strong>McCarran Internal Security Act</strong>. This sweeping piece of legislation made it a federal crime to plan any action that might ultimately lead to the establishment of a totalitarian dictatorship in the United States. It also required all communist and "communist-front" organizations to register with the federal government and prohibited their members from working in defense plants or obtaining passports to travel abroad. President Truman, recognizing the dangerous precedent the law set for free speech and political association, vetoed the bill. In his veto message, Truman fiercely argued that "in a free country, we punish men for the crimes setups they commit, but never for the opinions they have." However, the atmosphere of fear was so intense that Congress easily overrode Truman's veto, passing the McCarran Act into law and signaling that the government was willing to sacrifice individual liberties in the name of national security.</p>
+                    <p>Despite Truman's aggressive loyalty program, many conservative lawmakers in Congress felt that the executive branch was still not doing enough to root out communist subversion. In 1950, Congress passed the <strong>McCarran Internal Security Act</strong>. This sweeping piece of legislation made it a federal crime to plan any action that might ultimately lead to the establishment of a totalitarian dictatorship in the United States. It also required all communist and "communist-front" organizations to register with the federal government and prohibited their members from working in defense plants or obtaining passports to travel abroad. President Truman, recognizing the dangerous precedent the law set for free speech and political association, vetoed the bill. In his veto message, Truman fiercely argued that "in a free country, we punish men for the crimes setups they commit, but never for the opinions they have." However, the atmosphere of fear was so intense that Congress easily overrode Truman's veto, passing the McCarran Act into law and signaling that the government was willing to sacrifice individual liberties in the name of national security.</p>
 
-                        <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_2.png" alt="The United States Capitol">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">The United States Capitol served as the center of sweeping anti-communist legislation such as the 1950 McCarran Internal Security Act.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The passage of the McCarran Act over President Truman’s veto demonstrated how intensely anti-communist fear permeated Congress, leading lawmakers to enact laws that fundamentally restricted freedom of speech and political association.</p>
-                                <div class="question-box">
-                                    <p class="first-p"><strong>Student Question:</strong> What does the overriding of President Truman’s veto of the McCarran Internal Security Act reveal about congressional priorities during the early 1950s?</p>
-                                    <textarea id="va_3" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="checkpoint-block" id="cp-block-2" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <!-- Checkpoint 2 -->
+                    <div class="checkpoint-block" id="cp-block-2" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">2. How did the loyalty investigations of federal employees conflict with traditional American civil liberties?</p>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="A" onchange="handleRadioChange('cp-block-2')"> A) Suspects were forced to undergo public trials televised to a national audience.</label>
@@ -283,51 +481,53 @@
                                 <label class="checklist-item"><input type="radio" name="cp2" value="C" onchange="handleRadioChange('cp-block-2')"> C) The investigations relied on mandatory lie detector tests that were legally controversial.</label>
                                 <label class="checklist-item"><input type="radio" name="cp2" value="D" onchange="handleRadioChange('cp-block-2')"> D) Government employees were required to register their voting history with the Justice Department.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-2', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-2', 1)"></button>
-                            </div>
                         </div>
-                    </div>
-
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-1')">&larr; Previous</button>
-                        <button id="btn-next-sec-2" class="action-btn" onclick="switchTab('sec-3')" disabled>🔒 Answer Checkpoints to Continue</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-2', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-2', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- SECTION 3: Cultural Purges and High-Profile Espionage -->
-            <section id="sec-3" class="chapter-section">
-                <div class="content-wrapper">
-                    <div class="content-block">
-                        <h2>Cultural Purges and High-Profile Espionage</h2>
-                        <p class="first-p">The hunt for subversives quickly expanded beyond government offices to target the cultural institutions that shaped public opinion, most notably the Hollywood entertainment industry. Sensationalized committee hearings demanded ideological conformity, leading to blacklists and professional ruin for many who asserted their constitutional right to remain silent. This climate of cultural fear was further stoked by highly publicized, real-life espionage trials involving prominent government officials and nuclear secrets, which seemed to validate the public's absolute worst anxieties about communist infiltration and domestic betrayal.</p>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-1', 'nav-sec-1')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                    <button class="action-btn" id="btn-next-sec-2" onclick="switchTab('sec-3')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
+                </div>
+            </div>
+        </section>
 
-                        <h4>Investigating Hollywood and the Media</h4>
-                        <p class="first-p">While the Loyalty Review Board focused its attention on government workers, other investigative bodies turned their sights on the cultural institutions that shaped American public opinion. The most famous and powerful of these investigative bodies was <strong>HUAC (House Un-American Activities Committee)</strong>. Originally established in the late 1930s to investigate both fascist and communist activities, HUAC shifted its entire focus to communist subversion after World War II. The committee believed that communist agents had infiltrated various American institutions, including the Boy Scouts and labor unions, but they made their most spectacular headlines by investigating the American entertainment industry.</p>
-                        
-                        <p>HUAC members were deeply suspicious of the movie industry in Hollywood, California. They believed that communist writers, directors, and actors were secretly sneaking subversive, anti-capitalist propaganda into mainstream American feature films. The committee was also aware that investigating Hollywood celebrities would guarantee massive media coverage and elevate the political profiles of the committee members. In the fall of 1947, HUAC issued subpoenas to dozens of individuals working in the film industry, demanding that they travel to Washington, D.C., to testify about their political beliefs and the political beliefs of their colleagues. The resulting hearings were a media circus, held in crowded rooms illuminated by the blinding flashbulbs of press photographers.</p>
+        <!-- SECTION 3: Cultural Purges and High-Profile Espionage -->
+        <section id="sec-3" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Cultural Purges and High-Profile Espionage</h2>
+                    <p class="first-p">The hunt for subversives quickly expanded beyond government offices to target the cultural institutions that shaped public opinion, most notably the Hollywood entertainment industry. Sensationalized committee hearings demanded ideological conformity, leading to blacklists and professional ruin for many who asserted their constitutional right to remain silent. This climate of cultural fear was further stoked by highly publicized, real-life espionage trials involving prominent government officials and nuclear secrets, which seemed to validate the public's absolute worst anxieties about communist infiltration and domestic betrayal.</p>
 
-                        <p>The committee interviewed "friendly" witnesses, such as actor Ronald Reagan and animator Walt Disney, who enthusiastically supported HUAC's mission. These witnesses testified that there was indeed a dangerous communist influence in Hollywood and provided the committee with the names of people they suspected of being sympathetic to the Communist Party. However, not everyone cooperated. A group of ten writers and directors, who became known as the <strong>Hollywood Ten</strong>, refused to answer the committee's questions. When asked the standard question, "Are you now or have you ever been a member of the Communist Party?" the Hollywood Ten denounced the hearings as unconstitutional. They argued that the First Amendment of the United States Constitution guaranteed them the right to free speech and free association, which inherently included the right to remain silent about their personal political beliefs. HUAC rejected this constitutional defense, and the Hollywood Ten were arrested, convicted of contempt of Congress, and sent to federal prison.</p>
+                    <h4>Investigating Hollywood and the Media</h4>
+                    <p class="first-p">While the Loyalty Review Board focused its attention on government workers, other investigative bodies turned their sights on the cultural institutions that shaped American public opinion. The most famous and powerful of these investigative bodies was <strong>HUAC (House Un-American Activities Committee)</strong>. Originally established in the late 1930s to investigate both fascist and communist activities, HUAC shifted its entire focus to communist subversion after World War II. The committee believed that communist agents had infiltrated various American institutions, including the Boy Scouts and labor unions, but they made their most spectacular headlines by investigating the American entertainment industry.</p>
 
-                        <p>The aggressive tactics of HUAC and the imprisonment of the Hollywood Ten sent a shockwave of terror through the entertainment industry. Fearing that the negative publicity would destroy their box office profits and alienate the American public, the executives of major Hollywood film studios completely caved to the committee's pressure. The studio heads instituted a <strong>Blacklist</strong>, a comprehensive list of people whom they condemned for having a communist background or communist sympathies. Over five hundred actors, writers, producers, and directors were placed on the blacklist. Inclusion on this list meant instant professional ruin; the individuals were fired from their current jobs and permanently banned from working in the film, television, or radio industries. To survive, some blacklisted writers were forced to work under fake names at a fraction of their previous salaries, while many others saw their careers completely destroyed by a system that demanded ideological conformity as a condition of employment.</p>
-
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_3.png" alt="The Hollywood Ten">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">Film director Edward Dmytryk, a member of the Hollywood Ten, appears before the House Un-American Activities Committee in defiance of their interrogation.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The imprisonment of uncooperative witnesses and the resulting studio Blacklist highlighted how congressional investigations created an atmosphere of terror, forcing cultural institutions to demand ideological conformity from their employees.</p>
-                            </div>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> Why did members of the entertainment industry feel compelled to rely on the First and Fifth Amendments when testifying before congressional investigative committees?</p>
-                                <textarea id="va_4" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_3.png" alt="Spotlight 3" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Film director Edward Dmytryk, a member of the Hollywood Ten, appears before the House Un-American Activities Committee in defiance of their interrogation.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The imprisonment of uncooperative witnesses and the resulting studio Blacklist highlighted how congressional investigations created an atmosphere of terror, forcing cultural institutions to demand ideological conformity from their employees.</p>
                         </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                            <p class="first-p">Why did members of the entertainment industry feel compelled to rely on the First and Fifth Amendments when testifying before congressional investigative committees?</p>
+                            <textarea class="textarea-dark" id="pq_3" placeholder="Type your response here..."></textarea>
+                        </div>
+                    </div>
 
-                        <div class="checkpoint-block" id="cp-block-3" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <p>HUAC members were deeply suspicious of the movie industry in Hollywood, California. They believed that communist writers, directors, and actors were secretly sneaking subversive, anti-capitalist propaganda into mainstream American feature films. The committee was also aware that investigating Hollywood celebrities would guarantee massive media coverage and elevate the political profiles of the committee members. In the fall of 1947, HUAC issued subpoenas to dozens of individuals working in the film industry, demanding that they travel to Washington, D.C., to testify about their political beliefs and the political beliefs of their colleagues. The resulting hearings were a media circus, held in crowded rooms illuminated by the blinding flashbulbs of press photographers.</p>
+                    <p>The committee interviewed "friendly" witnesses, such as actor Ronald Reagan and animator Walt Disney, who enthusiastically supported HUAC's mission. These witnesses testified that there was indeed a dangerous communist influence in Hollywood and provided the committee with the names of people they suspected of being sympathetic to the Communist Party. However, not everyone cooperated. A group of ten writers and directors, who became known as the <strong>Hollywood Ten</strong>, refused to answer the committee's questions. When asked the standard question, "Are you now or have you ever been a member of the Communist Party?" the Hollywood Ten denounced the hearings as unconstitutional. They argued that the First Amendment of the United States Constitution guaranteed them the right to free speech and free association, which inherently included the right to remain silent about their personal political beliefs. HUAC rejected this constitutional defense, and the Hollywood Ten were arrested, convicted of contempt of Congress, and sent to federal prison.</p>
+                    <p>The aggressive tactics of HUAC and the imprisonment of the Hollywood Ten sent a shockwave of terror through the entertainment industry. Fearing that the negative publicity would destroy their box office profits and alienate the American public, the executives of major Hollywood film studios completely caved to the committee's pressure. The studio heads instituted a <strong>Blacklist</strong>, a comprehensive list of people whom they condemned for having a communist background or communist sympathies. Over five hundred actors, writers, producers, and directors were placed on the blacklist. Inclusion on this list meant instant professional ruin; the individuals were fired from their current jobs and permanently banned from working in the film, television, or radio industries. To survive, some blacklisted writers were forced to work under fake names at a fraction of their previous salaries, while many others saw their careers completely destroyed by a system that demanded ideological conformity as a condition of employment.</p>
+
+                    <!-- Checkpoint 3 -->
+                    <div class="checkpoint-block" id="cp-block-3" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">3. Why did the House Un-American Activities Committee (HUAC) choose to focus its investigations on the Hollywood film industry?</p>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="A" onchange="handleRadioChange('cp-block-3')"> A) The committee believed filmmakers were smuggling nuclear secrets out of the country in film canisters.</label>
@@ -335,43 +535,45 @@
                                 <label class="checklist-item"><input type="radio" name="cp3" value="C" onchange="handleRadioChange('cp-block-3')"> C) The investigations guaranteed massive media coverage and targeted suspected communist influence in American public opinion.</label>
                                 <label class="checklist-item"><input type="radio" name="cp3" value="D" onchange="handleRadioChange('cp-block-3')"> D) The studio executives had requested government assistance to stop labor strikes on movie sets.</label>
                             </div>
-                            <div class="checkpoint-q" style="display: none;">
+                            <div class="checkpoint-q" style="display:none;">
                                 <p class="first-p">4. What happened to the actors, writers, and directors who were placed on the Hollywood studio "Blacklist"?</p>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="A" onchange="handleRadioChange('cp-block-3')"> A) They were forced to move to the Soviet Union and produce propaganda films.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="B" onchange="handleRadioChange('cp-block-3')"> B) They faced immediate professional ruin and were banned from working in the entertainment industry.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="C" onchange="handleRadioChange('cp-block-3')"> C) They were required to complete government-sponsored patriotism courses before working again.</label>
                                 <label class="checklist-item"><input type="radio" name="cp4" value="D" onchange="handleRadioChange('cp-block-3')"> D) They were allowed to keep their jobs but had a portion of their salaries seized by the federal government.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-3', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-3', 1)"></button>
-                            </div>
                         </div>
-
-                        <h4>The Espionage Trials</h4>
-                        <p class="first-p">The domestic Red Scare was fueled by wild rumors and political posturing, but it was also driven by genuine cases of international espionage that stunned the American public. Two highly publicized spy trials dominated the national headlines during this era, seemingly confirming the worst fears of the American people and providing ammunition for politicians who claimed the nation was crawling with communist traitors.</p>
-                        
-                        <p>In 1948, a former communist spy named Whittaker Chambers appeared before HUAC and dropped a political bombshell. He accused <strong>Alger Hiss</strong>, a highly respected former State Department official who had advised President Roosevelt at the Yalta Conference and helped organize the United Nations, of having been a Soviet spy during the 1930s. Hiss vehemently denied the charges, insisting that he did not even know Whittaker Chambers. The case captivated the nation because Hiss represented the absolute peak of the educated, wealthy, East Coast political establishment. A young, ambitious Republican congressman from California named Richard Nixon pushed HUAC to relentlessly pursue the investigation against Hiss.</p>
-                        
-                        <p>The case took a dramatic turn when Chambers led federal investigators to a pumpkin patch on his Maryland farm. Hidden inside a hollowed-out pumpkin, Chambers produced rolls of microfilm containing highly classified government documents that he claimed Hiss had typed on his personal typewriter and passed to him years earlier. These documents, famously dubbed the "Pumpkin Papers," destroyed Hiss's defense. Because too many years had passed since the original crime, Hiss could not be legally charged with espionage due to the statute of limitations. Instead, in 1950, a jury convicted him of perjury—lying under oath to Congress about his relationship with Chambers—and sentenced him to federal prison. The conviction of such a high-ranking diplomat convinced millions of Americans that the highest levels of the Truman administration were deeply compromised.</p>
-                        
-                        <p>An even more terrifying espionage case broke the following year, directly linked to the greatest anxiety of the Cold War: the nuclear arms race. When the Soviet Union successfully exploded an atomic bomb in 1949, years before American scientists had predicted, many experts suspected that the Soviets had stolen the blueprints from the United States. In 1950, a British physicist named Klaus Fuchs admitted that he had systematically passed top-secret information about the American atomic bomb project to the Soviet Union. Fuchs's confession triggered a massive FBI investigation that eventually led to the arrest of two American citizens, the Rosenbergs.</p>
-
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_4.png" alt="Alger Hiss">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">Former State Department official Alger Hiss was convicted of perjury after highly classified government evidence against him was famously produced on microfilm.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The dramatic production of microfilm evidence undermined Hiss’s defense and convinced millions of Americans that domestic espionage was a terrifying reality that had successfully compromised the highest levels of government.</p>
-                            </div>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the conviction of Alger Hiss alter public perception regarding communist infiltration in the United States government?</p>
-                                <textarea id="va_5" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-3', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-3', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
                         </div>
+                    </div>
 
-                        <div class="checkpoint-block" id="cp-block-4" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <h4>The Espionage Trials</h4>
+                    <p class="first-p">The domestic Red Scare was fueled by wild rumors and political posturing, but it was also driven by genuine cases of international espionage that stunned the American public. Two highly publicized spy trials dominated the national headlines during this era, seemingly confirming the worst fears of the American people and providing ammunition for politicians who claimed the nation was crawling with communist traitors.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_4.png" alt="Spotlight 4" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Former State Department official Alger Hiss was convicted of perjury after highly classified government evidence against him was famously produced on microfilm.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The dramatic production of microfilm evidence undermined Hiss’s defense and convinced millions of Americans that domestic espionage was a terrifying reality that had successfully compromised the highest levels of government.</p>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                            <p class="first-p">How did the conviction of Alger Hiss alter public perception regarding communist infiltration in the United States government?</p>
+                            <textarea class="textarea-dark" id="pq_4" placeholder="Type your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p>In 1948, a former communist spy named Whittaker Chambers appeared before HUAC and dropped a political bombshell. He accused <strong>Alger Hiss</strong>, a highly respected former State Department official who had advised President Roosevelt at the Yalta Conference and helped organize the United Nations, of having been a Soviet spy during the 1930s. Hiss vehemently denied the charges, insisting that he did not even know Whittaker Chambers. The case captivated the nation because Hiss represented the absolute peak of the educated, wealthy, East Coast political establishment. A young, ambitious Republican congressman from California named Richard Nixon pushed HUAC to relentlessly pursue the investigation against Hiss.</p>
+                    <p>The case took a dramatic turn when Chambers led federal investigators to a pumpkin patch on his Maryland farm. Hidden inside a hollowed-out pumpkin, Chambers produced rolls of microfilm containing highly classified government documents that he claimed Hiss had typed on his personal typewriter and passed to him years earlier. These documents, famously dubbed the "Pumpkin Papers," destroyed Hiss's defense. Because too many years had passed since the original crime, Hiss could not be legally charged with espionage due to the statute of limitations. Instead, in 1950, a jury convicted him of perjury—lying under oath to Congress about his relationship with Chambers—and sentenced him to federal prison. The conviction of such a high-ranking diplomat convinced millions of Americans that the highest levels of the Truman administration were deeply compromised.</p>
+                    <p>An even more terrifying espionage case broke the following year, directly linked to the greatest anxiety of the Cold War: the nuclear arms race. When the Soviet Union successfully exploded an atomic bomb in 1949, years before American scientists had predicted, many experts suspected that the Soviets had stolen the blueprints from the United States. In 1950, a British physicist named Klaus Fuchs admitted that he had systematically passed top-secret information about the American atomic bomb project to the Soviet Union. Fuchs's confession triggered a massive FBI investigation that eventually led to the arrest of two American citizens, the Rosenbergs.</p>
+
+                    <!-- Checkpoint 4 -->
+                    <div class="checkpoint-block" id="cp-block-4" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">5. What was the significance of the "Pumpkin Papers" in the espionage case against Alger Hiss?</p>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="A" onchange="handleRadioChange('cp-block-4')"> A) They proved that Hiss had stolen plans for the atomic bomb from a secret government laboratory.</label>
@@ -379,39 +581,43 @@
                                 <label class="checklist-item"><input type="radio" name="cp5" value="C" onchange="handleRadioChange('cp-block-4')"> C) They demonstrated that the Soviet Union had successfully planted spies in the American military.</label>
                                 <label class="checklist-item"><input type="radio" name="cp5" value="D" onchange="handleRadioChange('cp-block-4')"> D) They revealed a plot by communist sympathizers to assassinate President Truman.</label>
                             </div>
-                            <div class="checkpoint-q" style="display: none;">
+                            <div class="checkpoint-q" style="display:none;">
                                 <p class="first-p">6. What event in 1949 intensified American fears of domestic espionage and led to increased investigations of nuclear scientists?</p>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="A" onchange="handleRadioChange('cp-block-4')"> A) The successful testing of an atomic bomb by the Soviet Union.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="B" onchange="handleRadioChange('cp-block-4')"> B) The sudden defection of an American physicist to Eastern Europe.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="C" onchange="handleRadioChange('cp-block-4')"> C) The discovery of a hidden Soviet military base in the Pacific Ocean.</label>
                                 <label class="checklist-item"><input type="radio" name="cp6" value="D" onchange="handleRadioChange('cp-block-4')"> D) The publication of detailed nuclear blueprints in an American newspaper.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-4', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-4', 1)"></button>
-                            </div>
                         </div>
-
-                        <h4>The Rosenberg Case</h4>
-                        <p class="first-p"><strong>Ethel and Julius Rosenberg</strong> were minor activists in the American Communist Party. The government accused them of being the masterminds of a spy ring that had handed the most critical secrets of the atomic bomb directly to the Soviet Union. When called to testify, the Rosenbergs repeatedly pleaded the Fifth Amendment, choosing to remain silent rather than answer questions about their political affiliations. They forcefully claimed that they were being persecuted simply because they were Jewish and held radical, unpopular political beliefs.</p>
-                        
-                        <p>The trial of the Rosenbergs was highly controversial and emotionally charged. The prosecution relied heavily on the testimony of Ethel Rosenberg’s own brother, David Greenglass, who had worked as a machinist at the secret atomic laboratory in Los Alamos, New Mexico. Greenglass testified that Julius Rosenberg had recruited him to steal diagrams of the bomb. In 1951, the jury found the Rosenbergs guilty of espionage. The judge presiding over the case sentenced them to death, famously declaring that their crime of putting the atomic bomb into the hands of the Soviets was "worse than murder," because it had potentially caused the Korean War and threatened the existence of the entire nation. Despite massive international protests and appeals for clemency to both President Truman and President Eisenhower, Ethel and Julius Rosenberg were executed in the electric chair in June 1953, becoming the first United States civilians executed for espionage in peacetime. The intense passions surrounding their trial permanently cemented the atmosphere of suspicion and hostility that defined the era.</p>
-
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_5.png" alt="Julius Rosenberg Arrest">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">Following an intense FBI investigation, Julius Rosenberg and his wife Ethel were convicted of espionage and executed for allegedly passing atomic secrets to the Soviet Union.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The unprecedented execution of civilians during peacetime for political espionage permanently cemented the deep atmosphere of hostility, paranoia, and partisan suspicion that characterized the era.</p>
-                            </div>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> What role did the successful Soviet detonation of an atomic bomb in 1949 play in the heightened severity of the espionage trial against Ethel and Julius Rosenberg?</p>
-                                <textarea id="va_6" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-4', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-4', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
                         </div>
+                    </div>
 
-                        <div class="checkpoint-block" id="cp-block-5" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <h4>The Rosenberg Case</h4>
+                    <p class="first-p"><strong>Ethel and Julius Rosenberg</strong> were minor activists in the American Communist Party. The government accused them of being the masterminds of a spy ring that had handed the most critical secrets of the atomic bomb directly to the Soviet Union. When called to testify, the Rosenbergs repeatedly pleaded the Fifth Amendment, choosing to remain silent rather than answer questions about their political affiliations. They forcefully claimed that they were being persecuted simply because they were Jewish and held radical, unpopular political beliefs.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_5.png" alt="Spotlight 5" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Following an intense FBI investigation, Julius Rosenberg and his wife Ethel were convicted of espionage and executed for allegedly passing atomic secrets to the Soviet Union.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The unprecedented execution of civilians during peacetime for political espionage permanently cemented the deep atmosphere of hostility, paranoia, and partisan suspicion that characterized the era.</p>
+                        </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                            <p class="first-p">What role did the successful Soviet detonation of an atomic bomb in 1949 play in the heightened severity of the espionage trial against Ethel and Julius Rosenberg?</p>
+                            <textarea class="textarea-dark" id="pq_5" placeholder="Type your response here..."></textarea>
+                        </div>
+                    </div>
+
+                    <p>The trial of the Rosenbergs was highly controversial and emotionally charged. The prosecution relied heavily on the testimony of Ethel Rosenberg’s own brother, David Greenglass, who had worked as a machinist at the secret atomic laboratory in Los Alamos, New Mexico. Greenglass testified that Julius Rosenberg had recruited him to steal diagrams of the bomb. In 1951, the jury found the Rosenbergs guilty of espionage. The judge presiding over the case sentenced them to death, famously declaring that their crime of putting the atomic bomb into the hands of the Soviets was "worse than murder," because it had potentially caused the Korean War and threatened the existence of the entire nation. Despite massive international protests and appeals for clemency to both President Truman and President Eisenhower, Ethel and Julius Rosenberg were executed in the electric chair in June 1953, becoming the first United States civilians executed for espionage in peacetime. The intense passions surrounding their trial permanently cemented the atmosphere of suspicion and hostility that defined the era.</p>
+
+                    <!-- Checkpoint 5 -->
+                    <div class="checkpoint-block" id="cp-block-5" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">7. Why did the trial and execution of Ethel and Julius Rosenberg become highly controversial?</p>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="A" onchange="handleRadioChange('cp-block-5')"> A) The Rosenbergs were not American citizens and were denied access to a fair trial under international law.</label>
@@ -419,52 +625,53 @@
                                 <label class="checklist-item"><input type="radio" name="cp7" value="C" onchange="handleRadioChange('cp-block-5')"> C) The government refused to hold a public trial, choosing instead to handle the case in a closed military tribunal.</label>
                                 <label class="checklist-item"><input type="radio" name="cp7" value="D" onchange="handleRadioChange('cp-block-5')"> D) The Rosenbergs were accused of stealing secrets for a country that was an American ally at the time.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-5', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-5', 1)"></button>
-                            </div>
                         </div>
-
-                    </div>
-
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-2')">&larr; Previous</button>
-                        <button id="btn-next-sec-3" class="action-btn" onclick="switchTab('sec-4')" disabled>🔒 Answer Checkpoints to Continue</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-5', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-5', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- SECTION 4: The Rise and Fall of a Demagogue -->
-            <section id="sec-4" class="chapter-section">
-                <div class="content-wrapper">
-                    <div class="content-block">
-                        <h2>The Rise and Fall of a Demagogue</h2>
-                        <p class="first-p">Exploiting the intense national anxiety fueled by international setbacks and spy trials, certain politicians ruthlessly weaponized anti-communist hysteria for their own political gain. This period saw the normalization of reckless, unsubstantiated accusations and the concept of "guilt by association," creating a toxic political atmosphere where few dared to speak out against the abuses of power. Ultimately, the extreme overreach of these aggressive tactics, particularly when directed at esteemed institutions like the United States Army, exposed the cruelty of the crusaders on national television and led to a dramatic collapse of their influence.</p>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-2', 'nav-sec-2')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                    <button class="action-btn" id="btn-next-sec-3" onclick="switchTab('sec-4')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
+                </div>
+            </div>
+        </section>
 
-                        <h4>Weaponizing Fear</h4>
-                        <p class="first-p">The atmosphere of intense anxiety created by the Soviet atomic bomb, the fall of China, and the sensational spy trials created a perfect political opportunity for a demagogue. The individual who most ruthlessly exploited this fear was <strong>Senator Joseph McCarthy</strong>, a Republican from Wisconsin. During his first years in the Senate, McCarthy had been a remarkably ineffective and obscure legislator. Realizing that he needed a powerful, attention-grabbing issue to win his upcoming reelection campaign, McCarthy decided to weaponize the nation's anti-communist hysteria.</p>
-                        
-                        <p>In February 1950, McCarthy delivered a speech to a Republican women's club in Wheeling, West Virginia. In a moment of pure political theater, he held up a piece of paper and boldly declared to the crowd, "I have here in my hand a list of 205 names that were made known to the Secretary of State as being members of the Communist Party and who nevertheless are still working and shaping policy in the State Department." The claim was entirely fabricated; McCarthy had no such list, and he constantly changed the number of alleged communists in subsequent speeches, sometimes claiming there were 81, sometimes 57. However, the exact numbers did not matter. The explosive accusation alone was enough to catapult McCarthy onto the front pages of every newspaper in the country.</p>
-                        
-                        <p>For the next four years, McCarthy dominated American politics using a tactic that became known as <strong>McCarthyism</strong>—the practice of making sweeping, reckless, and unsubstantiated accusations of treason without providing any actual evidence. Operating from his position as the chairman of a Senate investigating subcommittee, McCarthy ruined the careers of hundreds of government officials, diplomats, and academics. He bullied witnesses, badgered those who tried to defend themselves, and utilized the concept of "guilt by association," implying that anyone who had ever attended a meeting with a communist or defended a suspected communist was themselves a traitor. Most politicians were too terrified to oppose him, knowing that if they spoke out, McCarthy would immediately accuse them of being communist sympathizers, thereby destroying their political careers.</p>
-                        
-                        <p>However, there were a few brave voices of dissent. The most notable was <strong>Margaret Chase Smith</strong>, a Republican Senator from Maine. In 1950, when McCarthy was at the height of his power, Smith stood on the Senate floor and delivered her famous "Declaration of Conscience." Without explicitly naming McCarthy, she fiercely condemned the climate of fear and character assassination that was poisoning the Senate. She reminded her colleagues that the American principles of free speech and independent thought were being destroyed by "the Four Horsemen of Calumny—Fear, Ignorance, Bigotry, and Smear." Despite her courageous stand, the leadership of the Republican Party largely tolerated McCarthy's tactics, believing that his aggressive attacks on the Democratic administration were helping Republicans win elections.</p>
+        <!-- SECTION 4: The Rise and Fall of a Demagogue -->
+        <section id="sec-4" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>The Rise and Fall of a Demagogue</h2>
+                    <p class="first-p">Exploiting the intense national anxiety fueled by international setbacks and spy trials, certain politicians ruthlessly weaponized anti-communist hysteria for their own political gain. This period saw the normalization of reckless, unsubstantiated accusations and the concept of "guilt by association," creating a toxic political atmosphere where few dared to speak out against the abuses of power. Ultimately, the extreme overreach of these aggressive tactics, particularly when directed at esteemed institutions like the United States Army, exposed the cruelty of the crusaders on national television and led to a dramatic collapse of their influence.</p>
 
-                        <div class="spotlight-wrapper portrait">
-                            <img src="assets/Spotlight_6.png" alt="Senator Joseph McCarthy">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">A Republican senator from Wisconsin became a dominant political figure by making sweeping and unsubstantiated accusations of communist treason.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The unchecked rise of demagoguery demonstrated how politicians could weaponize public anxiety for their own gain by utilizing "guilt by association" to effectively silence dissent and ruin reputations.</p>
-                            </div>
-                            <div class="question-box">
-                                <p class="first-p"><strong>Student Question:</strong> How did the tactic of making reckless, unproven accusations help consolidate political power for certain lawmakers during periods of high national anxiety?</p>
-                                <textarea id="va_7" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                            </div>
+                    <h4>Weaponizing Fear</h4>
+                    <p class="first-p">The atmosphere of intense anxiety created by the Soviet atomic bomb, the fall of China, and the sensational spy trials created a perfect political opportunity for a demagogue. The individual who most ruthlessly exploited this fear was <strong>Senator Joseph McCarthy</strong>, a Republican from Wisconsin. During his first years in the Senate, McCarthy had been a remarkably ineffective and obscure legislator. Realizing that he needed a powerful, attention-grabbing issue to win his upcoming reelection campaign, McCarthy decided to weaponize the nation's anti-communist hysteria.</p>
+
+                    <div class="spotlight-wrapper portrait">
+                        <img src="assets/Spotlight_6.png" alt="Spotlight 6" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">A Republican senator from Wisconsin became a dominant political figure by making sweeping and unsubstantiated accusations of communist treason.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The unchecked rise of demagoguery demonstrated how politicians could weaponize public anxiety for their own gain by utilizing "guilt by association" to effectively silence dissent and ruin reputations.</p>
                         </div>
+                        <div class="question-box">
+                            <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                            <p class="first-p">How did the tactic of making reckless, unproven accusations help consolidate political power for certain lawmakers during periods of high national anxiety?</p>
+                            <textarea class="textarea-dark" id="pq_6" placeholder="Type your response here..."></textarea>
+                        </div>
+                    </div>
 
-                        <div class="checkpoint-block" id="cp-block-6" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <p>In February 1950, McCarthy delivered a speech to a Republican women's club in Wheeling, West Virginia. In a moment of pure political theater, he held up a piece of paper and boldly declared to the crowd, "I have here in my hand a list of 205 names that were made known to the Secretary of State as being members of the Communist Party and who nevertheless are still working and shaping policy in the State Department." The claim was entirely fabricated; McCarthy had no such list, and he constantly changed the number of alleged communists in subsequent speeches, sometimes claiming there were 81, sometimes 57. However, the exact numbers did not matter. The explosive accusation alone was enough to catapult McCarthy onto the front pages of every newspaper in the country.</p>
+                    <p>For the next four years, McCarthy dominated American politics using a tactic that became known as <strong>McCarthyism</strong>—the practice of making sweeping, reckless, and unsubstantiated accusations of treason without providing any actual evidence. Operating from his position as the chairman of a Senate investigating subcommittee, McCarthy ruined the careers of hundreds of government officials, diplomats, and academics. He bullied witnesses, badgered those who tried to defend themselves, and utilized the concept of "guilt by association," implying that anyone who had ever attended a meeting with a communist or defended a suspected communist was themselves a traitor. Most politicians were too terrified to oppose him, knowing that if they spoke out, McCarthy would immediately accuse them of being communist sympathizers, thereby destroying their political careers.</p>
+                    <p>However, there were a few brave voices of dissent. The most notable was <strong>Margaret Chase Smith</strong>, a Republican Senator from Maine. In 1950, when McCarthy was at the height of his power, Smith stood on the Senate floor and delivered her famous "Declaration of Conscience." Without explicitly naming McCarthy, she fiercely condemned the climate of fear and character assassination that was poisoning the Senate. She reminded her colleagues that the American principles of free speech and independent thought were being destroyed by "the Four Horsemen of Calumny—Fear, Ignorance, Bigotry, and Smear." Despite her courageous stand, the leadership of the Republican Party largely tolerated McCarthy's tactics, believing that his aggressive attacks on the Democratic administration were helping Republicans win elections.</p>
+
+                    <!-- Checkpoint 6 -->
+                    <div class="checkpoint-block" id="cp-block-6" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">8. How did Senator Joseph McCarthy first gain national prominence and exploit anti-communist hysteria?</p>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="A" onchange="handleRadioChange('cp-block-6')"> A) By exposing a massive ring of communist spies operating within the United States military.</label>
@@ -472,39 +679,43 @@
                                 <label class="checklist-item"><input type="radio" name="cp8" value="C" onchange="handleRadioChange('cp-block-6')"> C) By successfully passing a constitutional amendment that temporarily suspended civil liberties.</label>
                                 <label class="checklist-item"><input type="radio" name="cp8" value="D" onchange="handleRadioChange('cp-block-6')"> D) By convincing the Supreme Court to declare the American Communist Party an illegal organization.</label>
                             </div>
-                            <div class="checkpoint-q" style="display: none;">
+                            <div class="checkpoint-q" style="display:none;">
                                 <p class="first-p">9. What tactic was central to the concept of "McCarthyism" during the early 1950s?</p>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="A" onchange="handleRadioChange('cp-block-6')"> A) Making reckless, unsubstantiated accusations of treason to intimidate political opponents and critics.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="B" onchange="handleRadioChange('cp-block-6')"> B) Relying on highly organized, public debates to challenge the logic of communist ideology.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="C" onchange="handleRadioChange('cp-block-6')"> C) Utilizing the court system to file hundreds of lawsuits against suspected subversive organizations.</label>
                                 <label class="checklist-item"><input type="radio" name="cp9" value="D" onchange="handleRadioChange('cp-block-6')"> D) Funding secret government hit squads to eliminate individuals suspected of espionage.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-6', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-6', 1)"></button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-6', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-6', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                        </div>
+                    </div>
+
+                    <h4>A Demagogue's Downfall</h4>
+                    <p class="first-p">McCarthy’s reckless power finally collapsed in 1954 when he made the fatal mistake of attacking the United States Army. When the Army refused to grant special privileges to one of McCarthy's wealthy former aides who had been drafted, McCarthy retaliated by claiming that the upper ranks of the military were shielding communist spies. The resulting <strong>Army-McCarthy Hearings</strong> were broadcast live on national television. For the first time, millions of ordinary Americans watched for weeks as McCarthy bullied military officers, interrupted witnesses, and behaved like a cruel tyrant. The defining moment of the hearings occurred when McCarthy viciously attacked a young lawyer who worked for the Army's lead counsel, Joseph Welch. Visibly trembling with anger, Welch interrupted McCarthy and delivered the fatal blow to the senator's career, asking, "Let us not assassinate this lad further, Senator. You've done enough. Have you no sense of decency, sir? At long last, have you left no sense of decency?"</p>
+
+                    <div class="spotlight-wrapper">
+                        <img src="assets/Spotlight_7.png" alt="Spotlight 7" onerror="this.style.display='none'">
+                        <div class="spotlight-content">
+                            <p class="spotlight-caption">Millions of Americans watched live television broadcasts in 1954 as Senator McCarthy and his chief counsel Roy Cohn subjected military officers to prolonged interrogations.</p>
+                            <p class="spotlight-why"><strong>Why it Matters:</strong> The televised hearings shifted political power away from closed congressional rooms into the public sphere, ending McCarthy's reign of fear by exposing his cruel tactics to a massive national audience and prompting his formal Senate censure.</p>
+                            <div class="question-box">
+                                <p class="first-p" style="color: var(--accent-green); font-family: var(--font-heading); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Spotlight Question:</p>
+                                <p class="first-p">How did the transparency of the live televised Army-McCarthy Hearings contrast with the closed-door investigations that had previously fueled the domestic Red Scare?</p>
+                                <textarea class="textarea-dark" id="pq_7" placeholder="Type your response here..."></textarea>
                             </div>
                         </div>
+                    </div>
 
-                        <h4>A Demagogue's Downfall</h4>
-                        <p class="first-p">McCarthy’s reckless power finally collapsed in 1954 when he made the fatal mistake of attacking the United States Army. When the Army refused to grant special privileges to one of McCarthy's wealthy former aides who had been drafted, McCarthy retaliated by claiming that the upper ranks of the military were shielding communist spies. The resulting <strong>Army-McCarthy Hearings</strong> were broadcast live on national television. For the first time, millions of ordinary Americans watched for weeks as McCarthy bullied military officers, interrupted witnesses, and behaved like a cruel tyrant. The defining moment of the hearings occurred when McCarthy viciously attacked a young lawyer who worked for the Army's lead counsel, Joseph Welch. Visibly trembling with anger, Welch interrupted McCarthy and delivered the fatal blow to the senator's career, asking, "Let us not assassinate this lad further, Senator. You've done enough. Have you no sense of decency, sir? At long last, have you left no sense of decency?"</p>
-                        
-                        <p>The gallery erupted in applause. The television cameras had exposed McCarthy's cruelty, and the American public instantly turned against him. Stripped of his popular support, the United States Senate finally took action, voting later that year to formally censure McCarthy for improper conduct that brought the Senate into dishonor and disrepute. Disgraced and ignored by the press that had once amplified his every word, McCarthy spiraled into severe alcoholism and died three years later. Although McCarthy was gone, the legacy of McCarthyism left a deep scar on American society, instilling a chilling conformity and a lingering fear of political dissent that lasted for a generation.</p>
+                    <p>The gallery erupted in applause. The television cameras had exposed McCarthy's cruelty, and the American public instantly turned against him. Stripped of his popular support, the United States Senate finally took action, voting later that year to formally censure McCarthy for improper conduct that brought the Senate into dishonor and disrepute. Disgraced and ignored by the press that had once amplified his every word, McCarthy spiraled into severe alcoholism and died three years later. Although McCarthy was gone, the legacy of McCarthyism left a deep scar on American society, instilling a chilling conformity and a lingering fear of political dissent that lasted for a generation.</p>
 
-                        <div class="spotlight-wrapper">
-                            <img src="assets/Spotlight_7.png" alt="The Army-McCarthy Hearings">
-                            <div class="spotlight-content">
-                                <p class="spotlight-caption">Millions of Americans watched live television broadcasts in 1954 as Senator McCarthy and his chief counsel Roy Cohn subjected military officers to prolonged interrogations.</p>
-                                <p class="spotlight-why"><strong>Why it Matters:</strong> The televised hearings shifted political power away from closed congressional rooms into the public sphere, ending McCarthy's reign of fear by exposing his cruel tactics to a massive national audience and prompting his formal Senate censure.</p>
-                                <div class="question-box">
-                                    <p class="first-p"><strong>Student Question:</strong> How did the transparency of the live televised Army-McCarthy Hearings contrast with the closed-door investigations that had previously fueled the domestic Red Scare?</p>
-                                    <textarea id="va_8" class="textarea-dark" placeholder="Enter your response here..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="checkpoint-block" id="cp-block-7" data-current="0">
-                            <h3>Checkpoint</h3>
+                    <!-- Checkpoint 7 -->
+                    <div class="checkpoint-block" id="cp-block-7" data-current="0">
+                        <h3>Checkpoint</h3>
+                        <div class="checkpoint-grid">
                             <div class="checkpoint-q">
                                 <p class="first-p">10. What specific event led to the final collapse of Senator Joseph McCarthy's political power and public support?</p>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="A" onchange="handleRadioChange('cp-block-7')"> A) His failure to provide evidence of espionage during a televised debate with President Eisenhower.</label>
@@ -512,416 +723,468 @@
                                 <label class="checklist-item"><input type="radio" name="cp10" value="C" onchange="handleRadioChange('cp-block-7')"> C) His arrest by the FBI for accepting bribes from defense contractors during the Korean War.</label>
                                 <label class="checklist-item"><input type="radio" name="cp10" value="D" onchange="handleRadioChange('cp-block-7')"> D) A supreme court ruling that declared his investigative committee utterly unconstitutional.</label>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                                <button class="action-btn cp-prev-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-7', -1)">Previous</button>
-                                <span class="cp-indicator" style="font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-steel-nib);"></span>
-                                <button class="action-btn cp-next-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;" onclick="navigateCp('cp-block-7', 1)"></button>
-                            </div>
                         </div>
-
-                    </div>
-
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-3')">&larr; Previous</button>
-                        <button id="btn-next-sec-4" class="action-btn" onclick="switchTab('sec-5')" disabled>🔒 Answer Checkpoints to Continue</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <button class="action-btn cp-prev-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-7', -1)"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                            <span class="cp-indicator" style="font-family: var(--font-heading); color: var(--accent-green); font-weight: 600;"></span>
+                            <button class="action-btn cp-next-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="navigateCp('cp-block-7', 1)"><span style="position: relative; z-index: 1;">Next Question &rarr;</span></button>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- SECTION 5: Voices of the Era -->
-            <section id="sec-5" class="chapter-section">
-                <div class="content-wrapper">
-                    <div class="content-block">
-                        <h2>Voices of the Era | HUAC & The Red Scare</h2>
-                        
-                        <div class="visual-wrapper">
-                            <img src="assets/Visual_2.png" alt="Visual 2" class="visual-img">
-                            <p class="caption-text">As fears of communist subversion intensified, individuals subpoenaed by powerful congressional committees faced immense pressure to demonstrate ideological conformity, frequently risking professional ruin and imprisonment if they chose to exercise their constitutional right to remain silent.</p>
-                        </div>
-                        
-                        <h4>The Right to Silence vs. The Duty to Speak</h4>
-                        
-                        <h5>The Historical Context</h5>
-                        <p class="first-p">During the height of the Red Scare, the hearings conducted by the House Un-American Activities Committee (HUAC) became a battleground over the meaning of the United States Constitution. When individuals from the entertainment industry and the federal government were subpoenaed, they were forced to choose between cooperating with the committee—often by naming friends and colleagues as suspected communists—or refusing to answer, which guaranteed the loss of their jobs and potential imprisonment.</p>
-
-                        <h5>The Voices</h5>
-                        <p class="first-p"><em>The Voice of the Accused:</em> The "Hollywood Ten" and other uncooperative witnesses frequently relied on the First Amendment, and later the Fifth Amendment, to justify their silence. Screenwriter Dalton Trumbo, attempting to read a statement before he was shouted down by the committee, argued that HUAC’s questions were entirely illegal: <em>"This committee... is asking me to say what my political beliefs are, what my religious beliefs are, and what I think about the world... The Constitution of the United States says you have no right to ask me these questions. I shall not answer them."</em></p>
-                        
-                        <p><em>The Voice of the Investigators:</em> Members of HUAC, and politicians like Senator Joseph McCarthy, argued that the terrifying threat of Soviet espionage meant that individual rights had to be temporarily bypassed for the safety of the nation. They operated on the assumption that if an individual was innocent, they would enthusiastically answer every question. Senator McCarthy articulated this view frequently, stating: <em>"A man who has nothing to hide does not plead the Fifth Amendment. When a witness refuses to answer whether he is a communist on the grounds that his answer might incriminate him, he is telling the committee that he is a communist."</em></p>
-
-                        <div class="question-box" style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 8px;">
-                            <h3 style="margin-top: 0 !important;">Perspective Questions</h3>
-                            <p class="first-p" style="margin-top: 1.5rem;"><strong>Analyze the Arguments</strong> How did the Hollywood Ten interpret constitutional protections differently than the members of the House Un-American Activities Committee?</p>
-                            <textarea id="pq_1" class="textarea-dark" placeholder="Enter your analysis here..." style="margin-bottom: 20px;"></textarea>
-                            
-                            <p class="first-p"><strong>Consider the Context</strong> Why would a witness who had never actually committed an act of espionage or treason still feel compelled to plead the Fifth Amendment and remain silent during a HUAC hearing?</p>
-                            <textarea id="pq_2" class="textarea-dark" placeholder="Enter your analysis here..." style="margin-bottom: 20px;"></textarea>
-                            
-                            <p class="first-p"><strong>Assess the Impact</strong> How did Senator McCarthy's public assertion that "silence equals guilt" challenge the fundamental American legal presumption that a citizen is "innocent until proven guilty"?</p>
-                            <textarea id="pq_3" class="textarea-dark" placeholder="Enter your analysis here..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-4')">&larr; Previous</button>
-                        <button id="btn-next-sec-5" class="action-btn" onclick="switchTab('sec-6')">Next Section &rarr;</button>
-                    </div>
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-3', 'nav-sec-3')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                    <button class="action-btn" id="btn-next-sec-4" onclick="switchTab('sec-5')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- SECTION 6: Vocabulary Activity -->
-            <section id="sec-6" class="chapter-section">
-                <div class="content-wrapper">
-                    <div class="content-block">
-                        <h2>Vocabulary Activity</h2>
-                        <p class="first-p">Read the historical narrative below and fill in the blanks using the terms provided in the Word Bank to complete the story of the era.</p>
+        <!-- SECTION 5: Voices of the Era | HUAC & The Red Scare -->
+        <section id="sec-5" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>🎙️ Voices of the Era | HUAC & The Red Scare</h2>
 
-                        <div class="word-bank">
-                            <span class="word-pill">Red Scare</span>
-                            <span class="word-pill">HUAC (House Un-American Activities Committee)</span>
-                            <span class="word-pill">Hollywood Ten</span>
-                            <span class="word-pill">Blacklist</span>
-                            <span class="word-pill">Alger Hiss</span>
-                            <span class="word-pill">Ethel and Julius Rosenberg</span>
-                            <span class="word-pill">Senator Joseph McCarthy</span>
-                            <span class="word-pill">McCarthyism</span>
-                            <span class="word-pill">Margaret Chase Smith</span>
-                            <span class="word-pill">McCarran Internal Security Act</span>
-                            <span class="word-pill">Loyalty Review Board</span>
-                            <span class="word-pill">Army-McCarthy Hearings</span>
-                        </div>
+                    <h4>The Right to Silence vs. The Duty to Speak</h4>
 
-                        <div style="font-size: 1.15rem; line-height: 2.2;">
-                            <p class="first-p">Following World War II, growing anxieties over Soviet expansion and atomic weapons sparked a widespread domestic panic known as the 1. <input type="text" class="cloze-input" placeholder="Blank 1">. To root out suspected communists in the federal government, President Truman established the 2. <input type="text" class="cloze-input" placeholder="Blank 2">, which investigated millions of employees and abandoned standard legal protections. Congress went even further by passing the 3. <input type="text" class="cloze-input" placeholder="Blank 3">, a sweeping law that restricted the liberties of communist organizations and easily overrode Truman's presidential veto. Meanwhile, the legislative branch conducted its own investigations, led primarily by 4. <input type="text" class="cloze-input" placeholder="Blank 4">. This committee famously targeted the film industry, leading to the imprisonment of a group of uncooperative writers and directors known as the 5. <input type="text" class="cloze-input" placeholder="Blank 5">. In response, frightened studio executives created a 6. <input type="text" class="cloze-input" placeholder="Blank 6"> that permanently banned hundreds of suspected communist sympathizers from employment.</p>
-                            
-                            <p>Public fear was intensified by high-profile espionage cases that dominated national headlines. A respected former State Department official, 7. <input type="text" class="cloze-input" placeholder="Blank 7">, was accused of passing classified documents to the Soviets and was ultimately convicted of perjury. The nation was even part terrified when 8. <input type="text" class="cloze-input" placeholder="Blank 8"> were convicted and executed for allegedly masterminding a spy ring that gave atomic bomb secrets to the Soviet Union. Capitalizing on this atmosphere of terror, a Republican from Wisconsin named 9. <input type="text" class="cloze-input" placeholder="Blank 9"> skyrocketed to fame by falsely claiming he had a list of communists working in the State Department. His tactic of making sweeping, reckless, and unsubstantiated accusations became known as 10. <input type="text" class="cloze-input" placeholder="Blank 10">. Most politicians were too terrified to oppose him, though 11. <input type="text" class="cloze-input" placeholder="Blank 11"> bravely delivered her "Declaration of Conscience" against his vicious smear tactics. His reign of fear finally ended in 1954 during the televised 12. <input type="text" class="cloze-input" placeholder="Blank 12">, where the American public watched him behave like a cruel tyrant, leading to his swift downfall and formal censure.</p>
-                        </div>
+                    <h5>The Historical Context</h5>
+                    <p class="first-p">During the height of the Red Scare, the hearings conducted by the House Un-American Activities Committee (HUAC) became a battleground over the meaning of the United States Constitution. When individuals from the entertainment industry and the federal government were subpoenaed, they were forced to choose between cooperating with the committee—often by naming friends and colleagues as suspected communists—or refusing to answer, which guaranteed the loss of their jobs and potential imprisonment.</p>
+
+                    <div class="visual-wrapper">
+                        <img src="assets/Visual_2.png" alt="Visual 2" class="visual-img" onerror="this.style.display='none'">
+                        <p class="caption-text">As fears of communist subversion intensified, individuals subpoenaed by powerful congressional committees faced immense pressure to demonstrate ideological conformity, frequently risking professional ruin and imprisonment if they chose to exercise their constitutional right to remain silent.</p>
                     </div>
 
-                    <div class="bottom-nav">
-                        <button class="action-btn" onclick="switchTab('sec-5')">&larr; Previous</button>
-                        <button class="action-btn" style="background: var(--color-navy);" onclick="finishChapter()">Finished</button>
+                    <h5>The Voices</h5>
+                    <p class="first-p"><em>The Voice of the Accused:</em> The "Hollywood Ten" and other uncooperative witnesses frequently relied on the First Amendment, and later the Fifth Amendment, to justify their silence. Screenwriter Dalton Trumbo, attempting to read a statement before he was shouted down by the committee, argued that HUAC’s questions were entirely illegal: <em>"This committee... is asking me to say what my political beliefs are, what my religious beliefs are, and what I think about the world... The Constitution of the United States says you have no right to ask me these questions. I shall not answer them."</em></p>
+
+                    <p><em>The Voice of the Investigators:</em> Members of HUAC, and politicians like Senator Joseph McCarthy, argued that the terrifying threat of Soviet espionage meant that individual rights had to be temporarily bypassed for the safety of the nation. They operated on the assumption that if an individual was innocent, they would enthusiastically answer every question. Senator McCarthy articulated this view frequently, stating: <em>"A man who has nothing to hide does not plead the Fifth Amendment. When a witness refuses to answer whether he is a communist on the grounds that his answer might incriminate him, he is telling the committee that he is a communist."</em></p>
+
+                    <div class="question-box" style="margin-top: 3rem; background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-faint);">
+                        <h5> Perspective Questions</h5>
+                        
+                        <p class="first-p" style="font-weight: 600; color: var(--text-ink); margin-bottom: 0.5rem;">Analyze the Arguments</p>
+                        <p class="first-p" style="margin-bottom: 1rem;">How did the Hollywood Ten interpret constitutional protections differently than the members of the House Un-American Activities Committee?</p>
+                        <textarea class="textarea-dark" id="pq_8" placeholder="Type your response here..." style="margin-bottom: 2rem; min-height: 80px;"></textarea>
+
+                        <p class="first-p" style="font-weight: 600; color: var(--text-ink); margin-bottom: 0.5rem;">Consider the Context</p>
+                        <p class="first-p" style="margin-bottom: 1rem;">Why would a witness who had never actually committed an act of espionage or treason still feel compelled to plead the Fifth Amendment and remain silent during a HUAC hearing?</p>
+                        <textarea class="textarea-dark" id="pq_9" placeholder="Type your response here..." style="margin-bottom: 2rem; min-height: 80px;"></textarea>
+
+                        <p class="first-p" style="font-weight: 600; color: var(--text-ink); margin-bottom: 0.5rem;">Assess the Impact</p>
+                        <p class="first-p" style="margin-bottom: 1rem;">How did Senator McCarthy's public assertion that "silence equals guilt" challenge the fundamental American legal presumption that a citizen is "innocent until proven guilty"?</p>
+                        <textarea class="textarea-dark" id="pq_10" placeholder="Type your response here..." style="min-height: 80px;"></textarea>
                     </div>
+
                 </div>
-            </section>
-            
-        </main>
-    </div>
 
-    <script>
-        /* Background Management */
-        const bgImages = ['assets/bg_1.png', 'assets/bg_2.png', 'assets/bg_3.png', 'assets/bg_4.png'];
-        let bgIndex = 0;
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-4', 'nav-sec-4')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                    <button class="action-btn" id="btn-next-sec-5" onclick="switchTab('sec-6')"><span style="position: relative; z-index: 1;">Next Section &rarr;</span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: Vocabulary Activity -->
+        <section id="sec-6" class="chapter-section">
+            <div class="content-wrapper">
+                <div class="content-block">
+                    <h2>Vocabulary Activity</h2>
+                    <p class="first-p">Read the historical narrative below and fill in the blanks using the terms provided in the Word Bank to complete the story of the era.</p>
+
+                    <div class="word-bank">
+                        <span class="word-pill">Red Scare</span>
+                        <span class="word-pill">HUAC (House Un-American Activities Committee)</span>
+                        <span class="word-pill">Hollywood Ten</span>
+                        <span class="word-pill">Blacklist</span>
+                        <span class="word-pill">Alger Hiss</span>
+                        <span class="word-pill">Ethel and Julius Rosenberg</span>
+                        <span class="word-pill">Senator Joseph McCarthy</span>
+                        <span class="word-pill">McCarthyism</span>
+                        <span class="word-pill">Margaret Chase Smith</span>
+                        <span class="word-pill">McCarran Internal Security Act</span>
+                        <span class="word-pill">Loyalty Review Board</span>
+                        <span class="word-pill">Army-McCarthy Hearings</span>
+                    </div>
+
+                    <p class="first-p" style="line-height: 2.2;">
+                        Following World War II, growing anxieties over Soviet expansion and atomic weapons sparked a widespread domestic panic known as the 1. <input type="text" class="cloze-input" id="cloze-1">. To root out suspected communists in the federal government, President Truman established the 2. <input type="text" class="cloze-input" id="cloze-2">, which investigated millions of employees and abandoned standard legal protections. Congress went even further by passing the 3. <input type="text" class="cloze-input" id="cloze-3">, a sweeping law that restricted the liberties of communist organizations and easily overrode Truman's presidential veto. Meanwhile, the legislative branch conducted its own investigations, led primarily by 4. <input type="text" class="cloze-input" id="cloze-4">. This committee famously targeted the film industry, leading to the imprisonment of a group of uncooperative writers and directors known as the 5. <input type="text" class="cloze-input" id="cloze-5">. In response, frightened studio executives created a 6. <input type="text" class="cloze-input" id="cloze-6"> that permanently banned hundreds of suspected communist sympathizers from employment.
+                    </p>
+
+                    <p style="line-height: 2.2;">
+                        Public fear was intensified by high-profile espionage cases that dominated national headlines. A respected former State Department official, 7. <input type="text" class="cloze-input" id="cloze-7">, was accused of passing classified documents to the Soviets and was ultimately convicted of perjury. The nation was even part terrified when 8. <input type="text" class="cloze-input" id="cloze-8"> were convicted and executed for allegedly masterminding a spy ring that gave atomic bomb secrets to the Soviet Union. Capitalizing on this atmosphere of terror, a Republican from Wisconsin named 9. <input type="text" class="cloze-input" id="cloze-9"> skyrocketed to fame by falsely claiming he had a list of communists working in the State Department. His tactic of making sweeping, reckless, and unsubstantiated accusations became known as 10. <input type="text" class="cloze-input" id="cloze-10">. Most politicians were too terrified to oppose him, though 11. <input type="text" class="cloze-input" id="cloze-11"> bravely delivered her "Declaration of Conscience" against his vicious smear tactics. His reign of fear finally ended in 1954 during the televised 12. <input type="text" class="cloze-input" id="cloze-12">, where the American public watched him behave like a cruel tyrant, leading to his swift downfall and formal censure.
+                    </p>
+
+                </div>
+
+                <div class="bottom-nav">
+                    <button class="action-btn" onclick="switchTab('sec-5', 'nav-sec-5')"><span style="position: relative; z-index: 1;">&larr; Previous</span></button>
+                    <button class="action-btn" style="border-color: var(--accent-navy); color: var(--accent-navy);" onclick="finishChapter()"><span style="position: relative; z-index: 1;">Finish Assignment &check;</span></button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    /* Background Management */
+    const bgImages = [
+        'assets/bg_1.png', 
+        'assets/bg_2.png', 
+        'assets/bg_3.png', 
+        'assets/bg_4.png'
+    ];
+    let bgIndex = 0;
+
+    function rotateBackground() {
+        if (bgImages.length === 0) return;
+        const bgEl = document.getElementById('bg-slideshow');
+        if (!bgEl) return;
+        bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
+        bgIndex = (bgIndex + 1) % bgImages.length;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        rotateBackground();
+        setInterval(rotateBackground, 10000);
+        initCheckpoints();
+    });
+
+    /* Navigation */
+    function switchTab(id, btnId = null, scrollTarget = null) {
+        document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
         
-        function rotateBackground() {
-            if (bgImages.length === 0) return;
-            const bgEl = document.getElementById('bg-slideshow');
-            if (!bgEl) return;
-            bgEl.style.backgroundImage = `url('${bgImages[bgIndex]}')`;
-            bgIndex = (bgIndex + 1) % bgImages.length;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+        const activeBtnId = btnId || ('nav-' + id);
+        const activeBtn = document.getElementById(activeBtnId);
+        if (activeBtn) {
+            activeBtn.classList.add('active-nav');
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            rotateBackground();
-            setInterval(rotateBackground, 10000);
+
+        if (scrollTarget) {
+            setTimeout(() => {
+                const target = document.getElementById(scrollTarget);
+                if(target) {
+                    const offset = 40;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            }, 50);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        saveProgress();
+    }
+
+    /* Data Collection & Export */
+    function collectAssignmentData(isFinal) {
+        const studentName = document.getElementById('student-name').value || "Unknown_Student";
+        const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
+        const now = new Date().toLocaleDateString();
+
+        const assignmentData = {
+            assignmentTitle: "Interactive Chapter 17.3 Fear at Home",
+            studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
+            responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
+        };
+
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('va_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Spotlight Question:', '').trim() : 'Visual ' + i;
+                assignmentData.responses.visualAnalysis[qText] = el.value.trim();
+            }
+        }
+
+        for(let i=1; i<=30; i++) {
+            let inputs = document.querySelectorAll(`input[name="cp${i}"]`);
+            if(inputs.length > 0) {
+                let checked = document.querySelector(`input[name="cp${i}"]:checked`);
+                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
+            }
+        }
+
+        for(let i=1; i<=20; i++) {
+            let el = document.getElementById('pq_' + i);
+            if(el) {
+                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Identify the Core Conflict:', '').replace('Compare Viewpoints:', '').replace('Trace the Impact:', '').replace('Evaluate Strategy', '').replace('Assess the Legacy', '').replace('Analyze the Arguments', '').replace('Consider the Context', '').replace('Assess the Impact', '').trim() : 'Question ' + i;
+                assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
+            }
+        }
+
+        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+            assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
         });
 
-        /* Navigation */
-        function switchTab(id, btnId = null, scrollTarget = null) {
-            document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('active-section'));
-            document.getElementById(id).classList.add('active-section');
-            
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
-            const activeBtnId = btnId || ('nav-' + id);
-            const activeBtn = document.getElementById(activeBtnId);
-            if (activeBtn) {
-                activeBtn.classList.add('active-nav');
-            }
-            
-            if (scrollTarget) {
-                setTimeout(() => {
-                    const target = document.getElementById(scrollTarget);
-                    if(target) {
-                        const offset = 40;
-                        const bodyRect = document.body.getBoundingClientRect().top;
-                        const elementRect = target.getBoundingClientRect().top;
-                        const elementPosition = elementRect - bodyRect;
-                        const offsetPosition = elementPosition - offset;
-                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                    }
-                }, 50);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            saveProgress();
-        }
+        return assignmentData;
+    }
 
-        /* Data Collection & Export */
-        function collectAssignmentData(isFinal) {
-            const studentName = document.getElementById('student-name').value || "Unknown_Student";
-            const studentPeriod = document.getElementById('student-period').value || "Unknown_Period";
-            const now = new Date().toLocaleDateString();
-            
-            const assignmentData = {
-                assignmentTitle: "Interactive Chapter 17.3 - Fear at Home",
-                studentInfo: { name: studentName, period: studentPeriod, dateCompleted: isFinal ? now : "In Progress" },
-                responses: { visualAnalysis: {}, checkpoints: {}, perspectiveQuestions: {}, clozeActivity: {} }
-            };
-            
-            // Gather Visual Analysis Answers
-            for(let i=1; i<=20; i++) {
-                let el = document.getElementById('va_' + i);
-                if(el) {
-                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
-                    assignmentData.responses.visualAnalysis[qText] = el.value.trim();
-                }
-            }
-            
-            // Gather Checkpoint Answers
-            for(let i=1; i<=30; i++) {
-                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-                if(inputs.length > 0) {
-                    let checked = document.querySelector('input[name="cp' + i + '"]:checked');
-                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                    assignmentData.responses.checkpoints[qText] = checked ? checked.value : "No Answer";
-                }
-            }
-            
-            // Gather Perspective Questions
-            for(let i=1; i<=10; i++) {
-                let el = document.getElementById('pq_' + i);
-                if(el) {
-                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                    assignmentData.responses.perspectiveQuestions[qText] = el.value.trim();
-                }
-            }
-            
-            // Gather Cloze Activity Answers
-            document.querySelectorAll('.cloze-input').forEach((input, index) => {
-                assignmentData.responses.clozeActivity[`Blank_${index + 1}`] = input.value.trim();
-            });
-            
-            return assignmentData;
-        }
+    function triggerDownload(data, filename) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 
-        function triggerDownload(data, filename) {
-            const dataStr = JSON.stringify(data, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+    function downloadProgress() {
+        const data = collectAssignmentData(false);
+        const safeName = data.studentInfo.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\_]/g, '');
+        triggerDownload(data, `${safeName}_Progress_Ch17_3.json`);
+    }
 
-        function downloadProgress() {
-            const data = collectAssignmentData(false);
-            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
-            triggerDownload(data, `Chapter_Progress_${safeName}.json`);
-        }
-
-        function finishChapter() {
-            const dateField = document.getElementById('completion-date');
-            const now = new Date().toLocaleDateString();
-            if(dateField) dateField.value = now;
-            
-            const data = collectAssignmentData(true);
-            const safeName = data.studentInfo.name.replace(/[^a-z0-9]/gi, '').toLowerCase();
-            triggerDownload(data, `Chapter_Export_${safeName}.json`);
-            
-            alert('Upload JSON file to Canvas');
-            switchTab('sec-1', 'nav-sec-1');
-        }
-
-        /* Loading Progress */
-        function loadProgress(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const loadedData = JSON.parse(e.target.result);
-                    
-                    // Restore ID Panel and Burn In
-                    const nameInput = document.getElementById('student-name');
-                    const periodInput = document.getElementById('student-period');
-                    
-                    if (loadedData.studentInfo) {
-                        if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
-                            nameInput.value = loadedData.studentInfo.name;
-                            nameInput.setAttribute('readonly', 'true');
-                            nameInput.style.opacity = '0.7'; 
-                        }
-                        if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
-                            periodInput.value = loadedData.studentInfo.period;
-                            periodInput.setAttribute('disabled', 'true');
-                            periodInput.style.opacity = '0.7'; 
-                        }
-                    }
-                    
-                    if (loadedData.responses) {
-                        if (loadedData.responses.visualAnalysis) {
-                            for(let i=1; i<=20; i++) {
-                                let el = document.getElementById('va_' + i);
-                                if(el) {
-                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').trim() : 'Visual ' + i;
-                                    if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
-                                }
-                            }
-                        }
-                        
-                        if (loadedData.responses.checkpoints) {
-                            for(let i=1; i<=30; i++) {
-                                let inputs = document.querySelectorAll('input[name="cp' + i + '"]');
-                                if(inputs.length > 0) {
-                                    let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
-                                    let savedVal = loadedData.responses.checkpoints[qText];
-                                    if (savedVal && savedVal !== "No Answer") {
-                                        let radio = document.querySelector(`input[name="cp${i}"][value="${savedVal}"]`);
-                                        if(radio) radio.checked = true;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if (loadedData.responses.perspectiveQuestions) {
-                            for(let i=1; i<=10; i++) {
-                                let el = document.getElementById('pq_' + i);
-                                if(el) {
-                                    let qText = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : 'Question ' + i;
-                                    if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
-                                }
-                            }
-                        }
-                        
-                        if (loadedData.responses.clozeActivity) {
-                            document.querySelectorAll('.cloze-input').forEach((input, index) => {
-                                let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
-                                if (savedVal) input.value = savedVal;
-                            });
-                        }
-                    }
-                    
-                    initCheckpoints();
-                    alert('Progress loaded successfully!');
-                } catch (err) {
-                    console.error(err);
-                    alert('Error loading progress file. Please make sure it is a valid JSON file.');
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        /* Save & Reset Logic */
-        function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+    function finishChapter() {
+        const dateField = document.getElementById('completion-date');
+        const now = new Date().toLocaleDateString();
+        if(dateField) dateField.value = now;
         
-        function resetProgress() {
-            if(confirm('Are you sure you want to reset all progress?')) {
-                document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
-                document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+        const data = collectAssignmentData(true);
+        const safeName = data.studentInfo.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\_]/g, '');
+        triggerDownload(data, `${safeName}_Ch17_3.json`);
+        alert('Upload JSON file to Canvas');
+        switchTab('sec-1', 'nav-sec-1');
+    }
+
+    /* Loading Progress */
+    function loadProgress(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const loadedData = JSON.parse(e.target.result);
                 
-                // Un-burn ID panel fields
                 const nameInput = document.getElementById('student-name');
                 const periodInput = document.getElementById('student-period');
-                nameInput.removeAttribute('readonly');
-                nameInput.style.opacity = '1';
-                periodInput.removeAttribute('disabled');
-                periodInput.style.opacity = '1';
                 
-                document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
-                initCheckpoints();
-                switchTab('sec-1', 'nav-sec-1');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        /* Checkpoint Management */
-        const TOTAL_CHECKPOINTS = 7; 
-        
-        function initCheckpoints() {
-            for(let i=1; i<=TOTAL_CHECKPOINTS; i++) { updateCpUI(`cp-block-${i}`); }
-            checkSectionUnlock();
-        }
-
-        function updateCpUI(blockId) {
-            const block = document.getElementById(blockId);
-            if(!block) return;
-            const currentIndex = parseInt(block.getAttribute('data-current') || '0');
-            const questions = block.querySelectorAll('.checkpoint-q');
-            const indicator = block.querySelector('.cp-indicator');
-            const prevBtn = block.querySelector('.cp-prev-btn');
-            const nextBtn = block.querySelector('.cp-next-btn');
-            
-            questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
-            
-            if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
-            if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
-            
-            if(nextBtn) {
-                const currentQ = questions[currentIndex];
-                const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
-                
-                if (currentIndex === questions.length - 1) {
-                    if (isAnswered) {
-                        nextBtn.innerText = "Checkpoint Completed ✓";
-                        nextBtn.style.borderColor = "var(--color-navy)"; nextBtn.style.color = "var(--color-cream)"; nextBtn.style.backgroundColor = "var(--color-navy)";
-                        nextBtn.disabled = true; nextBtn.style.cursor = 'default'; nextBtn.style.opacity = '1';
-                    } else {
-                        nextBtn.innerText = "Finish Checkpoint";
-                        nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed';
-                        nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
+                if (loadedData.studentInfo) {
+                    if (loadedData.studentInfo.name && loadedData.studentInfo.name !== "Unknown_Student") {
+                        nameInput.value = loadedData.studentInfo.name;
+                        nameInput.setAttribute('readonly', 'true');
+                        nameInput.style.opacity = '0.6';
                     }
+                    if (loadedData.studentInfo.period && loadedData.studentInfo.period !== "Unknown_Period") {
+                        periodInput.value = loadedData.studentInfo.period;
+                        periodInput.setAttribute('disabled', 'true');
+                        periodInput.style.opacity = '0.6';
+                    }
+                }
+
+                if (loadedData.responses) {
+                    if (loadedData.responses.visualAnalysis) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('va_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Analysis Question:', '').replace('Spotlight Question:', '').trim() : 'Visual ' + i;
+                                if(loadedData.responses.visualAnalysis[qText]) el.value = loadedData.responses.visualAnalysis[qText];
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.checkpoints) {
+                        for(let i=1; i<=30; i++) {
+                            let inputs = document.querySelectorAll(`input[name="cp${i}"]`);
+                            if(inputs.length > 0) {
+                                let qText = inputs[0].closest('.checkpoint-q').querySelector('p.first-p').innerText.trim();
+                                let savedVal = loadedData.responses.checkpoints[qText];
+                                if (savedVal && savedVal !== "No Answer") {
+                                    let cleanVal = savedVal.replace(/"/g, '\\"');
+                                    let radio = document.querySelector(`input[name="cp${i}"][value="${cleanVal}"]`);
+                                    if(radio) radio.checked = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.perspectiveQuestions) {
+                        for(let i=1; i<=20; i++) {
+                            let el = document.getElementById('pq_' + i);
+                            if(el) {
+                                let qText = el.previousElementSibling ? el.previousElementSibling.innerText.replace('Identify the Core Conflict:', '').replace('Compare Viewpoints:', '').replace('Trace the Impact:', '').replace('Evaluate Strategy', '').replace('Assess the Legacy', '').replace('Analyze the Arguments', '').replace('Consider the Context', '').replace('Assess the Impact', '').trim() : 'Question ' + i;
+                                if(loadedData.responses.perspectiveQuestions[qText]) el.value = loadedData.responses.perspectiveQuestions[qText];
+                            }
+                        }
+                    }
+
+                    if (loadedData.responses.clozeActivity) {
+                        document.querySelectorAll('.cloze-input').forEach((input, index) => {
+                            let savedVal = loadedData.responses.clozeActivity[`Blank_${index + 1}`];
+                            if (savedVal) input.value = savedVal;
+                        });
+                    }
+                }
+                
+                initCheckpoints();
+                alert('Progress loaded successfully!');
+            } catch (err) {
+                console.error(err);
+                alert('Error loading progress file. Please make sure it is a valid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function saveProgress() { console.log('Progress stored in memory. Click Save Progress to download.'); }
+    
+    function resetProgress() {
+        if(confirm('Are you sure you want to reset all progress?')) {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.cloze-input, .textarea-dark, #student-name, #student-period, #completion-date').forEach(el => el.value = '');
+            
+            const nameInput = document.getElementById('student-name');
+            const periodInput = document.getElementById('student-period');
+            nameInput.removeAttribute('readonly');
+            nameInput.style.opacity = '1';
+            periodInput.removeAttribute('disabled');
+            periodInput.style.opacity = '1';
+
+            document.querySelectorAll('.checkpoint-block').forEach(block => block.setAttribute('data-current', '0'));
+            initCheckpoints();
+            switchTab('sec-1', 'nav-sec-1');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    /* Checkpoint Management */
+    const TOTAL_CHECKPOINTS = 7;
+
+    function initCheckpoints() {
+        for(let i=1; i<=TOTAL_CHECKPOINTS; i++) {
+            updateCpUI(`cp-block-${i}`);
+        }
+        checkSectionUnlock();
+    }
+
+    function updateCpUI(blockId) {
+        const block = document.getElementById(blockId);
+        if(!block) return;
+        
+        const currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
+        const indicator = block.querySelector('.cp-indicator');
+        const prevBtn = block.querySelector('.cp-prev-btn');
+        const nextBtn = block.querySelector('.cp-next-btn');
+        const spanInsideBtn = nextBtn ? nextBtn.querySelector('span') : null;
+
+        questions.forEach((q, idx) => { q.style.display = (idx === currentIndex) ? 'block' : 'none'; });
+        
+        if(indicator) indicator.innerText = `${currentIndex + 1} of ${questions.length}`;
+        if(prevBtn) prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-flex';
+        
+        if(nextBtn && spanInsideBtn) {
+            const currentQ = questions[currentIndex];
+            const isAnswered = currentQ.querySelector('input[type="radio"]:checked') !== null;
+
+            if (currentIndex === questions.length - 1) {
+                if (isAnswered) {
+                    spanInsideBtn.innerText = "Checkpoint Completed \u2713";
+                    nextBtn.style.borderColor = "var(--accent-navy)";
+                    nextBtn.style.color = "#fff";
+                    nextBtn.style.backgroundColor = "var(--accent-navy)";
+                    nextBtn.disabled = true;
+                    nextBtn.style.cursor = 'default';
+                    nextBtn.style.opacity = '1';
                 } else {
-                    nextBtn.innerText = "Next Question \u2192";
-                    nextBtn.style.backgroundColor = "rgba(0,0,0,0.5)"; nextBtn.style.color = "var(--color-gold)"; nextBtn.style.borderColor = "var(--color-gold)";
-                    
-                    if (isAnswered) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; nextBtn.style.cursor = 'pointer'; }
-                    else { nextBtn.disabled = true; nextBtn.style.opacity = '0.5'; nextBtn.style.cursor = 'not-allowed'; }
+                    spanInsideBtn.innerText = "Finish Checkpoint";
+                    nextBtn.disabled = true;
+                    nextBtn.style.opacity = '0.5';
+                    nextBtn.style.cursor = 'not-allowed';
+                    nextBtn.style.backgroundColor = "transparent";
+                    nextBtn.style.color = "var(--highlight-red)";
+                    nextBtn.style.borderColor = "var(--highlight-red)";
+                }
+            } else {
+                spanInsideBtn.innerText = "Next Question \u2192";
+                nextBtn.style.backgroundColor = "transparent";
+                nextBtn.style.color = "var(--highlight-red)";
+                nextBtn.style.borderColor = "var(--highlight-red)";
+                if (isAnswered) {
+                    nextBtn.disabled = false;
+                    nextBtn.style.opacity = '1';
+                    nextBtn.style.cursor = 'pointer';
+                } else {
+                    nextBtn.disabled = true;
+                    nextBtn.style.opacity = '0.5';
+                    nextBtn.style.cursor = 'not-allowed';
                 }
             }
-            checkSectionUnlock();
         }
+        checkSectionUnlock();
+    }
 
-        function navigateCp(blockId, dir) {
-            const block = document.getElementById(blockId);
-            let currentIndex = parseInt(block.getAttribute('data-current') || '0');
-            const questions = block.querySelectorAll('.checkpoint-q');
-            currentIndex += dir;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex >= questions.length) currentIndex = questions.length - 1;
-            block.setAttribute('data-current', currentIndex);
-            updateCpUI(blockId);
-        }
-
-        function handleRadioChange(blockId) { saveProgress(); updateCpUI(blockId); }
-        function isAnswered(name) { return document.querySelector(`input[name="${name}"]:checked`) !== null; }
+    function navigateCp(blockId, dir) {
+        const block = document.getElementById(blockId);
+        let currentIndex = parseInt(block.getAttribute('data-current') || '0');
+        const questions = block.querySelectorAll('.checkpoint-q');
         
-        function setNavButtonState(btnId, enabled) {
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
-            if (enabled) {
-                btn.removeAttribute('disabled'); btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-                btn.innerHTML = 'Next Section →'; btn.style.borderColor = 'var(--color-gold)';
-            } else {
-                btn.setAttribute('disabled', 'true'); btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
-                btn.innerHTML = '🔒 Answer Checkpoints to Continue'; btn.style.borderColor = 'var(--color-steel-nib)';
-            }
-        }
-
-        function checkSectionUnlock() {
-            setNavButtonState('btn-next-sec-1', true);
-            setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2'));
-            setNavButtonState('btn-next-sec-3', isAnswered('cp3') && isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7'));
-            setNavButtonState('btn-next-sec-4', isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10'));
-            setNavButtonState('btn-next-sec-5', true);
-        }
+        currentIndex += dir;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= questions.length) currentIndex = questions.length - 1;
         
-        window.onload = initCheckpoints;
-    </script>
+        block.setAttribute('data-current', currentIndex);
+        updateCpUI(blockId);
+    }
+
+    function handleRadioChange(blockId) {
+        saveProgress();
+        updateCpUI(blockId);
+    }
+
+    function isAnswered(name) {
+        return document.querySelector(`input[name="${name}"]:checked`) !== null;
+    }
+
+    function setNavButtonState(btnId, enabled) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        const spanInsideBtn = btn.querySelector('span');
+        
+        if (enabled) {
+            btn.removeAttribute('disabled');
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            if (spanInsideBtn) spanInsideBtn.innerHTML = 'Next Section &rarr;';
+            btn.style.borderColor = 'var(--highlight-red)';
+            btn.style.color = 'var(--highlight-red)';
+        } else {
+            btn.setAttribute('disabled', 'true');
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+            if (spanInsideBtn) spanInsideBtn.innerHTML = '🔒 Answer Checkpoints to Continue';
+            btn.style.borderColor = 'var(--navy-faint)';
+            btn.style.color = 'var(--accent-green)';
+        }
+    }
+
+    function checkSectionUnlock() {
+        setNavButtonState('btn-next-sec-1', true);
+        
+        // Sec 2 locks nav to Sec 3 based on CP1, CP2
+        setNavButtonState('btn-next-sec-2', isAnswered('cp1') && isAnswered('cp2'));
+        
+        // Sec 3 locks nav to Sec 4 based on CP3, CP4, CP5, CP6, CP7
+        setNavButtonState('btn-next-sec-3', isAnswered('cp3') && isAnswered('cp4') && isAnswered('cp5') && isAnswered('cp6') && isAnswered('cp7'));
+        
+        // Sec 4 locks nav to Sec 5 based on CP8, CP9, CP10
+        setNavButtonState('btn-next-sec-4', isAnswered('cp8') && isAnswered('cp9') && isAnswered('cp10'));
+        
+        // Sec 5 (Voices of the Era) has no checkpoints, automatically unlocked
+        setNavButtonState('btn-next-sec-5', true);
+    }
+</script>
+
 </body>
 </html>
