@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 6: The Contested West | E Pluribus Unum | Daniel Garza, M.A.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --ink:#523342; --ink-2:#715964; --ink-3:#79656E;
+  --paper:#F5EADA; --white:#FDFBF7;
+  --unit:#546B7E; --unit-dk:#523342; --unit-lt:#F5EADA; --unit-mid:#B4BFC9;
+  --amber:#737B62; --amber-lt:#CAA44F; --amber-dk:#856316;
+  --coral:#b04630; --coral-lt:#f6e4de; --amber-wash:#F7EEE0; --cream:#F5EADA; --pale:#CAA44F;
+  --sage:#4e7d4a; --sage-lt:#e8f1e5;
+  --violet:#5b4bb7; --violet-lt:#ecebfa;
+  --rule:#d9dde3; --grid:#e6e8ec;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --other:#9aa1ad;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Segoe UI", Arial, sans-serif;
+  --cond:"Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F5EADA;color:var(--ink);font-family:var(--serif);font-size:18.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;height:auto;display:block}
+a{color:var(--unit)}
+.book{max-width:1180px;margin:0 auto;background:var(--paper);box-shadow:0 0 40px rgba(0,0,0,.08)}
+
+/* ---------- top navigation ---------- */
+.topnav{position:sticky;top:0;z-index:50;background:rgba(82,51,66,.97);color:var(--cream);font-family:var(--sans);font-size:13px;display:flex;align-items:center;gap:6px;padding:0 18px;height:46px;overflow-x:auto;white-space:nowrap}
+.topnav .brand{font-family:var(--cond);font-weight:700;letter-spacing:.08em;font-size:16px;margin-right:14px;color:var(--pale)}
+.topnav a{color:var(--cream);text-decoration:none;padding:6px 10px;border-radius:6px}
+.topnav a:hover{background:rgba(255,255,255,.12)}
+.progress{position:sticky;top:46px;z-index:49;height:4px;background:#d8cfb8}
+.progress span{display:block;height:100%;width:0;background:var(--pale)}
+
+/* ---------- chapter opener ---------- */
+.opener{position:relative;background:linear-gradient(160deg,var(--unit-dk) 0%,var(--unit) 70%);color:var(--cream);overflow:hidden}
+.opener-art{width:100%}
+.opener-head{position:absolute;left:0;right:0;top:0;padding:46px 56px 0;display:flex;gap:28px;align-items:flex-start}
+.chapnum{font-family:var(--cond);font-weight:800;font-size:170px;line-height:.78;color:var(--pale);text-shadow:0 4px 0 rgba(0,0,0,.18)}
+.chapword{font-family:var(--cond);letter-spacing:.32em;font-size:15px;font-weight:600;color:var(--pale);margin-bottom:4px}
+.unitline{font-family:var(--sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream);margin-bottom:10px}
+.opener h1{font-family:var(--cond);font-weight:700;font-size:72px;line-height:.95;margin:0;letter-spacing:.01em;text-shadow:0 2px 10px rgba(0,0,0,.25)}
+.opener-caption{background:var(--unit-dk);color:var(--cream);font-family:var(--sans);font-size:13.5px;line-height:1.5;padding:12px 56px}
+.opener-caption b{color:var(--pale)}
+.opener-grid{display:grid;grid-template-columns:300px 1fr;background:var(--paper);color:var(--ink)}
+.sectionlist{background:var(--unit-lt);padding:30px 28px;border-right:1px solid var(--unit-mid)}
+.sectionlist h3{font-family:var(--cond);font-size:15px;letter-spacing:.2em;color:var(--unit);margin:0 0 14px}
+.sectionlist a{display:block;text-decoration:none;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--unit-mid)}
+.sectionlist a:last-child{border-bottom:0}
+.sectionlist .sl-tag{display:block;font-family:var(--cond);font-weight:700;font-size:14px;letter-spacing:.15em;color:var(--unit)}
+.sectionlist .sl-title{display:block;font-family:var(--sans);font-weight:600;font-size:16px;line-height:1.25}
+.sectionlist .cs .sl-tag{color:var(--coral)}
+.opener-main{padding:30px 44px 34px}
+.kicker{font-family:var(--cond);font-weight:700;letter-spacing:.2em;font-size:15px;color:var(--unit);margin:0 0 6px;text-transform:uppercase}
+.keyconcept{background:var(--white);border-left:6px solid var(--amber);padding:16px 20px;margin:12px 0 22px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.keyconcept .kicker{color:var(--amber-dk)}
+.keyconcept p{margin:0;font-size:20px;line-height:1.45}
+.standards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+.stdbox{border:1px solid var(--rule);background:#FDFBF7;border-radius:10px;padding:14px 16px;font-family:var(--sans);font-size:13.5px;line-height:1.45}
+.stdbox h4{margin:0 0 8px;font-family:var(--cond);font-size:16px;letter-spacing:.12em;color:var(--unit)}
+.stdbox ul{margin:0;padding-left:0;list-style:none}
+.stdbox li{margin:0 0 7px}
+.stdbox code{font-family:var(--sans);font-weight:700;color:var(--unit-dk);background:var(--unit-lt);padding:1px 6px;border-radius:4px;font-size:12px}
+
+/* ---------- section openers ---------- */
+.section{padding:0 0 10px;scroll-margin-top:56px}
+.sec-banner{display:grid;grid-template-columns:130px 1fr 210px;align-items:stretch;background:var(--unit);color:var(--cream);min-height:150px}
+.sec-banner .num{background:var(--unit-dk);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--cond)}
+.sec-banner .num small{letter-spacing:.3em;font-size:14px;color:var(--pale);font-weight:600}
+.sec-banner .num b{font-size:64px;line-height:.9;color:var(--pale)}
+.sec-banner h2{font-family:var(--cond);font-size:50px;line-height:1;margin:0;padding:30px 30px;align-self:center;font-weight:700}
+.sec-banner .icon{display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(255,255,255,.06)}
+
+/* ---------- body text grid ---------- */
+.content{padding:8px 56px 10px}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) 250px;column-gap:38px;align-items:start}
+.pair > .side{padding-top:22px}
+.wide{margin:26px 0}
+h3.kc{font-family:var(--cond);font-size:15px;letter-spacing:.22em;color:var(--amber-dk);margin:34px 0 0;text-transform:uppercase}
+h3.head{font-family:var(--cond);font-size:36px;line-height:1.05;color:var(--unit-dk);margin:4px 0 10px;font-weight:700}
+h4.sub{font-family:var(--sans);font-size:19px;color:var(--unit);margin:22px 0 4px;font-weight:700}
+p{margin:0 0 14px}
+.lead::first-letter{font-family:var(--cond);float:left;font-size:78px;line-height:.82;padding:6px 10px 0 0;color:var(--unit);font-weight:700}
+dfn,.kt{font-style:normal;font-weight:700;color:var(--unit-dk);background:linear-gradient(transparent 62%,var(--amber-lt) 62%)}
+.es{font-style:italic;color:var(--ink-3);font-size:.92em}
+
+/* margin notes */
+.qr{background:#FDFBF7;border-top:4px solid var(--unit);padding:12px 14px 12px;margin:0 0 18px;font-family:var(--sans);font-size:14px;line-height:1.45;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.qr .tag{display:block;font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--unit);margin-bottom:4px}
+.qr .term{font-weight:700;color:var(--unit-dk)}
+.qr .sp{display:block;margin-top:6px;color:var(--ink-3);font-size:12.5px}
+.fact{background:var(--amber-wash);border-top:4px solid var(--amber);padding:12px 14px;margin:0 0 18px;font-family:var(--sans);font-size:14px;line-height:1.45}
+.fact .tag{display:block;font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--amber-dk);margin-bottom:4px}
+.fact .big{font-family:var(--cond);font-weight:800;font-size:40px;line-height:1;color:var(--amber-dk);display:block;margin:2px 0 4px}
+.math{background:var(--violet-lt);border-top:4px solid var(--violet);padding:12px 14px;margin:0 0 18px;font-family:var(--sans);font-size:14px;line-height:1.45}
+.math .tag{display:block;font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--violet);margin-bottom:4px}
+.connect{background:var(--sage-lt);border-top:4px solid var(--sage);padding:12px 14px;margin:0 0 18px;font-family:var(--sans);font-size:14px;line-height:1.45}
+.connect .tag{display:block;font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--sage);margin-bottom:4px}
+
+/* feature boxes */
+.box{border-radius:12px;margin:28px 0;overflow:hidden;background:#FDFBF7;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.box-h{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#fff;font-family:var(--cond);font-size:21px;font-weight:700;letter-spacing:.06em}
+.box-h small{font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.2em;opacity:.85;display:block}
+.box-b{padding:18px 22px 16px;font-size:17px}
+.box-b p:last-child{margin-bottom:0}
+.example .box-h{background:var(--unit)}
+.example{border:2px solid var(--unit)}
+.choices .box-h{background:var(--coral)}
+.choices{border:2px solid var(--coral)}
+.choices .opts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.choices .opt{background:var(--coral-lt);border-radius:10px;padding:14px;font-size:16px}
+.choices .opt h5{margin:8px 0 4px;font-family:var(--sans);font-size:16px;color:var(--coral)}
+.choices .ask{margin-top:14px;font-family:var(--sans);font-weight:600;font-size:15px}
+.global .box-h{background:var(--sage)}
+.global{border:2px solid var(--sage)}
+.app{border:2px dashed var(--amber);background:var(--amber-wash);box-shadow:none}
+.app .box-h{background:transparent;color:var(--amber-dk);padding-bottom:0}
+.app .box-b{font-family:var(--sans);font-size:15.5px}
+.skill .box-h{background:var(--violet)}
+.skill{border:2px solid var(--violet)}
+.skill ol{font-family:var(--sans);font-size:15.5px;padding-left:22px}
+.skill li{margin-bottom:6px}
+.thinking{border-left:6px solid var(--unit);background:var(--unit-lt);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0 22px;font-family:var(--sans);font-size:15px}
+.thinking b.t{font-family:var(--cond);letter-spacing:.16em;color:var(--unit);font-size:14px;display:block}
+
+/* figures */
+figure{margin:28px 0;background:#FDFBF7;border:1px solid var(--rule);border-radius:12px;padding:18px 20px 14px}
+figure.bare{background:none;border:0;padding:0}
+.figlabel{font-family:var(--cond);font-weight:700;font-size:20px;letter-spacing:.05em;color:var(--unit-dk);margin:0 0 2px}
+.figlabel span{color:var(--amber-dk);margin-right:8px}
+.figsub{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);margin:0 0 10px}
+figcaption,.source{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);margin-top:8px;line-height:1.45}
+.analyze{margin-top:12px;border-top:1px solid var(--rule);padding-top:10px;font-family:var(--sans);font-size:14.5px}
+.analyze b{font-family:var(--cond);letter-spacing:.16em;color:var(--amber-dk);font-size:14px;margin-right:6px}
+.analyze ol{margin:4px 0 0;padding-left:20px}
+details.dt{margin-top:8px;font-family:var(--sans);font-size:13px}
+details.dt summary{cursor:pointer;color:var(--unit);font-weight:600}
+table.data{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14px;margin:8px 0}
+table.data th{background:var(--unit);color:var(--cream);text-align:left;padding:7px 10px;font-weight:600}
+table.data td{padding:7px 10px;border-bottom:1px solid var(--rule)}
+table.data tr:nth-child(even) td{background:#faf7ef}
+table.data td.num,table.data th.num{text-align:right;font-variant-numeric:tabular-nums}
+table.data tr.hl td{background:var(--amber-wash)!important;font-weight:600}
+.essentials{border:3px solid var(--unit);background:#FDFBF7}
+.essentials .es-head{background:var(--unit);color:var(--cream);margin:-18px -20px 16px;padding:10px 20px;font-family:var(--cond);font-size:22px;font-weight:700;letter-spacing:.06em;border-radius:9px 9px 0 0}
+.essentials .es-head small{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.22em;color:var(--pale)}
+.fop{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fop > div{border-radius:10px;padding:12px;font-family:var(--sans);font-size:13.5px;line-height:1.4}
+.fop h5{font-family:var(--cond);font-size:22px;margin:6px 0 2px;letter-spacing:.04em}
+.fop .what{font-weight:600;margin-bottom:6px}
+.fop ul{margin:0;padding-left:16px}
+.questions3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.questions3 > div{background:var(--unit-lt);border-radius:10px;padding:14px;font-family:var(--sans);font-size:14px}
+.questions3 h5{margin:6px 0 4px;font-family:var(--cond);font-size:22px;color:var(--unit-dk)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.chart svg text{font-family:var(--sans)}
+svg .bar:hover,svg .pt:hover,svg .slice:hover{opacity:.82}
+
+/* pacesetter */
+.pacesetter{display:grid;grid-template-columns:240px 1fr;border:2px solid var(--unit-dk);border-radius:12px;overflow:hidden;margin:30px 0;background:#FDFBF7}
+.pacesetter .ps-side{background:var(--unit-dk);color:var(--cream);padding:18px;font-family:var(--sans);font-size:13.5px;line-height:1.45}
+.pacesetter .ps-side h5{font-family:var(--cond);color:var(--pale);letter-spacing:.2em;font-size:15px;margin:12px 0 8px}
+.pacesetter .ps-side dt{font-weight:700;color:var(--pale);margin-top:8px}
+.pacesetter .ps-side dd{margin:0}
+.pacesetter .ps-main{padding:18px 24px}
+.pacesetter .ps-main .kicker{color:var(--amber-dk)}
+.pacesetter h4{font-family:var(--cond);font-size:34px;margin:0 0 10px;color:var(--unit-dk);line-height:1}
+.pacesetter h4 span{display:block;font-size:20px;color:var(--ink-2);font-weight:600}
+
+.ps-photo{margin:0 0 6px;padding:0;border:0;background:none;border-radius:0}
+.ps-photo img{width:100%;border-radius:8px;display:block}
+.ps-photo figcaption{color:var(--cream);font-size:12.5px;line-height:1.45;margin-top:8px}
+.ps-photo figcaption span{display:block;margin-top:4px;font-size:11px;color:var(--unit-mid)}
+.ps-photo figcaption a{color:var(--unit-mid)}
+/* assessments */
+.assess{margin:34px 0 10px;border:3px solid var(--unit);border-radius:14px;overflow:hidden;background:#FDFBF7}
+.assess-h{background:var(--unit);color:var(--cream);padding:12px 22px;display:flex;align-items:baseline;gap:14px;font-family:var(--cond)}
+.assess-h b{font-size:28px;letter-spacing:.06em}
+.assess-h span{font-family:var(--sans);font-size:12px;letter-spacing:.2em;color:var(--pale)}
+.assess-grid{display:grid;grid-template-columns:1fr 1fr;font-family:var(--sans);font-size:15px;line-height:1.5}
+.assess-grid > div{padding:16px 22px}
+.assess-grid > div:first-child{border-right:1px solid var(--rule)}
+.assess h5{font-family:var(--cond);font-size:16px;letter-spacing:.16em;color:var(--unit);margin:4px 0 8px}
+.assess ol{padding-left:22px;margin:0 0 10px}
+.assess li{margin-bottom:8px}
+.inpractice{background:var(--amber-wash);border-top:1px solid var(--rule);padding:16px 22px;font-family:var(--sans);font-size:15px}
+.inpractice h5{color:var(--amber-dk)}
+.inpractice table.data{background:#FDFBF7}
+.inpractice td.blank{color:#b0b5bd}
+
+/* case study */
+.case{background:#f3efe6;padding:0 0 20px}
+.case-banner{background:var(--coral);color:#fff;padding:34px 56px 28px;position:relative;overflow:hidden}
+.case-banner .kicker{color:#ffe3c2;letter-spacing:.3em}
+.case-banner h2{font-family:var(--cond);font-size:58px;margin:4px 0 6px;line-height:1}
+.case-banner p{font-family:var(--sans);font-size:15px;max-width:720px;margin:0;color:#fff3ee}
+.doc{background:#FDFBF7;border:1px solid #e0d7c6;border-radius:10px;margin:22px 0;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.doc-h{display:flex;gap:14px;align-items:center;padding:12px 18px;border-bottom:1px solid #eee4d3}
+.doc-h .letter{width:44px;height:44px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--cond);font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center;flex:none}
+.doc-h b{font-family:var(--cond);font-size:22px;color:var(--ink)}
+.doc-h small{display:block;font-family:var(--sans);font-size:12px;color:var(--ink-3);letter-spacing:.06em}
+.doc-b{padding:14px 20px;font-size:16.5px}
+.doc .think{background:var(--coral-lt);padding:10px 20px;font-family:var(--sans);font-size:14.5px;border-radius:0 0 10px 10px}
+.doc .think b{color:var(--coral)}
+.voices{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.voice{background:#faf7f1;border-radius:10px;padding:14px;font-size:15.5px}
+.voice h6{margin:0 0 6px;font-family:var(--sans);font-size:14px;color:var(--coral)}
+
+/* chapter assessment */
+.chap-assess .sec-banner{background:var(--ink)}
+.chap-assess .sec-banner .num{background:#0f131c}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.wordbank span{background:var(--unit-lt);border:1px solid var(--unit-mid);border-radius:20px;padding:3px 12px;font-family:var(--sans);font-size:14px}
+.cloze{font-size:17.5px;line-height:1.9}
+.cloze .bl{display:inline-block;min-width:34px;border-bottom:2px solid var(--ink);text-align:center;font-family:var(--sans);font-weight:700;font-size:13px;color:var(--unit)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.summary-grid > div{background:#FDFBF7;border:1px solid var(--rule);border-left:5px solid var(--unit);border-radius:8px;padding:12px 16px;font-family:var(--sans);font-size:14.5px}
+.summary-grid h5{margin:0 0 6px;font-family:var(--cond);font-size:19px;color:var(--unit-dk)}
+.sim{border:3px solid var(--violet);border-radius:14px;background:#FDFBF7;overflow:hidden;margin:28px 0}
+.sim .box-h{background:var(--violet)}
+.sim .box-b{font-family:var(--sans);font-size:15.5px}
+.steps{counter-reset:st;list-style:none;padding:0}
+.steps li{counter-increment:st;position:relative;padding:0 0 10px 44px}
+.steps li::before{content:counter(st);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--violet);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.credits{font-family:var(--sans);font-size:13px;color:var(--ink-2);padding:22px 56px;background:#f1f0eb;border-top:1px solid var(--rule)}
+.credits h4{font-family:var(--cond);letter-spacing:.16em;color:var(--unit);font-size:16px;margin:0 0 8px}
+.credits li{margin-bottom:4px}
+
+/* running footer */
+.runfoot{display:block;text-align:center;background:var(--unit-dk);color:var(--cream);font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;font-weight:600;padding:10px 56px;margin-top:26px}
+
+
+/* photos */
+figure.photo{padding:0;overflow:hidden;background:#FDFBF7}
+figure.photo img{width:100%;display:block;background:#F5EADA}
+figure.photo .crop{position:relative;overflow:hidden;width:100%;background:#e9e7e0}
+.kl{position:absolute;left:50%;transform:translateX(-50%);font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.2em;color:var(--cream);background:rgba(0,0,0,.6);padding:3px 12px;border-radius:3px;white-space:nowrap}.kn{top:12px}.ks{bottom:12px}
+figure.photo.sidefig{float:left;width:270px;margin:4px 28px 14px 0}
+.pair > .body{display:flow-root}
+figure.photo figcaption{margin:0;padding:10px 16px 12px;font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ink-2);border-top:4px solid var(--amber)}
+figure.photo .phlabel{display:block;font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--amber-dk);text-transform:uppercase;margin-bottom:2px}
+figure.photo .credit{display:block;margin-top:5px;font-size:11.5px;color:var(--ink-3)}
+figure.photo .credit a{color:var(--ink-3)}
+.side figure.photo{margin:0 0 18px}
+.side figure.photo figcaption{font-size:12.5px;padding:8px 12px 10px}
+figure.photo.sidefig figcaption{font-size:12.5px;padding:8px 12px 10px}
+.photo-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:26px 0}
+.photo-row figure.photo{margin:0}
+.opener-photo{position:relative;height:560px;overflow:hidden}
+.opener-photo img{width:100%;height:100%;object-fit:cover;object-position:center 70%;display:block}
+.opener-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(82,51,66,.80) 0%,rgba(82,51,66,.38) 45%,rgba(0,0,0,0) 70%)}
+.opener-head{z-index:2}
+.opener-caption .credit{display:block;font-size:11.5px;color:var(--unit-mid);margin-top:4px}
+.opener-caption .credit a{color:var(--unit-mid)}
+@media (max-width:900px){.photo-row{grid-template-columns:1fr}.opener-photo{height:300px}}
+
+/* added for Government */
+.src-quote{margin:0;padding:14px 20px;background:#FDFBF7;border-left:6px solid var(--amber);font-size:17px;line-height:1.55}
+.src-quote cite{display:block;margin-top:8px;font-family:var(--sans);font-size:12.5px;font-style:normal;color:var(--ink-3)}
+table.cmp{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:13.5px;line-height:1.4}
+table.cmp th{background:var(--unit);color:var(--cream);text-align:left;padding:8px 10px;font-weight:600;vertical-align:top}
+table.cmp td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top;background:#FDFBF7}
+table.cmp td:first-child{font-weight:700;color:var(--unit-dk);background:var(--unit-lt)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.chips span{background:var(--unit-lt);border:1px solid var(--unit-mid);border-radius:20px;padding:2px 12px;font-family:var(--sans);font-size:13.5px;color:var(--unit-dk);font-weight:600}
+.obj-term{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.obj-term > div{background:#FDFBF7;border:1px solid var(--rule);border-radius:10px;padding:12px 16px;font-family:var(--sans);font-size:14px;line-height:1.45}
+.obj-term h4{margin:0 0 6px;font-family:var(--cond);font-size:16px;letter-spacing:.14em;color:var(--unit)}
+.obj-term ul{margin:0;padding-left:18px}
+.reviewbox{border:3px solid var(--unit);border-radius:12px;background:#FDFBF7;padding:14px 20px;margin:12px 0 22px;font-family:var(--sans);font-size:15.5px}
+.reviewbox .kicker{margin-bottom:4px}
+@media (max-width:900px){.obj-term{grid-template-columns:1fr}}
+
+/* responsive */
+@media (max-width:900px){
+  body{font-size:17px}
+  .content{padding:8px 20px}
+  .pair{grid-template-columns:1fr}
+  figure.photo.sidefig{float:none;width:100%;max-width:380px;margin:12px auto}
+  .opener-head{position:static;padding:24px 20px 0;background:var(--unit-dk)}
+  .chapnum{font-size:110px}
+  .opener h1{font-size:48px}
+  .fop,.questions3{grid-template-columns:1fr 1fr}
+  .sec-banner{grid-template-columns:90px 1fr}
+  .sec-banner .icon{display:none}
+  .sec-banner h2{font-size:34px;padding:20px}
+  .case-banner{padding:26px 20px}
+  .runfoot{padding:10px 20px;grid-template-columns:1fr;text-align:center}
+  
+}
+@media print{
+  body{background:#FDFBF7;font-size:11pt}
+  .topnav,.progress{display:none}
+  .book{box-shadow:none}
+  .section,.case,.chap-assess{break-before:page}
+  figure,.box,.assess,.doc,.pacesetter{break-inside:avoid}
+  details.dt{display:none}
+}
+
+.solo{max-width:calc(100% - 288px)}
+.act{margin:44px 0 6px;display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--amber);padding-bottom:6px}
+.act span{font-family:var(--cond);font-weight:700;letter-spacing:.2em;font-size:14px;color:var(--amber-dk)}
+.act b{font-family:var(--cond);font-size:28px;color:var(--unit-dk)}
+.cp .box-h{color:var(--unit-dk)} .cp ul.ch{list-style:upper-alpha;margin:4px 0 8px;padding-left:24px}
+.cp ol>li{margin-bottom:10px}
+.feature{margin:34px 0;border:2px solid var(--unit);border-radius:12px;background:#FDFBF7;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);font-family:var(--sans)}
+.feature .ft-h{display:flex;gap:14px;align-items:center;background:var(--unit);color:var(--cream);padding:12px 20px}
+.feature .ft-h .em{font-size:30px}
+.feature .ft-h small{display:block;font-family:var(--cond);letter-spacing:.2em;font-size:13px;color:var(--pale);font-weight:700}
+.feature .ft-h b{font-family:var(--cond);font-size:24px;letter-spacing:.03em}
+.feature .ft-b{padding:16px 22px 14px;font-size:16px;line-height:1.55}
+.feature.chron{border-color:var(--amber-dk);border-width:3px}
+.feature.chron .ft-h{background:var(--unit-dk);border-bottom:4px solid var(--pale)}
+.ft-sub{font-family:var(--cond);font-size:22px;color:var(--unit-dk);margin:6px 0 8px}
+.chron-sub{font-family:var(--cond);font-size:20px;color:var(--amber-dk);margin:0 0 10px;font-weight:700;letter-spacing:.03em}
+.vision{border-left:5px solid var(--amber);background:var(--amber-wash);padding:8px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+.vision h5{margin:0 0 4px;font-family:var(--cond);font-size:17px;letter-spacing:.06em;color:var(--unit-dk)}
+h5.qh{font-family:var(--cond);letter-spacing:.16em;font-size:15px;color:var(--unit);margin:16px 0 4px;text-transform:uppercase}
+ol.qs{padding-left:22px;margin:4px 0 6px} ol.qs li{margin-bottom:6px}
+.doc{border:2px solid var(--unit);border-radius:12px;overflow:hidden;margin:26px 0;background:#FDFBF7}
+.doc-h{display:flex;gap:14px;align-items:center;background:var(--unit);color:var(--cream);padding:10px 18px}
+.doc-h .letter{width:42px;height:42px;border-radius:50%;background:var(--pale);color:var(--unit-dk);font-family:var(--cond);font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center}
+.doc-h small{display:block;font-family:var(--cond);letter-spacing:.18em;font-size:13px;color:var(--pale)} .doc-h b{font-family:var(--cond);font-size:22px}
+.doc-b{padding:14px 22px;font-size:16.5px} .doc .think{padding:12px 22px;background:var(--unit-lt);border-top:1px solid var(--unit-mid);font-family:var(--sans);font-size:15px}
+.doc .ctx{font-family:var(--sans);font-size:14.5px;color:#333;margin:8px 0}
+.case-banner{position:relative;background:linear-gradient(160deg,var(--unit-dk),var(--unit));color:var(--cream);padding:44px 56px;overflow:hidden}
+.case-banner h2{font-family:var(--cond);font-size:52px;line-height:1;margin:6px 0 10px}
+.case-banner .kicker{color:var(--pale)}
+.src-quote{margin:8px 0;padding:10px 18px;border-left:5px solid var(--amber);background:var(--amber-wash);font-size:17px}
+.src-quote cite{display:block;margin-top:8px;font-family:var(--sans);font-size:13px;font-style:normal;color:#444}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:14px 0 20px} .summary-grid>div{border-top:5px solid var(--amber);background:#FDFBF7;padding:12px 14px;font-family:var(--sans);font-size:14.5px;box-shadow:0 1px 3px rgba(0,0,0,.08)} .summary-grid h5{font-family:var(--cond);font-size:19px;color:var(--unit-dk);margin:0 0 6px}
+.reviewbox{background:var(--unit-lt);border-left:6px solid var(--amber);padding:14px 20px;font-size:20px;font-weight:600;color:var(--unit-dk);margin:20px 0}
+
+.chron-card{margin:34px 0;border:3px solid var(--amber-dk);border-radius:12px;background:#FDFBF7;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);font-family:var(--sans)}
+.chron-card .ft-h{display:flex;gap:14px;align-items:center;background:var(--unit-dk);color:var(--cream);padding:12px 20px;border-bottom:4px solid var(--pale)}
+.chron-card .ft-h .em{font-size:30px}
+.chron-card .ft-h small{display:block;font-family:var(--cond);letter-spacing:.2em;font-size:13px;color:var(--pale);font-weight:700}
+.chron-card .ft-h b{font-family:var(--cond);font-size:24px;letter-spacing:.03em}
+.chron-card .ft-b{padding:16px 22px 18px;font-size:16px;line-height:1.55}
+.chron-card .chron-sub{margin:0 0 8px}
+.chron-card .dek{font-family:var(--serif);margin:0 0 12px}
+.chron-card a.readmore{display:inline-block;background:var(--unit);color:var(--cream);text-decoration:none;font-family:var(--cond);font-weight:700;letter-spacing:.12em;font-size:15px;padding:8px 18px;border-radius:8px;border-bottom:3px solid var(--amber-dk)}
+.chron-card a.readmore:hover{background:var(--unit-dk)}
+.chron-page{padding:34px 56px 20px}
+.chron-page .back{display:inline-block;font-family:var(--cond);font-weight:700;letter-spacing:.12em;font-size:15px;color:var(--unit);text-decoration:none;margin-bottom:14px}
+.chron-page .back:hover{text-decoration:underline}
+.chron-hero{background:linear-gradient(160deg,var(--unit-dk),var(--unit));color:var(--cream);padding:40px 56px 34px;border-bottom:6px solid var(--pale)}
+.chron-hero small{display:block;font-family:var(--cond);letter-spacing:.24em;font-size:15px;color:var(--pale);font-weight:700}
+.chron-hero h1{font-family:var(--cond);font-size:54px;line-height:1;margin:8px 0 8px}
+.chron-hero p{font-family:var(--cond);font-size:24px;color:var(--cream);margin:0;letter-spacing:.03em}
+.chron-page .body{max-width:820px;margin:0 auto;font-size:18px;line-height:1.65}
+.chron-page figure.photo{margin-top:4px}
+.chron-page figure.photo.wide{float:none;width:100%;max-width:560px;margin:6px auto 22px}
+@media (max-width:900px){.chron-page{padding:24px 20px}.chron-hero{padding:28px 20px}.chron-hero h1{font-size:38px}}
+.tag{color:#3F6A3C !important}.ft-h small,.doc-h small{color:var(--cream) !important}.doc-h b{color:var(--cream) !important}
+</style>
+<style id="qc-fixes">
+/* QC fixes: case-study document titles were dark on the dark header; review grid and wide tables on narrow screens */
+.doc .doc-h b{color:#fff}.feature .ft-h small{color:#fff}h3.kc{color:#856316}.doc .doc-h small{color:#e4e4e4}
+.fact .big{overflow-wrap:anywhere}
+figure.chart{overflow-x:auto}
+@media(max-width:900px){.summary-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.summary-grid{grid-template-columns:1fr}.sec-banner .num small{letter-spacing:.12em;font-size:12px}figure.chart table.cmp{min-width:520px}}
+</style></head>
+<body>
+<div class="book">
+<nav class="topnav" aria-label="Chapter sections">
+  <span class="brand">CH. 6 · THE CONTESTED WEST</span>
+  <a href="#opener">Opener</a><a href="#s1">6.1 Steel, Steam, and the Closing of the Range</a><a href="#s2">6.2 The Wars for the Plains</a><a href="#s3">6.3 The Fractured Frontier</a><a href="#case">Case Study</a><a href="#assess">Chapter Review</a>
+</nav>
+<div class="progress"><span id="bar"></span></div>
+
+
+
+
+<header class="opener" id="opener">
+  <div class="opener-photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dale%20Creek%20Bridge%20Union%20Pacific%20Railroad%20Company%20by%20Andrew%20J%20Russell.jpg?width=2000" alt="A black-and-white photograph of a tall railroad trestle bridge crossing a rocky gorge." style="object-position:50% 50%"></div>
+  <div class="opener-head">
+    <div class="chapnum">6</div>
+    <div><div class="unitline">Unit 2 · Expansion and Exclusion</div><div class="chapword">CHAPTER</div><h1>The Contested West</h1></div>
+  </div>
+  <div class="opener-caption"><b>Steel across the gorge.</b> Dale Creek Bridge was built for the Union Pacific Railroad. Photographer Andrew J. Russell took the picture between about 1864 and 1869, as the line was being built. It shows the scale of the project at the heart of this chapter. <span class="credit">Image: Andrew J. Russell (Yale Collection of Western Americana) / <a href="https://commons.wikimedia.org/wiki/File:Dale_Creek_Bridge_Union_Pacific_Railroad_Company_by_Andrew_J_Russell.jpg">Wikimedia Commons</a>, Public domain</span></div>
+  <div class="opener-grid">
+    <aside class="sectionlist">
+      <h3>IN THIS CHAPTER</h3>
+      <a href="#s1"><span class="sl-tag">SECTION 6.1</span><span class="sl-title">Steel, Steam, and the Closing of the Range</span></a><a href="#s2"><span class="sl-tag">SECTION 6.2</span><span class="sl-title">The Wars for the Plains</span></a><a href="#s3"><span class="sl-tag">SECTION 6.3</span><span class="sl-title">The Fractured Frontier</span></a>
+      <a href="#case" class="cs"><span class="sl-tag">CASE STUDY</span><span class="sl-title">Who Was the West For?</span></a>
+      <a href="#assess"><span class="sl-tag">CHAPTER REVIEW</span><span class="sl-title">Summary and Sources</span></a>
+    </aside>
+    <div class="opener-main">
+      <p class="kicker">Essential Question</p>
+      <p style="font-size:21px;line-height:1.4;font-weight:600;color:var(--unit-dk)">How was the American West transformed from a diverse borderland into a consolidated part of the national economy, and at what human cost?</p>
+      <div class="obj-term">
+        <div><h4>CHAPTER OBJECTIVES</h4><ul><li><b>Analyze</b> the partnership between the federal government and private corporations (railroads) in opening the West to settlement and extraction.</li><li><b>Evaluate</b> the impact of U.S. military strategy (“total war”) and assimilation policies (Dawes Act, boarding schools) on Native American societies.</li><li><b>Contrast</b> the myth of the “frontier” with the reality of the West as a multiracial borderland shaped by Chinese, Mexican, and African American laborers.</li><li><b>Trace</b> the economic shifts from the open range of the Cattle Kingdom to the fenced industrial agriculture of the late 19th century.</li><li><b>Examine</b> the rise of exclusionary laws, such as the Chinese Exclusion Act, that defined who belonged in the new American West.</li></ul></div>
+        <div><h4>KEY TERMS</h4><div class="chips"><span><a href="#t-transcontinental-railroad" style="color:inherit;text-decoration:none">Transcontinental Railroad</a></span><span><a href="#t-homestead-act" style="color:inherit;text-decoration:none">Homestead Act</a></span><span><a href="#t-cattle-kingdom" style="color:inherit;text-decoration:none">Cattle Kingdom</a></span><span><a href="#t-barbed-wire" style="color:inherit;text-decoration:none">Barbed Wire</a></span><span><a href="#t-the-grange" style="color:inherit;text-decoration:none">The Grange</a></span><span><a href="#t-exodusters" style="color:inherit;text-decoration:none">Exodusters</a></span><span><a href="#t-reservation-system" style="color:inherit;text-decoration:none">Reservation System</a></span><span><a href="#t-battle-of-little-bighorn" style="color:inherit;text-decoration:none">Battle of Little Bighorn</a></span><span><a href="#t-dawes-severalty-act" style="color:inherit;text-decoration:none">Dawes Severalty Act</a></span><span><a href="#t-assimilation" style="color:inherit;text-decoration:none">Assimilation</a></span><span><a href="#t-carlisle-indian-school" style="color:inherit;text-decoration:none">Carlisle Indian School</a></span><span><a href="#t-ghost-dance-movement" style="color:inherit;text-decoration:none">Ghost Dance Movement</a></span><span><a href="#t-wounded-knee-massacre" style="color:inherit;text-decoration:none">Wounded Knee Massacre</a></span><span><a href="#t-nativism" style="color:inherit;text-decoration:none">Nativism</a></span><span><a href="#t-chinese-exclusion-act" style="color:inherit;text-decoration:none">Chinese Exclusion Act</a></span><span><a href="#t-yick-wo-v-hopkins" style="color:inherit;text-decoration:none">Yick Wo v. Hopkins</a></span><span><a href="#t-californios" style="color:inherit;text-decoration:none">Californios</a></span><span><a href="#t-las-gorras-blancas" style="color:inherit;text-decoration:none">Las Gorras Blancas</a></span><span><a href="#t-frontier-thesis" style="color:inherit;text-decoration:none">Frontier Thesis</a></span><span><a href="#t-borderlands" style="color:inherit;text-decoration:none">Borderlands</a></span></div></div>
+      </div>
+      <div class="keyconcept" style="margin-top:20px">
+        <p class="kicker">Chapter 6 Key Concept</p>
+        <p><b>Opening the West and closing it to others.</b> After the Civil War, the federal government and the railroads joined to tie the West to the national economy. That project brought settlers, cattle, and farms. It also meant the defeat of the Plains nations, the forced assimilation of Native children, and laws that pushed Chinese and Mexican Americans to the margins.</p>
+      </div>
+      <p class="kicker">Why the Concept Matters</p>
+      <p>Debates today about immigration, Native sovereignty, public lands, and who counts as a “real” American draw on stories first told about the West. The myth of an empty frontier shaped how Americans saw their country for generations. Knowing the real history helps you test any story that says the nation’s growth cost nothing.</p>
+      <p class="kicker" style="margin-top:18px">Case Study Preview</p>
+      <p style="margin-bottom:0">At the end of this chapter you will read three primary sources, a speech about boarding schools, a law restricting Chinese immigration, and a famous essay about the frontier, and write a paragraph on <a href="#case">how the West was transformed and at what human cost.</a></p>
+      <div class="standards">
+        <div class="stdbox"><h4>CALIFORNIA CONTENT STANDARDS</h4><ul>
+          <li><code>HSS-11.1.4</code> Examine the effects of the Civil War and Reconstruction and of the industrial revolution, including demographic shifts and the emergence in the late nineteenth century of the United States as a world power. <i>(Sections 6.1 – 6.3)</i></li>
+          <li><code>HSS-11.2.6</code> Trace the economic development of the United States and its emergence as a major industrial power, including its gains from trade and the advantages of its physical geography. <i>(Section 6.1)</i></li></ul></div>
+        <div class="stdbox"><h4>ALSO SUPPORTS</h4><ul>
+          <li><code>HSS-11.2.3</code> Trace the effect of the Americanization movement. <i>(Section 6.2, closest fit for assimilation policy)</i></li>
+          <li><code>HSS-11.2.8</code> Examine the effect of political programs and activities of Populists. <i>(Section 6.1, the Grange)</i></li>
+          <li><code>RH.11-12.7</code> Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, as well as in words) in order to address a question or solve a problem. <i>(Figures, Case Study)</i></li></ul></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="s1">
+  <div class="sec-banner">
+    <div class="num"><small>SECTION</small><b>6.1</b></div>
+    <h2>Steel, Steam, and the Closing of the Range</h2>
+    <div class="icon">
+      <svg viewBox="0 0 160 120" width="150" aria-hidden="true"><path d="M52 108 L72 14 M108 108 L88 14" stroke="#CAA44F" stroke-width="6" stroke-linecap="round"/><path d="M58 84 H102 M64 58 H96 M69 34 H91" stroke="#F5EADA" stroke-width="5" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+  <div class="content">
+
+    <h3 class="kc">Introduction</h3>
+    <h3 class="head">Corporate Conquest</h3>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">In the decades following the Civil War, the American West was transformed from a perceived “wild” frontier into a calculated industrial and government-sponsored project. Far from the myth of rugged individualism, the incorporation of the West was driven by a powerful partnership between the federal government and massive corporations seeking to extract the continent’s immense resources. Through the expansion of the steam locomotive and landmark legislation like the Homestead Act, the nation’s identity and economy were fundamentally altered as the Pacific coast was bound to the industrial North. This era saw the rise of global agricultural markets, the birth of the Cattle Kingdom, and the eventual enclosure of the plains by barbed wire.</p>
+      </div>
+      <div class="side">
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1862–1890</span>The years of the main developments in this section, from the Pacific Railway Act to the closing of the range.</div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>Section 6.2 shows what these railroads and settlers meant for the Plains nations.</div>
+      </div>
+    </div>
+
+    <div class="act"><span>SECTION 6.1 · PART 1</span><b>The Industrialized Homestead</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">The initial conquest of the West required an infrastructure project of unprecedented scale: the Transcontinental Railroad. Because the financial risk was too great for private investors alone, the federal government became an indispensable partner, providing massive land grants in a “checkerboard” pattern to subsidize construction. While these railroads populating the West with recruited immigrants, the government simultaneously passed the Homestead Act to encourage small, independent farming. However, the semi-arid climate of the Great Plains often turned this Jeffersonian dream into a grueling struggle for survival, leading to the rise of massive corporate “bonanza farms” that could afford the expensive machinery necessary for the harsh environment.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Checkerboard land grant</span> A pattern in which the railroad received alternating square-mile sections of land along its track and the government kept the rest. <span class="sp">Spanish: concesión de tierras en tablero</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1862</span>Year of the first Pacific Railway Act and the Homestead Act.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Engine of Consolidation</h3>
+    <div class="pair">
+      <div class="body">
+        <p>In the decades following the Civil War, the American West underwent a transformation so rapid and profound that it fundamentally altered the nation’s identity and economy. Often depicted in mythology as a triumph of rugged individualism—where solitary pioneers tamed a wild continent with nothing but grit and a rifle—the reality of western expansion was far more organized, industrial, and government-sponsored. The incorporation of the West was not a haphazard migration but a calculated project of the federal government, driven by the desire to bind the Pacific coast to the industrial North and to extract the immense resources of the continent’s interior. The primary instrument of this transformation was the steam locomotive.</p>
+        <p>Before the 1860s, travel to the West was a perilous months-long journey by wagon or a long sea voyage around South America. The solution to this geographic isolation lay in the construction of the <dfn id="t-transcontinental-railroad"><strong>Transcontinental Railroad</strong></dfn>, a feat of engineering that would bridge the gap between the Missouri River and the Pacific Ocean. However, the sheer scale of such a project was beyond the financial risk appetite of private investors. Building thousands of miles of track through the Great Plains, over the Rockies, and across the scorched Great Basin required capital that no single corporation possessed. To solve this, the federal government stepped in, becoming the indispensable partner of industry.</p>
+        <p>Congress passed the Pacific Railway Acts of 1862 and 1864, which chartered two companies to undertake the task: the <b>Union Pacific</b> and the <b>Central Pacific</b>. The Union Pacific was to build westward from Omaha, Nebraska, while the Central Pacific would build eastward from Sacramento, California. To finance this colossal endeavor, the government did not simply hand over cash; it handed over the continent itself. The government granted these companies massive loans and, more importantly, vast tracts of public land. For every mile of track laid, the railroad companies received ten square miles of land in alternating sections on either side of the track—a pattern that looked like a checkerboard.</p>
+        <p>This land grant system had profound consequences. It made the railroad companies not just transportation firms, but the largest real estate developers in the nation. They financed construction by selling these government-gifted lands to settlers, speculators, and European investors. The railroads sent agents to Scandinavia, Germany, and Great Britain to recruit immigrants with promises of fertile soil and cheap passage, effectively populating the West to create their own customer base. The federal subsidy system ensured that the settlement of the West was tied inextricably to corporate profit. The railroads determined where towns would be built, which farmers would succeed based on freight rates, and which regions would stagnate.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Transcontinental Railroad</span> The rail line that joined the Missouri River to the Pacific coast, built by the Union Pacific and the Central Pacific. <span class="sp">Spanish: Ferrocarril Transcontinental</span></div>
+        <div class="connect"><span class="tag">CONNECT TO ECONOMICS</span>Private investors thought the risk of a line this long was too high. The government shared the risk by giving land and loans. Who should pay for projects like this?</div>
+      <div class="connect"><span class="tag">CONNECT TO CIVICS</span>The text says the Pacific Railway Acts of 1862 and 1864 made the federal government the indispensable partner of industry.</div>
+</div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.1</span>How a Railroad Land Grant Worked</p>
+      <p class="figsub">The steps from the Pacific Railway Acts to settlement, according to Section 6.1.</p>
+      <svg viewBox="0 0 860 130" role="img" aria-label="Flow diagram: Congress charters two railroads; the government grants loans and alternating land sections; the railroad sells the land; the railroad recruits settlers who become its customers"><g><title>Congress charters: Pacific Railway Acts create two companies</title><rect x="40.0" y="8" width="176" height="74" rx="10" fill="#fff" stroke="#546B7E" stroke-width="2.5"/></g><text x="128.0" y="34" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#523342" text-anchor="middle" font-weight="700">Congress charters</text><text x="128.0" y="52" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">Pacific Railway Acts</text><text x="128.0" y="65" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">create two companies</text><g><title>Government grants: Loans and alternating sections of land</title><rect x="241.3" y="8" width="176" height="74" rx="10" fill="#fff" stroke="#546B7E" stroke-width="2.5"/></g><text x="329.3" y="34" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#523342" text-anchor="middle" font-weight="700">Government grants</text><text x="329.3" y="52" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">Loans and alternating</text><text x="329.3" y="65" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">sections of land</text><g><title>Railroad sells land: Sales to settlers and investors pay for track</title><rect x="442.7" y="8" width="176" height="74" rx="10" fill="#fff" stroke="#546B7E" stroke-width="2.5"/></g><text x="530.7" y="34" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#523342" text-anchor="middle" font-weight="700">Railroad sells land</text><text x="530.7" y="52" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">Sales to settlers and</text><text x="530.7" y="65" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">investors pay for track</text><g><title>Railroad recruits: European settlers become customers</title><rect x="644.0" y="8" width="176" height="74" rx="10" fill="#fff" stroke="#546B7E" stroke-width="2.5"/></g><text x="732.0" y="34" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#523342" text-anchor="middle" font-weight="700">Railroad recruits</text><text x="732.0" y="52" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">European settlers become</text><text x="732.0" y="65" font-family="Inter, Arial, sans-serif" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="400">customers</text><path d="M219.0 45.0 L236.3 45.0" stroke="#737B62" stroke-width="3" fill="none"/><path d="M236.3 39.0 l8 6 l-8 6z" fill="#737B62"/><path d="M420.3 45.0 L437.7 45.0" stroke="#737B62" stroke-width="3" fill="none"/><path d="M437.7 39.0 l8 6 l-8 6z" fill="#737B62"/><path d="M621.7 45.0 L639.0 45.0" stroke="#737B62" stroke-width="3" fill="none"/><path d="M639.0 39.0 l8 6 l-8 6z" fill="#737B62"/></svg>
+      <p class="source">Source: Sequence as described in Section 6.1’s text. Diagram created for this textbook.</p>
+      <div class="analyze"><b>ANALYZE DIAGRAMS</b>
+        <ol><li>Why did the federal government become a partner of the railroads?</li><li>How did selling land help the railroads pay for construction?</li><li>What did the railroads gain from recruiting settlers in Europe?</li></ol>
+      </div>
+    </figure>
+
+    <div class="pair">
+      <div class="body">
+        <p>The construction of the line was a race, as each mile of track meant more land and more government bonds. This competition drove a brutal pace of labor. The Union Pacific relied heavily on Irish immigrants and Civil War veterans, who laid track across the flat expanses of the Plains while fending off attacks from Native American tribes who saw the “iron horse” as a death knell for their way of life. The Central Pacific, facing the granite wall of the Sierra Nevada, turned to Chinese laborers. These workers blasted tunnels through solid rock and worked through avalanches and blizzards, suffering high casualty rates that were often glossed over in company reports. The two lines finally met on May 10, 1869, at <b>Promontory Point</b>, Utah. A golden spike was driven into the final tie, sending a telegraph signal to the East Coast that set off celebrations of national unity. The continent had been shrunk; a journey that once took months now took days.</p>
+        <p>The impact of the railroads extended beyond mere travel time. To manage the scheduling of trains moving across the vast breadth of the continent, the railroad companies unilaterally divided the nation into four <b>Standard Time Zones</b> in 1883. Prior to this, every town kept its own local sun time, a nightmare for schedulers. The fact that the federal government later adopted these railroad time zones into law illustrates the immense power these corporations held: they literally redefined time for the American people.</p>
+      </div>
+      <div class="side">
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">May 10, 1869</span>Date the Union Pacific and Central Pacific met at Promontory Point, Utah.</div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Standard Time Zones</span> Four zones created by the railroads in 1883, so trains could keep a common schedule. <span class="sp">Spanish: husos horarios estándar</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>Section 6.3 returns to the Chinese workers who built the Central Pacific’s mountain line.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Agrarian Dream and Reality</h3>
+    <div class="pair">
+      <div class="body">
+        <p>While the railroads laid the infrastructure for the West, the federal government also sought to populate the land with loyal citizens. The Republican party, dominating Congress during the Civil War, passed the <dfn id="t-homestead-act"><strong>Homestead Act</strong></dfn> in 1862. This landmark legislation reflected the Jeffersonian ideal of a nation of small, independent farmers. It offered 160 acres of public land free to any citizen, or intended citizen, who was head of a household. The only requirements were to pay a small registration fee, live on the land for five years, and “improve” it by building a dwelling and cultivating crops.</p>
+        <p>On paper, the Homestead Act was a democratic triumph, offering the poor a chance at property ownership that was impossible in Europe or the crowded East. Between 1862 and 1900, up to 600,000 families took advantage of this offer. However, the reality of the Homestead Act was often far harsher than the dream. The law was written by legislators from the lush, wet woodlands of the East who did not understand the geography of the West. West of the 100th meridian, the climate is semi-arid, receiving less than 20 inches of rain a year. In these dry regions, 160 acres was often too large to irrigate by hand but too small to practice the dry-farming techniques necessary to yield a profit.</p>
+        <p>Settlers on the Great Plains, known as <b>Sodbusters</b>, faced a grueling existence. Lacking trees for timber, they built their homes out of stacked blocks of prairie turf. These sod houses were cool in the summer and warm in the winter, but they were dark, damp, and prone to infestation by snakes and insects. The environment itself seemed hostile. Farmers battled blizzards, tornadoes, and terrifying plagues of locusts that could devour a year’s worth of crops in hours. Water was a constant obsession; deep wells had to be drilled, often by hand, to reach the water table.</p>
+        <p>The economic reality of the frontier also challenged the ideal of the independent yeoman farmer. Successful farming on the Plains increasingly required expensive machinery—steel plows to break the tough root systems of the prairie grass, mechanical reapers to harvest wheat, and grain drills to plant seeds deep where moisture remained. Most homesteaders lacked the capital to buy this equipment, forcing them to take out loans at high interest rates. Consequently, while the Homestead Act helped many, a significant portion of the land ended up in the hands of speculators and large corporations. “Bonanza farms”—enormous single-crop operations of 15,000 to 50,000 acres—began to appear. These corporate farms operated like factories, using economies of scale and professional management to outproduce and undersell the small family farmer.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Homestead Act</span> The 1862 law that offered 160 acres of public land to a head of household who paid a small fee, lived on it for five years, and improved it. <span class="sp">Spanish: Ley de Heredad (Homestead Act)</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">160 acres</span>Land offered to each homesteader.</div>
+        <div class="connect"><span class="tag">CONNECT TO CIVICS</span>The Act reflected Jefferson’s idea of a nation of small independent farmers. Who should decide how public land is used?</div>
+      </div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.2</span>The Homestead Dream and the Plains Reality</p>
+      <p class="figsub">What the Homestead Act promised and what settlers found, according to Section 6.1.</p>
+      <table class="cmp"><thead><tr><th>Question</th><th>The dream</th><th>The reality</th></tr></thead><tbody><tr><td>Land</td><td>160 acres of free public land</td><td>Semi-arid land west of the 100th meridian; under 20 inches of rain a year</td></tr><tr><td>Water</td><td>Farm by hand and by well</td><td>Deep wells drilled by hand; constant worry</td></tr><tr><td>Home</td><td>A house and cultivated fields</td><td>A sod house of stacked turf, damp and prone to insects and snakes</td></tr><tr><td>Equipment</td><td>Self-reliance of the independent farmer</td><td>Steel plows, reapers, and grain drills that most families could not afford</td></tr><tr><td>Result</td><td>A nation of small independent farmers</td><td>Loans at high interest; land that often ended up with speculators and large “bonanza farms”</td></tr></tbody></table>
+      <p class="source">Source: Summary of this section’s text. Table created for this textbook.</p>
+      <div class="analyze"><b>ANALYZE TABLES</b>
+        <ol><li>What problem did the 100th meridian create for settlers?</li><li>Why did equipment costs favor large farms over small ones?</li><li>Why did the text call the Homestead Act a democratic triumph “on paper”?</li></ol>
+      </div>
+    </figure>
+
+    <div class="pair">
+      <div class="body">
+        <p>Despite these hardships, the pull of the land remained strong, particularly for African Americans in the South following the collapse of Reconstruction. In 1879, a mass migration known as the “Exodus” occurred, as thousands of African Americans moved from the post-Reconstruction South to Kansas. Known as <dfn id="t-exodusters"><strong>Exodusters</strong></dfn>, these migrants sought to escape the violence of the Ku Klux Klan and the economic slavery of sharecropping. They saw the West as a promised land of freedom. While some Exodusters managed to establish successful communities, many found that the best land had already been taken by railroad companies or speculators, and they often faced the same poverty on the plains that they had fled in the South, though they remained fiercely proud of their independence from white oversight.</p>
+        <p>To support this agricultural expansion, the federal government passed the <b>Morrill Land Grant Act</b> of 1862 and 1890. This act gave federal land to the states to help finance agricultural colleges. These institutions were tasked with developing new farming techniques and machinery adapted to the unique conditions of the American West. The research produced by these “land-grant colleges” eventually helped turn the arid plains into the nation’s breadbasket, but often by promoting the very industrial farming methods that favored large operations over the small homesteader.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Exodusters</span> African Americans who left the post-Reconstruction South for Kansas, starting in 1879. <span class="sp">Spanish: Exodusters</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Morrill Land Grant Act</span> The 1862 law that gave federal land to the states to support agricultural colleges. <span class="sp">Spanish: Ley Morrill de concesión de tierras</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>The Exodusters’ journey is told in Chapter 5’s American Chronicle, “The Great Exodus.”</div>
+      </div>
+    </div>
+
+    <div class="act"><span>SECTION 6.1 · PART 2</span><b>The Enclosed Horizon</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">Before the Plains were fully subdivided by farmers, the region was dominated by the Cattle Kingdom, an industry built on Spanish and Mexican traditions and the high demand for beef in Northern cities. Cowboys, including a diverse workforce of Mexican Vaqueros and African Americans, drove millions of cattle along trails to railroad hubs in an era defined by the “Long Drive”. This iconic period of the open range lasted only twenty years before it was dismantled by overgrazing, harsh winters, and the invention of barbed wire. As the frontier closed and the West became a grid of private property, marginalized farmers began organizing into the Grange to challenge the corporate monopolies that now controlled their economic destiny.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Open range</span> Unfenced public grassland where cattle could graze freely. <span class="sp">Spanish: pastizal abierto</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">About 20 years</span>How long, the text says, the open range era lasted.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Rise of the Cattle Kingdom</h3>
+    <div class="pair">
+      <div class="body">
+        <p>Before the farmers fully fenced in the Plains, the vast grasslands from Texas to Montana were the domain of the cattle rancher. The roots of this industry lay in Texas, where Spanish and Mexican traditions had established the techniques of open-range ranching long before American settlers arrived. The Texas Longhorn, a breed descended from Spanish cattle, was perfectly adapted to the harsh environment; it could survive on coarse grass and little water and was immune to widespread diseases like Texas fever. By the end of the Civil War, millions of these cattle roamed wild in Texas.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Longhorn</span> A hardy breed descended from Spanish cattle that could survive on coarse grass and little water. <span class="sp">Spanish: ganado longhorn</span></div>
+        <div class="connect"><span class="tag">CONNECT TO ECONOMICS</span>A steer that was worth a few dollars in Texas could bring forty or fifty dollars in the North. That gap between supply and demand created the Cattle Kingdom.</div>
+      </div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Texas%20longhorn.jpg?width=1400" alt="A Texas Longhorn steer with very long, wide horns standing in a grassy field." loading="lazy" style="height:auto"><figcaption><span class="phlabel">A Texas Longhorn today</span>A Texas Longhorn at Lyndon B. Johnson State Park in Texas, photographed in 2006. This is a modern photograph. The breed descends from Spanish cattle, as the text explains.<span class="credit">Photo: Larry D. Moore / <a href="https://commons.wikimedia.org/wiki/File:Texas_longhorn.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span></figcaption></figure>
+
+    <div class="pair">
+      <div class="body">
+        <p>The economic driver of the cattle boom was the disconnection between supply and demand. In Texas, a steer might be worth only a few dollars. In the rapidly industrializing cities of the North, where hungry workers demanded beef, that same steer could command forty or fifty dollars. The challenge was logistics: how to move the beef from the range to the railhead. This economic opportunity gave rise to the <dfn id="t-cattle-kingdom">Cattle Kingdom</dfn> and the iconic era of the <b>Long Drive</b>.</p>
+        <p>Ranchers hired cowboys to herd cattle hundreds of miles north from Texas to the nearest railroad towns in Kansas, Missouri, and Nebraska. Routes like the <b>Chisholm Trail</b> became arteries of commerce, funneling millions of cattle to towns like Abilene and Dodge City. These “cow towns” became famous for their rowdiness, but their primary function was industrial: they were loading docks where living resources were transferred to the <b>Union Pacific</b> or Kansas Pacific tracks for shipment to the slaughterhouses of Chicago.</p>
+        <p>The labor force that drove this industry was far more diverse than Hollywood westerns typically depict. The very tools and techniques of the American cowboy—the lasso, the saddle, the chaps, and even the word “rodeo”—were borrowed directly from the Mexican <b>Vaqueros</b>. Furthermore, it is estimated that one in four cowboys on the long drives was African American, and another sizable percentage was Mexican. For many young men, the cattle drive offered a paying job and a life of relative equality on the trail, where skill with a horse and a rope mattered more than skin color. However, it was grueling, dangerous work, characterized by long hours in the saddle, the threat of stampedes, and constant exposure to the elements, all for low wages.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Long Drive</span> The trip in which cowboys herded cattle hundreds of miles from Texas to railroad towns. <span class="sp">Spanish: el arreo largo</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Vaqueros</span> Mexican cowboys whose tools and techniques the American cowboy borrowed. <span class="sp">Spanish: vaqueros</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1 in 4</span>Share of cowboys on the long drives who were African American, according to the text.</div>
+              <div class="connect" data-q2="1"><span class="tag">CONNECT TO ECONOMICS</span>A steer worth a few dollars in Texas sold for forty or fifty in northern cities. Railroads and the long drive existed to close that price gap.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">Closing the Frontier</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The era of the open range and the long drive was brief, lasting only about twenty years. Its demise was brought about by a combination of environmental limits and technological innovation. As homesteaders and sodbusters moved onto the Plains in greater numbers, conflict arose between the ranchers, who needed open land for grazing, and farmers, who needed to protect their crops from trampling herds. In a land with few trees, building wooden fences was prohibitively expensive.</p>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Reyner%20sod%20house%20by%20Solomon%20Butcher.jpg?width=1000" alt="A low house with thick sod walls and a shingled roof on bare ground, with one man standing on the roof." loading="lazy" style="height:auto"><figcaption><span class="phlabel">A sod house in Nebraska</span>A sod house in Custer County, Nebraska, photographed by Solomon D. Butcher and published in 1904. Homesteaders on the treeless Plains cut blocks of prairie sod to build walls, because wood was scarce.<span class="credit">Image: Solomon D. Butcher / <a href="https://commons.wikimedia.org/wiki/File:Reyner_sod_house_by_Solomon_Butcher.jpg">Wikimedia Commons</a>, public domain</span></figcaption></figure>
+        <p>The solution came in 1874, when an Illinois farmer named <b>Joseph Glidden</b> invented a practical, mass-producible form of <dfn id="t-barbed-wire"><strong>Barbed Wire</strong></dfn>. This simple invention changed the geography of the West forever. Cheap and effective, barbed wire allowed farmers to fence off their claims, physically blocking the cattle trails that had sustained the long drives. At the same time, forward-thinking ranchers began to realize that the open range model was unsustainable. Overgrazing had degraded the grasslands, and severe weather events—specifically the harsh winters of 1886-1887—wiped out enormous herds of cattle that had been left to fend for themselves on the open plains.</p>
+        <p>Ranching transformed from a nomadic adventure into a settled business. Ranchers began to buy land, fence it with barbed wire, and raise hay to feed their stock during the winter. They imported blooded stock to improve the quality of their beef, moving away from the hardy but stringy Longhorn. The <b>Cattle Kingdom</b> did not disappear, but it was fenced in and corporatized. The romantic figure of the cowboy became a ranch hand, a wage laborer who spent as much time repairing fences as he did riding horses.</p>
+        <p>This transition marked the effective closure of the frontier. The West was no longer an open expanse but a grid of private property, connected by railroads and divided by wire. The integration of the West into the national economy was complete. Farmers, now tied to the global market for their wheat and corn, found themselves at the mercy of railroad freight rates and grain elevator monopolies. Feeling squeezed by these corporate powers, they began to organize. In 1867, Oliver Hudson Kelley founded the Patrons of Husbandry, commonly known as <dfn id="t-the-grange"><strong>The Grange</strong></dfn>. Originally a social outlet for isolated farm families, the Grange quickly evolved into a political force, fighting for government regulation of railroad rates and grain storage fees. This agrarian unrest would eventually blossom into the Populist movement, challenging the very corporate-government partnership that had opened the West in the first place.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Barbed wire</span> Cheap fencing invented in 1874 that let farmers block cattle trails. <span class="sp">Spanish: alambre de púas</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">The Grange</span> A farmers’ organization founded in 1867 that became a political force against railroad and grain storage costs. <span class="sp">Spanish: La Grange (Patrons of Husbandry)</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>The Grange’s anger at corporations leads toward the Populist movement in later chapters.</div>
+      </div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.3</span>Steel, Steam, and the Closing of the Range, 1862–1887</p>
+      <p class="figsub">Events from this section, in order. Dates are the ones given in the text.</p>
+      <svg viewBox="0 0 860 270" role="img" aria-label="Timeline: 1862 Pacific Railway Act and Homestead Act; 1867 Grange founded; May 1869 rails meet at Promontory Point; 1874 barbed wire invented; 1879 Exodus to Kansas; 1883 standard time zones; 1886 to 1887 harsh winters kill herds"><line x1="40" y1="135" x2="820" y2="135" stroke="#546B7E" stroke-width="4" stroke-linecap="round"/><line x1="95.7" y1="135" x2="95.7" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1862: Pacific Railway, Homestead Acts</title><circle cx="95.7" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="95.7" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="start" font-weight="800">1862</text><text x="95.7" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Pacific Railway,</text><text x="95.7" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="400">Homestead Acts</text><line x1="207.1" y1="135" x2="207.1" y2="145" stroke="#546B7E" stroke-width="2"/><g><title>1867: Grange founded</title><circle cx="207.1" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="207.1" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1867</text><text x="207.1" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Grange</text><text x="207.1" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">founded</text><line x1="318.6" y1="135" x2="318.6" y2="116" stroke="#737B62" stroke-width="2"/><g><title>May 1869: Rails meet at Promontory Point</title><circle cx="318.6" cy="135" r="8" fill="#737B62" stroke="#fff" stroke-width="2.5"/></g><text x="318.6" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#856316" text-anchor="middle" font-weight="800">May 1869</text><text x="318.6" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Rails meet at</text><text x="318.6" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Promontory Point</text><line x1="430.0" y1="135" x2="430.0" y2="145" stroke="#546B7E" stroke-width="2"/><g><title>1874: Barbed wire invented</title><circle cx="430.0" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="430.0" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1874</text><text x="430.0" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Barbed wire</text><text x="430.0" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">invented</text><line x1="541.4" y1="135" x2="541.4" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1879: Exodus to Kansas</title><circle cx="541.4" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="541.4" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1879</text><text x="541.4" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Exodus to</text><text x="541.4" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Kansas</text><line x1="652.9" y1="135" x2="652.9" y2="145" stroke="#546B7E" stroke-width="2"/><g><title>1883: Standard Time Zones</title><circle cx="652.9" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="652.9" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1883</text><text x="652.9" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Standard</text><text x="652.9" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Time Zones</text><line x1="764.3" y1="135" x2="764.3" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1886–87: Harsh winters kill herds</title><circle cx="764.3" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="764.3" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="end" font-weight="800">1886–87</text><text x="764.3" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="end" font-weight="700">Harsh winters</text><text x="764.3" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="400">kill herds</text></svg>
+      <p class="source">Source: Dates as stated in this section’s text. Timeline created for this textbook. Events are evenly spaced for readability, not to scale.</p>
+      <details class="dt"><summary>View data table</summary><table class="data"><thead><tr><th>When</th><th>Event</th></tr></thead><tbody><tr><td>1862</td><td>Pacific Railway Act and Homestead Act</td></tr><tr><td>1867</td><td>The Grange founded</td></tr><tr><td>May 10, 1869</td><td>Rails meet at Promontory Point, Utah</td></tr><tr><td>1874</td><td>Barbed wire invented</td></tr><tr><td>1879</td><td>Exodusters migrate to Kansas</td></tr><tr><td>1883</td><td>Railroads create four standard time zones</td></tr><tr><td>1886–1887</td><td>Harsh winters kill herds on the open range</td></tr></tbody></table></details>
+      <div class="analyze"><b>ANALYZE GRAPHS</b>
+        <ol><li>How many years passed between the Pacific Railway Act and the invention of barbed wire?</li><li>Which events on the timeline were driven by railroads?</li><li>Which event do you think did the most to end the open range? Use the text to explain.</li></ol>
+      </div>
+    </figure>
+
+    <aside class="feature ">
+      <div class="ft-h"><span class="em" aria-hidden="true">🗺️</span><div><small>MAPPING HISTORY</small><b>Shrinking the Continent</b></div></div>
+      <div class="ft-b">
+<h4 class="ft-sub">The Checkerboard Land Grant System</h4>
+<h5>Location and Landscape</h5>
+<p>The Pacific Railway Acts of 1862 and 1864 granted the Union Pacific and Central Pacific railroads vast swathes of public land to subsidize construction. This was not a solid block of land, but a “checkerboard” pattern extending 10 to 20 miles on either side of the track.</p>
+<h5>Geography and Events</h5>
+<p>The government retained every other square-mile section (the white squares), while the railroads received the alternating sections (the black squares). This meant that for every mile of track laid, the railroad received ten sections (6,400 acres) of land. The logic was that the railroad would increase the value of the government’s retained land, which could then be sold at a higher price.</p>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.4</span>The Checkerboard Land Grant</p>
+      <p class="figsub">How alternating sections of land were divided along a railroad, according to Section 6.1.</p>
+      <svg viewBox="0 0 860 300" role="img" aria-label="A checkerboard diagram. A railroad track runs left to right through the middle. Squares on both sides alternate between railroad-owned and government-owned sections."><rect x="60" y="30" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="124" y="30" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="188" y="30" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="252" y="30" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="316" y="30" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="380" y="30" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="444" y="30" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="508" y="30" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="572" y="30" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="636" y="30" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="60" y="94" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="124" y="94" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="188" y="94" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="252" y="94" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="316" y="94" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="380" y="94" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="444" y="94" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="508" y="94" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="572" y="94" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="636" y="94" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="60" y="180" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="124" y="180" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="188" y="180" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="252" y="180" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="316" y="180" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="380" y="180" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="444" y="180" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="508" y="180" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="572" y="180" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="636" y="180" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="60" y="244" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="124" y="244" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="188" y="244" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="252" y="244" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="316" y="244" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="380" y="244" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="444" y="244" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="508" y="244" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="572" y="244" width="64" height="64" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><rect x="636" y="244" width="64" height="64" fill="#546B7E" stroke="#546B7E" stroke-width="1.5"/><rect x="60" y="166" width="640" height="6" fill="#523342"/><line x1="68.0" y1="160" x2="68.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="100.0" y1="160" x2="100.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="132.0" y1="160" x2="132.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="164.0" y1="160" x2="164.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="196.0" y1="160" x2="196.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="228.0" y1="160" x2="228.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="260.0" y1="160" x2="260.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="292.0" y1="160" x2="292.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="324.0" y1="160" x2="324.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="356.0" y1="160" x2="356.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="388.0" y1="160" x2="388.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="420.0" y1="160" x2="420.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="452.0" y1="160" x2="452.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="484.0" y1="160" x2="484.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="516.0" y1="160" x2="516.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="548.0" y1="160" x2="548.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="580.0" y1="160" x2="580.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="612.0" y1="160" x2="612.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="644.0" y1="160" x2="644.0" y2="178" stroke="#523342" stroke-width="3"/><line x1="676.0" y1="160" x2="676.0" y2="178" stroke="#523342" stroke-width="3"/><text x="714" y="174" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#523342">Railroad track</text><rect x="714" y="34" width="18" height="18" fill="#546B7E" stroke="#546B7E"/><text x="740" y="48" font-family="Inter, Arial, sans-serif" font-size="14" fill="#523342">Railroad land</text><rect x="714" y="62" width="18" height="18" fill="#fff" stroke="#546B7E" stroke-width="1.5"/><text x="740" y="76" font-family="Inter, Arial, sans-serif" font-size="14" fill="#523342">Government land</text></svg>
+      <p class="source">Source: Pattern as described in the Mapping History feature. Diagram created for this textbook. Simplified and not to scale; the text says the grant reached 10 to 20 miles on either side of the track.</p>
+      <div class="analyze"><b>ANALYZE DIAGRAMS</b>
+        <ol><li>Which squares did the government keep, and which did the railroad receive?</li><li>Why would the railroad’s land be worth more once the track was built?</li><li>Imagine you are a settler who wants land next to the track. What choices do you face?</li></ol>
+      </div>
+    </figure>
+
+<h5>Regional Impact</h5>
+<p>This grant system made the railroads the arbiters of western geography. They decided where towns would be built and promoted specific crops to ensure freight business. However, this also led to corruption, as railroads often claimed the best land (with water access) and sold it for high profits, while the “public” land available to homesteaders was often further from the tracks or less desirable.</p>
+<h5>Broader Implications</h5>
+<p>The checkerboard pattern permanently shaped land ownership in the West. It created a patchwork of private corporate land and public domain that complicates land management to this day. It effectively privatized a massive portion of the national commons to finance industrial development.</p>
+<h5 class="qh">Spatial Reasoning Questions</h5>
+<ol class="qs"><li><b>Analyze the Layout.</b> Explain how the alternating checkerboard pattern of land ownership forced settlers to rely on railroad companies for access to prime locations and transportation infrastructure.</li><li><b>Evaluate Strategy.</b> Why would the federal government choose to distribute land in this specific alternating pattern rather than granting the railroads a single, solid block of territory?</li><li><b>Synthesize the “Corporate Frontier”.</b> Analyze the connection between the geography of these land grants and the concept of a “corporate frontier.” How does this spatial arrangement illustrate the evolving relationship between the U.S. government and industrial capitalism?</li></ol>
+      </div>
+    </aside>
+
+  </div>
+  <div class="runfoot">E PLURIBUS UNUM | UNIT 2 · EXPANSION & EXCLUSION | CHAPTER 6 · THE CONTESTED WEST</div>
+</section>
+
+<section class="section" id="s2">
+  <div class="sec-banner">
+    <div class="num"><small>SECTION</small><b>6.2</b></div>
+    <h2>The Wars for the Plains</h2>
+    <div class="icon">
+      <svg viewBox="0 0 160 120" width="150" aria-hidden="true"><path d="M80 12 L28 104 H132 Z" fill="none" stroke="#CAA44F" stroke-width="6" stroke-linejoin="round"/><path d="M80 104 L66 66 H94 Z" fill="none" stroke="#F5EADA" stroke-width="5" stroke-linejoin="round"/><path d="M80 12 V0 M80 12 L66 0 M80 12 L94 0" stroke="#F5EADA" stroke-width="4" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+  <div class="content">
+
+    <h3 class="kc">Introduction</h3>
+    <h3 class="head">The Vanishing Frontier</h3>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">As the smoke cleared from the Civil War, the United States turned its full attention toward the vast grasslands of the interior, a region once dismissed as uninhabitable. This area, home to powerful nomadic nations, became the stage for a brutal struggle over the meaning of land and the future of indigenous sovereignty. The federal government utilized both devastating military strategies and coercive legislative tools to dismantle the tribal way of life. This chapter explores the tragic sequence of events that transformed the Great Plains from an open range into a landscape of confinement and forced cultural change.</p>
+      </div>
+      <div class="side">
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">3 decades</span>The text says conflict engulfed the West for nearly three decades.</div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>Section 6.3 turns from the Plains to the Chinese and Mexican Americans who also lived in this contested West.</div>
+      </div>
+    </div>
+
+    <div class="act"><span>SECTION 6.2 · PART 1</span><b>The Broken Prairie</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">The initial encounter between the expanding United States and the Plains tribes was defined by a fundamental disagreement over land use—one side saw a commodity to be fenced, while the other saw a sacred open range. As railroads and settlers encroached, the federal government moved from loose oversight to the restrictive <dfn id="t-reservation-system">Reservation System</dfn>, intended to clear the path for white civilization. When tribes resisted this confinement, U.S. military leaders applied the ruthless logic of “total war,” recognizing that they could not defeat a mobile enemy without first destroying the biological foundation of their existence: the buffalo</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Reservation System</span> A policy that moved Native nations onto defined tracts of land so the rest could open to settlers and railroads. <span class="sp">Spanish: sistema de reservas</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Total war</span> A strategy of destroying an enemy’s economy and resources as well as its army. <span class="sp">Spanish: guerra total</span></div>
+              <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>Article II, Section 2 lets the President make treaties with the consent of two-thirds of the Senate. In 1871 Congress ended treaty-making with tribes and began using ordinary laws instead.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Collision of Two Worlds</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The geographic expanse known as the <b>Great Plains</b> stretches from the Dakotas south to Texas and from the Mississippi River west to the Rocky Mountains. For decades, American mapmakers had labeled this region the “Great American Desert,” deeming it unfit for white civilization due to its lack of timber and reliable rainfall. This dismissal, however, served as a protective barrier for the indigenous nations that called the grasslands home. By the mid-19th century, the Plains were dominated by powerful, horse-mounted tribes including the Sioux (Lakota), Cheyenne, Arapaho, Comanche, and Kiowa. These nations had developed a highly mobile, warrior culture that was perfectly adapted to the semi-arid environment. They were not monolithic; while some groups practiced agriculture, the defining feature of the Plains culture was the chase.</p>
+        <p>Central to this way of life was the <b>Buffalo (Bison)</b>. This massive animal was the biological foundation of the Plains economy. A single buffalo provided hundreds of pounds of meat for sustenance, hides for tepees and winter robes, sinew for bowstrings, and bones for tools. The migration patterns of the buffalo herds dictated the rhythm of life, requiring the tribes to remain nomadic. This mobility was their greatest strategic asset, but it was also the source of their inevitable conflict with the United States. To the American government and the settlers moving west, land was a commodity to be measured, fenced, and owned. To the Plains tribes, the land was an open range to be traversed.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Great Plains</span> The grasslands from the Dakotas south to Texas and from the Mississippi River west to the Rocky Mountains. <span class="sp">Spanish: Grandes Llanuras</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">Sioux, Cheyenne, Arapaho, Comanche, Kiowa</span>The horse-mounted nations the text names.</div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">Great American Desert</span>The label mapmakers gave the Plains, which the text says served as a protective barrier for the nations living there.</div>
+</div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.5</span>Two Ways of Seeing the Plains</p>
+      <p class="figsub">The collision of two worlds, according to Section 6.2.</p>
+      <table class="cmp"><thead><tr><th>Question</th><th>Plains nations</th><th>The United States</th></tr></thead><tbody><tr><td>How the land was seen</td><td>An open range to be traveled</td><td>A commodity to be measured, fenced, and owned</td></tr><tr><td>The buffalo</td><td>Food, shelter, tools, and the rhythm of life</td><td>An obstacle, then a weapon of war</td></tr><tr><td>Way of life</td><td>Mobile, with horse-mounted hunters</td><td>Sedentary: farms, towns, and railroads</td></tr><tr><td>Goal</td><td>Keep their independence and hunting grounds</td><td>Clear the land for settlers and force tribes onto reservations</td></tr></tbody></table>
+      <p class="source">Source: Summary of this section’s text. Table created for this textbook.</p>
+      <div class="analyze"><b>ANALYZE TABLES</b>
+        <ol><li>Why did the buffalo make the Plains tribes strong, and why did it also make them vulnerable?</li><li>How did the Reservation System follow from the American view of land?</li><li>Write a Counter-Argument a settler might have made in 1870. Why would a Plains leader disagree?</li></ol>
+      </div>
+    </figure>
+
+    <div class="pair">
+      <div class="body">
+        <p>As the Civil War concluded, the pressure on the Plains intensified. The construction of the Transcontinental Railroad sliced through the heart of tribal hunting grounds. Miners flooded into Colorado and Montana, ignoring treaty boundaries in their search for gold. In response, the federal government adopted a more aggressive approach to the “Indian Question.” The loose oversight of the past was replaced by the <b>Reservation System</b>, a policy designed to concentrate Native American populations onto clearly defined, often restricted tracts of land. The goal was twofold: to clear the vast majority of the land for white settlement and railroads, and to force the nomadic tribes to adopt a sedentary, agricultural lifestyle. The tribes, however, refused to submit quietly to this confinement, leading to a series of brutal conflicts that would engulf the West for nearly three decades.</p>
+      </div>
+      <div class="side">
+        <div class="connect"><span class="tag">CONNECT TO CIVICS</span>Treaties are agreements between governments. What does it mean when a government ignores its own treaties?</div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1864</span>Year of the Sand Creek Massacre, covered next.</div>
+      </div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/American%20Progress%20%28John%20Gast%20painting%29.jpg?width=1400" alt="A painting of a large woman in a flowing white dress floating over a landscape and carrying a book and a telegraph wire, with settlers and trains moving west below her while Native Americans and bison retreat into the dark." loading="lazy" style="height:auto;max-height:520px;object-fit:contain"><figcaption><span class="phlabel">“American Progress,” 1872</span>John Gast’s 1872 painting <i>American Progress</i> shows a figure called Columbia leading settlers, railroads, and telegraph lines west while Native Americans and bison flee. It was widely distributed as an engraving. It is a picture made by a settler-society artist and shows his side’s view of expansion.<span class="credit">Image: John Gast / <a href="https://commons.wikimedia.org/wiki/File:American_Progress_(John_Gast_painting).jpg">Wikimedia Commons</a>, Public domain</span></figcaption></figure>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">Flashpoints of Violence</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The cycle of violence that defined the post-Civil War West did not begin with a single declaration of war but with a series of tragic misunderstandings and brutal massacres that eroded trust on both sides. One of the most infamous incidents occurred in Colorado in 1864. As tensions rose between miners and the Cheyenne and Arapaho tribes, a peace chief named Black Kettle sought protection for his band. Assured of safety by U.S. military officials, he camped along Sand Creek flying an American flag and a white truce flag above his lodge.</p>
+        <p>On the morning of November 29, 1864, Colonel John Chivington led a militia force of 700 men against the sleeping village. Ignoring the flags and the fact that most of the camp’s warriors were out hunting, Chivington ordered his troops to “Kill and scalp all, big and little; nits make lice.” The resulting <b>Sand Creek Massacre</b> was horrific. Over 150 Cheyenne and Arapaho, mostly women, children, and the elderly, were slaughtered and mutilated. The brutality of Sand Creek shocked Eastern reformers but radicalized the Plains tribes. It proved to many young warriors that the white man’s treaties were worthless and his promises fatal.</p>
+        <p>Resistance intensified across the Plains. In the north, the Lakota Sioux, led by Red Cloud, fought a successful campaign to close the Bozeman Trail, a route to the Montana gold fields that cut through their prime hunting grounds. In 1866, warriors lured an overconfident U.S. officer, Captain William Fetterman, into an ambush, killing him and all 80 of his men. The government, realizing it could not militarily defeat the united tribes at that time, sued for peace. The resulting Treaty of Fort Laramie (1868) was a temporary victory for the Sioux, abandoning the Bozeman Trail and guaranteeing the “Great Sioux Reservation,” including the sacred Black Hills, to the tribes in perpetuity. However, this peace was fragile, built on the government’s hope that the reservation system would eventually pacify the tribes without further bloodshed—a hope that would soon be dashed by the discovery of gold.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Massacre</span> The killing of many people who cannot defend themselves. <span class="sp">Spanish: masacre</span></div>
+        <div class="connect"><span class="tag">CONNECT TO CIVICS</span>Black Kettle camped under an American flag and a white truce flag. Why do flags of truce matter in war?</div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">Nov. 29, 1864</span>Date of the Sand Creek Massacre, in which over 150 Cheyenne and Arapaho were killed, according to the text.</div>
+</div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sand%20Creek%20Massacre%20National%20Historic%20Site%2C%20Eads%2C%20Colorado%2001.jpg?width=1400" alt="A wide view of open shortgrass prairie under a big sky at the Sand Creek Massacre National Historic Site." loading="lazy" style="height:auto"><figcaption><span class="phlabel">Sand Creek today</span>The Sand Creek Massacre National Historic Site near Eads, Colorado, photographed in 2013. The massacre took place here on November 29, 1864. This is a modern photograph of the landscape.<span class="credit">Photo: Stephanie A. Terry / <a href="https://commons.wikimedia.org/wiki/File:Sand_Creek_Massacre_National_Historic_Site,_Eads,_Colorado_01.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span></figcaption></figure>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Strategy of Total War</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The U.S. Army, tasked with enforcing the reservation policy, faced a difficult enemy. The Plains warriors were expert horsemen and guerrilla fighters who knew the terrain intimately. They could strike isolated wagon trains or settlements and then vanish into the vastness of the prairie before heavy columns of infantry or cavalry could respond. Conventional European tactics of line battles and sieges were useless against such a mobile force. Frustrated by their inability to bring the tribes to a decisive engagement, Union Army veterans like Generals William Tecumseh Sherman and Philip Sheridan applied the brutal lessons they had learned during the Civil War: the concept of “total war.”</p>
+        <p>Total war dictates that to defeat an enemy, one must destroy not just their army, but the economic and psychological resources that sustain their ability to fight. On the Plains, this meant attacking the tribes during the winter when they were most vulnerable and, most devastatingly, targeting the buffalo. General Sheridan correctly identified the buffalo as the “commissary” of the Plains tribes. As long as the herds roamed free, the tribes could remain independent of the government. If the buffalo were gone, the tribes would face a stark choice: surrender to the reservation and accept government food rations, or face starvation.</p>
+        <p>The destruction of the buffalo was industrial in scale and speed. The railroads facilitated this slaughter by bringing professional hunters and “sportsmen” deep into the herds’ territory. Hunters killed the animals by the thousands, stripping the hides for leather belts in eastern factories and leaving the carcasses to rot on the prairie. It is estimated that between 1865 and 1875, the buffalo population collapsed from over 15 million to fewer than a thousand. This was not merely hunting; it was ecological genocide engineered for political ends. The U.S. Army provided ammunition to hunters and protected them, viewing them as more effective than soldiers in pacifying the tribes.</p>
+        <p>The impact on the Plains Indians was catastrophic. The disappearance of the buffalo destroyed their economy, their shelter, and their spiritual practices. Warriors who had once roamed thousands of miles were reduced to waiting in lines at reservation agencies for handouts of beef and flour, which were often spoiled or stolen by corrupt Indian Agents. This enforced dependency broke the power of the tribal chiefs and shattered the social cohesion of the nations. The “taming” of the West was thus achieved as much by the Sharps buffalo rifle as by the military campaigns themselves.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Commissary</span> A store of food and supplies for an army or a group of people. <span class="sp">Spanish: comisaría (suministros)</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">Sharps rifle</span>The text says the “taming” of the West was achieved as much by this rifle as by campaigns.</div>
+      <div class="connect"><span class="tag">CONNECT TO ECONOMICS</span>The text says Sheridan called the buffalo the “commissary” of the Plains tribes: without the herds, they faced surrender or starvation.</div>
+</div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Buffalo%20Herd%20grazing%20South%20Dakota.jpg?width=1400" alt="A herd of bison grazing on open grassland in the Black Hills." loading="lazy" style="height:auto"><figcaption><span class="phlabel">Bison at Wind Cave, 1948</span>Bison at Wind Cave National Park in the Black Hills of South Dakota, photographed in 1948. This is a 20th-century photograph of the small herds that survived. It is not an image of the herds of the 1870s.<span class="credit">Photo: Hultstrand and F.A. Pazandak Photograph Collections, Library of Congress / <a href="https://commons.wikimedia.org/wiki/File:Buffalo_Herd_grazing_South_Dakota.jpg">Wikimedia Commons</a>, Public domain</span></figcaption></figure>
+
+    <div class="act"><span>SECTION 6.2 · PART 2</span><b>Subjugation and Cultural Transformation</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">While military conflict reached a fever pitch on the northern plains with rare tribal victories, the overwhelming industrial might of the United States eventually forced a surrender. However, the end of armed hostiles did not mean the end of the conflict; it merely shifted from the battlefield to the classroom and the surveyor’s map. Through policies of <dfn id="t-assimilation">Assimilation</dfn>, reformers and legislators sought to “civilize” Native Americans by dismantling communal tribal identities in favor of private property and forced education. This era of cultural reconstruction culminated in the heartbreaking violence at Wounded Knee, effectively closing the frontier to indigenous independence.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Assimilation</span> A policy of absorbing a minority group into the dominant culture. <span class="sp">Spanish: asimilación</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>The next group of paragraphs follows the end of armed resistance on the Northern Plains.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Crisis on the Northern Plains</h3>
+    <div class="pair">
+      <div class="body">
+        <p>While the southern tribes (like the Comanche and Kiowa) were subjugated by the mid-1870s through the Red River War, resistance remained fierce on the Northern Plains. The Sioux (Lakota), led by determined chiefs and spiritual leaders, posed the most significant military challenge to U.S. expansion. The conflict came to a head in the Black Hills of South Dakota. The Treaty of Fort Laramie (1868) had guaranteed the Black Hills to the Sioux as part of their reservation “as long as the grass shall grow.” However, in 1874, an expedition led by Lieutenant Colonel <b>George Custer</b> confirmed the presence of gold in the hills.</p>
+        <p>The discovery triggered a gold rush. Thousands of white prospectors illegally flooded into the Sioux reservation. The federal government, rather than enforcing the treaty and removing the miners, tried to buy the Black Hills from the Sioux. The tribes refused to sell their sacred land. In response, the government declared that all Sioux who did not report to their agencies by January 31, 1876, would be considered “hostile.” It was an impossible deadline to meet in the dead of winter, and many bands, led by the charismatic <b>Sitting Bull</b> and the brilliant tactical commander <b>Crazy Horse</b>, had no intention of complying.</p>
+        <p>In the summer of 1876, the U.S. Army launched a massive three-pronged offensive to round up these “hostiles.” The campaign culminated in one of the most famous and mythologized events in American history. On June 25, 1876, Custer’s 7th Cavalry located a massive encampment of Sioux and Cheyenne along the Little Bighorn River in Montana Territory. Custer, seeking glory and vastly underestimating the size of the village, divided his forces and attacked without waiting for reinforcements.</p>
+        <p>The <dfn id="t-battle-of-little-bighorn"><strong>Battle of Little Bighorn</strong></dfn> was a stunning victory for the Native American alliance. The encampment contained thousands of warriors who, inspired by Sitting Bull’s vision of soldiers falling into camp “like grasshoppers,” fought with desperate ferocity. Custer and all 260 men of his immediate command were surrounded and killed in less than an hour. The victory, however, was the beginning of the end for the Sioux. News of “Custer’s Last Stand” reached the East Coast just as the nation was celebrating its Centennial (100th anniversary). The public was outraged, viewing the battle as a massacre of American heroes.</p>
+        <p>The U.S. government responded with overwhelming force. Congress authorized thousands more troops to flood the region. Throughout the winter of 1876-1877, the Army relentlessly pursued the scattered bands, preventing them from hunting or resting. Starving and freezing, the Sioux were forced to surrender one by one. Crazy Horse turned himself in and was later killed in a struggle at a guardhouse. Sitting Bull led a band into Canada but eventually returned to surrender in 1881, ending the era of major military resistance on the Northern Plains.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Treaty of Fort Laramie (1868)</span> The treaty that ended the Bozeman Trail fighting and guaranteed the Black Hills to the Sioux. <span class="sp">Spanish: Tratado de Fort Laramie</span></div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">Jan. 31, 1876</span>Deadline the government set for the Sioux to report to their agencies, or be considered “hostile.”</div>
+        <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>In United States v. Sioux Nation of Indians (1980), the Supreme Court ruled the Black Hills had been taken illegally and awarded payment. The Sioux have refused the money and still demand the land.</div>
+      </div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/View%20west%20from%20last%20stand%20hill%20with%20markers%20where%20they%20fell.jpg?width=1400" alt="A grassy hillside at Little Bighorn Battlefield with small stone markers scattered across it." loading="lazy" style="height:auto"><figcaption><span class="phlabel">Last Stand Hill, Montana</span>A view west from Last Stand Hill at Little Bighorn Battlefield National Monument in Montana, photographed in 2004. Stone markers show where soldiers fell. This is a modern photograph.<span class="credit">Photo: Meodegard / <a href="https://commons.wikimedia.org/wiki/File:View_west_from_last_stand_hill_with_markers_where_they_fell.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span></figcaption></figure>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Politics of Assimilation</h3>
+    <div class="pair">
+      <div class="body">
+        <p>With the tribes confined to reservations, the government’s policy shifted from military conquest to cultural reconstruction. In the East, a growing movement of humanitarian reformers began to critique the government’s history of violence and broken promises. A pivotal figure in this movement was <b>Helen Hunt Jackson</b>, whose 1881 book <i><strong>A Century of Dishonor</strong></i> meticulously documented the systemic fraud and betrayal characterizing U.S. dealings with Native Americans. While Jackson helped awaken the nation’s conscience, the solution proposed by reformers was often just as destructive as the military campaigns.</p>
+        <p>The reformers believed that the Native American could only survive by vanishing culturally—by becoming “civilized” according to white American standards. This meant abandoning tribal identities, communal living, and native religions in favor of individualism, private property, and Christianity. This philosophy, known as <b>Assimilation</b>, became the official policy of the United States.</p>
+        <p>The legal instrument for this transformation was the <dfn id="t-dawes-severalty-act"><strong>Dawes Severalty Act</strong></dfn> of 1887. This legislation sought to dismantle the reservation system by breaking up tribal land ownership. Instead of the tribe owning the land collectively, the Dawes Act allotted 160 acres to each head of household and 80 acres to single adults. The government believed that private land ownership would magically transform hunters into self-sufficient farmers. However, the policy was a disaster for Native Americans. The allotted land was often in arid regions unsuitable for small-scale agriculture. Furthermore, the act declared that any reservation land remaining after allotment was “surplus” and could be sold to white settlers.</p>
+        <p>The result was a massive transfer of wealth. In 1887, tribes held 138 million acres of land. By 1934, when the policy was finally reversed, that amount had shrunk to 48 million acres. The best farmland ended up in white hands, while Native Americans were left with the scrap. The Dawes Act undermined the tribal structure by treating individuals as separate from the group, effectively striking at the heart of indigenous social organization.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Dawes Severalty Act</span> The 1887 law that broke up tribal land into individual allotments. <span class="sp">Spanish: Ley Dawes</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Surplus land</span> Land left over after allotment, which the government declared open to sale to settlers. <span class="sp">Spanish: tierras excedentes</span></div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">160 acres</span>Land the Dawes Act allotted to each head of household; single adults received 80 acres.</div>
+        <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>The Dawes Act granted citizenship to Native Americans who accepted allotments. Congress did not make all Native Americans born in the United States citizens until 1924.</div>
+      </div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.6</span>Tribal Land Before and After the Dawes Act</p>
+      <p class="figsub">Acres held by tribes, according to Section 6.2.</p>
+      <svg viewBox="0 0 860 114" role="img" aria-label="Bar chart: Tribes held 138 million acres in 1887 and 48 million acres in 1934"><line x1="100.0" y1="10" x2="100.0" y2="70" stroke="#e6e8ec"/><text x="100.0" y="88" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5f6676" text-anchor="middle" font-weight="400">0M</text><line x1="323.3" y1="10" x2="323.3" y2="70" stroke="#e6e8ec"/><text x="323.3" y="88" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5f6676" text-anchor="middle" font-weight="400">50M</text><line x1="546.7" y1="10" x2="546.7" y2="70" stroke="#e6e8ec"/><text x="546.7" y="88" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5f6676" text-anchor="middle" font-weight="400">100M</text><line x1="770.0" y1="10" x2="770.0" y2="70" stroke="#e6e8ec"/><text x="770.0" y="88" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5f6676" text-anchor="middle" font-weight="400">150M</text><text x="90" y="30.0" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#1c2230" text-anchor="end" font-weight="400">1887</text><g><title>1887: 138M</title><path d="M100 16 h612.4 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-612.4z" fill="#546B7E"/></g><text x="724.4" y="30.0" font-family="Inter, Arial, sans-serif" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">138M</text><text x="90" y="60.0" font-family="Inter, Arial, sans-serif" font-size="13.5" fill="#1c2230" text-anchor="end" font-weight="400">1934</text><g><title>1934: 48M</title><path d="M100 46 h210.4 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-210.4z" fill="#737B62"/></g><text x="322.4" y="60.0" font-family="Inter, Arial, sans-serif" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">48M</text><line x1="100" y1="10" x2="100" y2="70" stroke="#5f6676" stroke-width="1.5"/><text x="435.0" y="110" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5f6676" text-anchor="middle" font-weight="400">Acres held by tribes (millions)</text></svg>
+      <p class="source">Source: Figures as stated in Section 6.2’s text. Chart created for this textbook.</p>
+      <div class="analyze"><b>ANALYZE GRAPHS</b>
+        <ol><li>By about what percent did tribal land shrink between 1887 and 1934?</li><li>Why did the Dawes Act call leftover land “surplus”?</li><li>How did the Act strike at the heart of tribal social organization?</li></ol>
+      </div>
+    </figure>
+
+    <div class="pair">
+      <div class="body">
+        <p>Cultural assimilation was also pursued through education. The government removed thousands of Native American children from their families and sent them to boarding schools, the most famous being the <dfn id="t-carlisle-indian-school"><strong>Carlisle Indian School</strong></dfn> in Pennsylvania. Founded by <b>Richard Henry Pratt</b>, a former army officer, the school operated under the motto: “Kill the Indian and save the man.” Students were subjected to a military-style regimen. They had their long hair shorn, were dressed in uniforms, and were severely punished for speaking their native languages or practicing their religions. The curriculum focused on vocational training, preparing the students for lives as manual laborers or domestic servants. While some graduates used their education to fight for tribal rights, for many, the experience was deeply traumatic, creating a generation alienated from both their own heritage and white society.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Carlisle Indian School</span> A boarding school in Pennsylvania founded by Richard Henry Pratt. <span class="sp">Spanish: Escuela India de Carlisle</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">138 to 48</span>Millions of acres held by tribes in 1887 and in 1934, according to the text.</div>
+              <div class="fact" data-q2="1"><span class="tag">FAST FACT</span><span class="big">1879</span>Year the Carlisle Indian School opened in Pennsylvania.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Final Tragedy: Wounded Knee</h3>
+    <div class="pair">
+      <div class="body">
+        <p>By 1890, the Sioux on the reservations were in a state of despair. Their land had been taken, their herds destroyed, and their culture outlawed. Disease and starvation were rampant. Into this misery came a message of hope from a Paiute prophet named Wovoka. He preached a new religious vision known as the <dfn id="t-ghost-dance-movement"><strong>Ghost Dance Movement</strong></dfn>. Wovoka promised that if the people lived peacefully and performed the sacred Ghost Dance, the white man would disappear, the buffalo would return, and their ancestors would rise from the dead to inhabit a renewed earth.</p>
+        <p>The Ghost Dance was a non-violent religious response to cultural collapse, but to the nervous white agents and settlers surrounding the reservations, it looked like the preparation for an uprising. The rhythmic dancing and the gathering of large crowds terrified officials, who called for military support. The government decided to arrest the tribal leaders they believed were fomenting this “rebellion,” specifically targeting Sitting Bull at the Standing Rock Agency. On December 15, 1890, tribal police sent to arrest Sitting Bull killed him during a struggle, further inflaming tensions.</p>
+        <p>Fearful of reprisal, a band of about 350 Miniconjou Sioux under Chief Big Foot fled, seeking safety at the Pine Ridge Agency. They were intercepted by the 7th Cavalry—Custer’s old regiment—and brought to a campsite at Wounded Knee Creek. On the morning of December 29, 1890, the soldiers began to disarm the freezing and starving Sioux. During the tension of the search, a gun was discharged. The soldiers, positioned on the ridges above the camp with Hotchkiss machine guns, immediately opened fire on the crowd.</p>
+        <p>The <dfn id="t-wounded-knee-massacre"><strong>Wounded Knee Massacre</strong></dfn> was not a battle; it was a slaughter. Within minutes, roughly 300 Native Americans lay dead or dying, including women and children who were chased down and shot as they fled. The soldiers left the bodies to freeze in a blizzard that swept in that afternoon. The photographs of the frozen corpses in the snow remain some of the most haunting images in American history. Wounded Knee marked the symbolic and bloody end of the Indian Wars. The armed resistance of the Plains tribes had been crushed, and the reservation system was firmly established. The frontier, as a place of indigenous sovereignty, was closed.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Ghost Dance Movement</span> A religious movement started by the Paiute prophet Wovoka that promised the return of the buffalo and renewal of the world. <span class="sp">Spanish: Movimiento de la Danza de los Espíritus</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>Section 6.3 shows how Americans reimagined the closed frontier in myth and history.</div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">Dec. 29, 1890</span>Date of the soldiers’ attempt to disarm the Sioux at Wounded Knee Creek, according to the text.</div>
+</div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wounded%20Knee%20National%20Historic%20Landmark%20Oglala%20Lakota%20Co%20SD%20looking%20northwest%2C%20entrance%20to%20Catholic%20Cemetery%20with%20Wounded%20Knee%20Monument%20at%20center.jpg?width=1400" alt="An entrance to a cemetery with a stone monument at its center, on the Pine Ridge Reservation in South Dakota." loading="lazy" style="height:auto"><figcaption><span class="phlabel">The Wounded Knee Memorial</span>The entrance to the cemetery at Wounded Knee, with the Wounded Knee Monument at center, on the Pine Ridge Reservation in South Dakota, photographed in 2026. It is a memorial to those killed on December 29, 1890.<span class="credit">Photo: SharonPapierdreams / <a href="https://commons.wikimedia.org/wiki/File:Wounded_Knee_National_Historic_Landmark_Oglala_Lakota_Co_SD_looking_northwest,_entrance_to_Catholic_Cemetery_with_Wounded_Knee_Monument_at_center.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span></figcaption></figure>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.7</span>The Wars for the Plains, 1864–1890</p>
+      <p class="figsub">Events from this section, in order. Dates are the ones given in the text.</p>
+      <svg viewBox="0 0 860 280" role="img" aria-label="Timeline: 1864 Sand Creek Massacre; 1868 Treaty of Fort Laramie; 1874 Custer finds gold in the Black Hills; June 1876 Battle of Little Bighorn; 1877 Chief Joseph surrenders; 1881 Sitting Bull surrenders; 1887 Dawes Act; December 1890 Wounded Knee"><line x1="40" y1="140" x2="820" y2="140" stroke="#546B7E" stroke-width="4" stroke-linecap="round"/><line x1="88.8" y1="140" x2="88.8" y2="121" stroke="#546B7E" stroke-width="2"/><g><title>1864: Sand Creek Massacre</title><circle cx="88.8" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="88.8" y="82" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="start" font-weight="800">1864</text><text x="88.8" y="98" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Sand Creek</text><text x="88.8" y="113" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="400">Massacre</text><line x1="186.2" y1="140" x2="186.2" y2="150" stroke="#546B7E" stroke-width="2"/><g><title>1868: Treaty of Fort Laramie</title><circle cx="186.2" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="186.2" y="176" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1868</text><text x="186.2" y="192" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Treaty of</text><text x="186.2" y="207" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Fort Laramie</text><line x1="283.8" y1="140" x2="283.8" y2="121" stroke="#546B7E" stroke-width="2"/><g><title>1874: Custer finds gold in Black Hills</title><circle cx="283.8" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="283.8" y="82" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1874</text><text x="283.8" y="98" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Custer finds gold</text><text x="283.8" y="113" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">in Black Hills</text><line x1="381.2" y1="140" x2="381.2" y2="150" stroke="#546B7E" stroke-width="2"/><g><title>June 1876: Little Bighorn</title><circle cx="381.2" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="381.2" y="176" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">June 1876</text><text x="381.2" y="192" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Little</text><text x="381.2" y="207" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Bighorn</text><line x1="478.8" y1="140" x2="478.8" y2="121" stroke="#546B7E" stroke-width="2"/><g><title>1877: Chief Joseph surrenders</title><circle cx="478.8" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="478.8" y="82" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1877</text><text x="478.8" y="98" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Chief Joseph</text><text x="478.8" y="113" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">surrenders</text><line x1="576.2" y1="140" x2="576.2" y2="150" stroke="#546B7E" stroke-width="2"/><g><title>1881: Sitting Bull surrenders</title><circle cx="576.2" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="576.2" y="176" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1881</text><text x="576.2" y="192" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Sitting Bull</text><text x="576.2" y="207" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">surrenders</text><line x1="673.8" y1="140" x2="673.8" y2="121" stroke="#546B7E" stroke-width="2"/><g><title>1887: Dawes Act</title><circle cx="673.8" cy="140" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="673.8" y="82" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1887</text><text x="673.8" y="98" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Dawes</text><text x="673.8" y="113" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Act</text><line x1="771.2" y1="140" x2="771.2" y2="150" stroke="#737B62" stroke-width="2"/><g><title>Dec. 1890: Wounded Knee</title><circle cx="771.2" cy="140" r="8" fill="#737B62" stroke="#fff" stroke-width="2.5"/></g><text x="771.2" y="176" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#856316" text-anchor="end" font-weight="800">Dec. 1890</text><text x="771.2" y="192" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="end" font-weight="700">Wounded</text><text x="771.2" y="207" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="400">Knee</text></svg>
+      <p class="source">Source: Dates as stated in this section’s text. Timeline created for this textbook. Events are evenly spaced for readability, not to scale.</p>
+      <details class="dt"><summary>View data table</summary><table class="data"><thead><tr><th>When</th><th>Event</th></tr></thead><tbody><tr><td>November 29, 1864</td><td>Sand Creek Massacre</td></tr><tr><td>1868</td><td>Treaty of Fort Laramie</td></tr><tr><td>1874</td><td>Custer’s expedition confirms gold in the Black Hills</td></tr><tr><td>June 25, 1876</td><td>Battle of Little Bighorn</td></tr><tr><td>October 5, 1877</td><td>Chief Joseph surrenders</td></tr><tr><td>1881</td><td>Sitting Bull surrenders</td></tr><tr><td>1887</td><td>Dawes Severalty Act</td></tr><tr><td>December 29, 1890</td><td>Wounded Knee Massacre</td></tr></tbody></table></details>
+      <div class="analyze"><b>ANALYZE GRAPHS</b>
+        <ol><li>How many years passed between the Treaty of Fort Laramie and Wounded Knee?</li><li>Which events were military, and which were legal or cultural?</li><li>Which event do you think did the most to break Plains resistance? Use the text to explain.</li></ol>
+      </div>
+    </figure>
+
+    <aside class="feature ">
+      <div class="ft-h"><span class="em" aria-hidden="true">🗣️</span><div><small>VOICES OF THE ERA</small><b>Chief Joseph and Zitkála-Šá</b></div></div>
+      <div class="ft-b">
+<h4 class="ft-sub">“I Will Fight No More Forever”</h4><h5>The Speaker</h5><p>Chief Joseph (Hin-mah-too-yah-lat-kekt) of the Nez Perce tribe.</p><h5>The Context</h5><p>While the Sioux dominated the headlines, other tribes faced similar fates. In 1877, the U.S. government ordered the Nez Perce to move from their ancestral lands in Oregon to a smaller reservation in Idaho. Rather than submit, Chief Joseph led his people on a desperate, brilliant 1,400-mile fighting retreat toward Canada, seeking asylum. For months, this band of 700 men, women, and children outmaneuvered multiple U.S. Army columns. Just 40 miles from the Canadian border, suffering from cold, hunger, and exhaustion, they were surrounded.</p>
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Bear%20Paw%20Battlefield.jpg?width=1400" alt="A wide, open grassland landscape in Montana under a broad sky." loading="lazy" style="height:auto;max-height:420px;object-fit:cover"><figcaption><span class="phlabel">Bear Paw Battlefield</span>Bear Paw Battlefield in Montana, where the U.S. Army besieged the Nez Perce camp. The Nez Perce surrendered here in 1877. This is a modern photograph from the National Park Service.<span class="credit">Photo: National Park Service / <a href="https://commons.wikimedia.org/wiki/File:Bear_Paw_Battlefield.jpg">Wikimedia Commons</a>, Public domain</span></figcaption></figure>
+<h5>The Source</h5><blockquote class="src-quote">“I am tired of fighting. Our chiefs are killed... The old men are all dead... It is cold, and we have no blankets. The little children are freezing to death. My people, some of them, have run away to the hills, and have no blankets, no food. No one knows where they are—perhaps freezing to death. I want to have time to look for my children, and see how many of them I can find. Maybe I shall find them among the dead. Hear me, my chiefs! I am tired; my heart is sick and sad. From where the sun now stands, I will fight no more forever.”<cite>Chief Joseph’s Surrender Speech, October 5, 1877</cite></blockquote><h5>The Counterpoint</h5><p><i>Zitkála-Šá (Gertrude Bonnin) on Boarding School Life</i></p><p>While Joseph’s words marked the end of military resistance, a new struggle began in the classrooms of schools like Carlisle. Zitkála-Šá, a Sioux writer and activist, described her first day at a boarding school where her hair was cut—a traumatic act of cultural erasure:</p><blockquote class="src-quote">“I cried aloud, shaking my head all the while until I felt the cold blades of the scissors against my neck, and heard them gnaw off one of my thick braids. Then I lost my spirit. Since the day I was taken from my mother I had suffered extreme indignities... And now my long hair was shingled like a coward’s! In my anguish I moaned for my mother, but no one came to comfort me. Not a soul reasoned quietly with me, as my own mother used to do; for now I was only one of many little animals driven by a herder.”<cite>Zitkála-Šá, on her first day at a boarding school</cite></blockquote><h5 class="qh">Perspective Questions</h5><ol class="qs"><li><b>Analyze the Transition.</b> Compare the tone of physical resignation in Chief Joseph’s surrender with the description of psychological violation in Zitkála-Šá’s account. How do these two sources together illustrate the shift in U.S. policy from military conquest to forced cultural assimilation?</li><li><b>Assess the Legacy.</b> Chief Joseph laments that “the old men are all dead.” Explain how the loss of tribal elders and the forced removal of children described by Zitkála-Šá worked in tandem to dismantle traditional Native American social and leadership structures.</li><li><b>Evaluate Media and Rhetoric.</b> Zitkála-Šá describes herself as “one of many little animals driven by a herder.” How does this dehumanizing metaphor directly challenge the “benevolent” claims of reformers who argued that the boarding school system was a humane alternative to the “Indian Wars” of the frontier?</li></ol>
+      </div>
+    </aside>
+
+  </div>
+  <div class="runfoot">E PLURIBUS UNUM | UNIT 2 · EXPANSION & EXCLUSION | CHAPTER 6 · THE CONTESTED WEST</div>
+</section>
+
+<section class="section" id="s3">
+  <div class="sec-banner">
+    <div class="num"><small>SECTION</small><b>6.3</b></div>
+    <h2>The Fractured Frontier</h2>
+    <div class="icon">
+      <svg viewBox="0 0 160 120" width="150" aria-hidden="true"><circle cx="62" cy="62" r="38" fill="none" stroke="#CAA44F" stroke-width="6"/><circle cx="102" cy="62" r="38" fill="none" stroke="#F5EADA" stroke-width="5"/></svg>
+    </div>
+  </div>
+  <div class="content">
+
+    <h3 class="kc">Introduction</h3>
+    <h3 class="head">The Collision of Cultures</h3>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">The late nineteenth-century American West is often remembered as a lonely expanse of untamed wilderness, but the historical reality was a vibrant and often violent collision of diverse peoples. As the United States pushed its borders to the Pacific, the region functioned less like a simple line of settlement and more like a complex meeting ground for Native Americans, Hispanic communities, and waves of Asian and European immigrants. This expansion was fueled by a multiracial workforce that transformed the landscape, even as a growing white majority sought to impose a rigid racial and legal hierarchy over the land. The struggle for belonging in this era would redefine the American legal system and create lasting tensions over the meaning of citizenship and property.</p>
+      </div>
+      <div class="side">
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1848–1893</span>The years of the developments in this section, from the Treaty of Guadalupe Hidalgo to Turner’s thesis.</div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>The American Chronicle at the end of this section, “The Bone Wars,” shows another side of the changing West.</div>
+      </div>
+    </div>
+
+    <div class="act"><span>SECTION 6.3 · PART 1</span><b>The Multiracial Borderland</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">The development of the West was not the work of a single group of pioneers, but rather the result of a massive, multiracial labor force. While popular mythology often centered on the white male settler, the physical infrastructure and economic foundation of the region were built by a diverse array of hands. This section explores the meeting of these cultures and the essential roles they played in integrating the West into the American economy.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Multiracial</span> Made up of people of many races and ethnic groups. <span class="sp">Spanish: multirracial</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">3 groups</span>The chapter points to Chinese, Mexican, and African American laborers as key builders of the West.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Myth and the Reality</h3>
+    <div class="pair">
+      <div class="body">
+        <p>In the American imagination, the West has long been portrayed as a blank canvas—a rugged wilderness where white pioneers, through grit and individualism, built a civilization from scratch. This narrative was popularized in dime novels and later in Hollywood films, constructing a “frontier” that was presented as overwhelmingly white and male. These stories focused on the lone pioneer taming the desert, ignoring the fact that the region was already a home to established civilizations. By framing the West as “empty,” these myths justified the displacement of those who had lived there for centuries.</p>
+        <p>However, the historical reality of the trans-Mississippi West was radically different. It was not merely a frontier of settlement but a complex <dfn id="t-borderlands">Borderlands</dfn> of encounter, conflict, and exchange among diverse peoples. Long before the arrival of Anglo-American settlers, the region was populated by indigenous nations and Hispanic communities with deep roots in the soil. As the United States expanded, this mix was further enriched by waves of Asian immigrants crossing the Pacific and African Americans moving west from the South to escape the constraints of the post-Reconstruction era.</p>
+        <p>The integration of the West into the national economy was driven by this multiracial workforce, rather than the efforts of a single group. The tunnels of the Sierra Nevada were blasted by Chinese crews; the cattle of the Great Plains were herded by Mexican, Black, and white laborers; and the agricultural bounty of California was harvested by a kaleidoscope of people from across the globe. One of the most enduring symbols of the erasure of this diversity occurred on May 10, 1869, at Promontory Point, Utah. When the ceremonial <b>Golden Spike</b> was driven to connect the Central Pacific and Union Pacific railroads, the official photographs conspicuously excluded the thousands of Chinese laborers who had performed the most dangerous work on the line.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Borderlands</span> A region where different peoples meet, trade, and fight over land and power. <span class="sp">Spanish: zonas fronterizas</span></div>
+        <div class="connect"><span class="tag">CONNECT TO CIVICS</span>If a story calls a place “empty,” whose claims does it leave out?</div>
+      <div class="connect"><span class="tag">CONNECT TO CIVICS</span>The text says the integration of the West into the national economy was driven by a multiracial workforce, not a single group.</div>
+</div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Cowboy and the Borderland</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The iconic figure of the American West, the <b>Cowboy</b>, was itself a product of this complex borderland history rather than a purely Anglo-American invention. The cattle industry of the Great Plains was directly adapted from the Mexican ranching system that had thrived in the Southwest for centuries. The equipment used by cattlemen—including the lariat, the specialized saddle, and leather chaps—was Mexican in origin. Even the vocabulary of the trail, from “rodeo” and “corral” to “bronco,” was borrowed from the Spanish language, reflecting the deep cultural roots of the industry.</p>
+        <p>Furthermore, the workforce on the legendary cattle trails was deeply multiracial. Historians estimate that at least one-third of the cowboys on the long drives were Mexican or African American. For many Black men, the West offered a degree of autonomy and social equality that was impossible in the Jim Crow South. On the trail, a man’s status was often determined by his skill with a horse or a rope rather than the color of his skin. While they still faced discrimination in the “cow towns” at the end of the drive, the trail itself functioned as a unique space of professional integration.</p>
+        <p>Despite this reality, the “whitewashing” of the West in popular culture later replaced these Black and Brown laborers with the image of the white gunslinger. By the early 20th century, the diverse origins of the ranching industry were largely scrubbed from the national memory to fit a more homogeneous vision of American identity. This process of cultural erasure mirrored the political and economic dispossession occurring across the region, where the contributions of non-white workers were utilized for profit while their rights and histories were systematically suppressed.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Cowboy</span> A cattle worker whose tools and words came from Mexican ranching. <span class="sp">Spanish: vaquero / cowboy</span></div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">One-third</span>Share of cowboys on the long drives who, according to historians in the text, were Mexican or African American.</div>
+</div>
+    </div>
+
+    <div class="act"><span>SECTION 6.3 · PART 2</span><b>Exclusion and Resistance</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">As the West became more integrated into the national economy, white settlers and politicians increasingly used the power of the law to enforce a racial hierarchy. This period was marked by the nation’s first racially restrictive immigration laws and the widespread loss of property rights for those who had lived in the region long before it became part of the United States. This section examines how these marginalized groups fought to maintain their status and dignity in a changing nation.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Exclusion</span> Keeping a group out by law. <span class="sp">Spanish: exclusión</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">1882</span>Year of the Chinese Exclusion Act.</div>
+              <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>In Chae Chan Ping v. United States (1889), the Supreme Court upheld Chinese exclusion and said Congress holds sweeping power over immigration.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The “Chinese Question” and the Politics of Exclusion</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The Chinese presence in the West began in earnest with the California Gold Rush, but the construction of the Transcontinental Railroad brought even greater numbers of young men from the Pearl River Delta. Recruited by the Central Pacific Railroad for work that many white laborers refused, Chinese workers proved indispensable. They exhibited immense skill and courage, lowering themselves in baskets down sheer cliffs to plant explosives and enduring the brutal winters of the high Sierras. Despite these contributions, they were often denied the recognition and safety afforded to their white counterparts.</p>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20railroad%20workers%20sierra%20nevada.jpg?width=1000" alt="An engraving of a train passing a snow shed in a mountain valley, with workers shoveling snow beside the track." loading="lazy" style="height:auto"><figcaption><span class="phlabel">Snow sheds in the Sierra Nevada, 1870</span>This engraving shows a Central Pacific train running through snow sheds in the Sierra Nevada, with workers clearing the track. It appeared in Frank Leslie’s Illustrated Newspaper on February 6, 1870. The text describes the winters Chinese laborers endured here.<span class="credit">Image: Joseph Becker / Frank Leslie’s Illustrated Newspaper / <a href="https://commons.wikimedia.org/wiki/File:Chinese_railroad_workers_sierra_nevada.jpg">Wikimedia Commons</a>, public domain</span></figcaption></figure>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Pearl River Delta</span> The region of southern China from which many Chinese workers came. <span class="sp">Spanish: Delta del Río de las Perlas</span></div>
+              <div class="fact" data-q2="1"><span class="tag">FAST FACT</span><span class="big">1943</span>Year Congress repealed the Chinese Exclusion Act, 61 years after passing it.</div>
+      </div>
+    </div>
+
+
+    <div class="pair">
+      <div class="body">
+        <p>As the economy dipped in the 1870s, white workers began to view the Chinese as convenient scapegoats for their own financial struggles. This sentiment was crystalized in the rise of <dfn id="t-nativism"><strong>Nativism</strong></dfn>—a political policy of promoting the interests of native-born inhabitants against those of immigrants. In California, this took a specifically anti-Asian form. The political face of this movement was <b>Dennis Kearney</b>, an Irish immigrant and leader of the <b>Workingmen’s Party</b> of California. Kearney was a demagogue who whipped up crowds in San Francisco with fiery speeches blaming “railroad magnates” and the Chinese for the plight of the working class, famously ending his rallies with the slogan, “The Chinese must go!”</p>
+
+<figure class="photo sidefig"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20Mercantile%20Houses%2C%20Dupont%20Street%2C%20San%20Francisco%20LCCN2002723035.jpg?width=1400" alt="A nineteenth-century photograph of a street lined with multi-story shops and commercial buildings." loading="lazy" style="height:auto;max-height:520px;object-fit:contain"><figcaption><span class="phlabel">Dupont Street, San Francisco, 1866</span>“Chinese Mercantile Houses, Dupont Street, San Francisco,” a half stereograph by Lawrence & Houseworth published in 1866. It shows businesses in the city’s Chinese district, the kind of enclave the text calls a Chinatown.<span class="credit">Image: Lawrence &amp; Houseworth (Library of Congress) / <a href="https://commons.wikimedia.org/wiki/File:Chinese_Mercantile_Houses,_Dupont_Street,_San_Francisco_LCCN2002723035.jpg">Wikimedia Commons</a>, Public domain</span></figcaption></figure>
+
+        <p>The resulting political pressure led to the passage of the <dfn id="t-chinese-exclusion-act"><strong>Chinese Exclusion Act</strong></dfn> in 1882. This landmark legislation was the first law in American history to ban a specific group of immigrants solely on the basis of race and class. To enforce the law, the government established a bureaucracy of control at <b>Angel Island</b> in San Francisco Bay, where Chinese arrivals were detained for months. Despite this hostility, the Chinese community fought back. They retreated into urban enclaves known as <b>Chinatowns</b> for safety and used the court system to challenge discrimination. In the 1886 case <dfn id="t-yick-wo-v-hopkins"><strong>Yick Wo v. Hopkins</strong></dfn>, the Supreme Court established the crucial principle that the 14th Amendment’s Equal Protection Clause applied to all persons on U.S. soil, regardless of their citizenship status.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Nativism</span> A policy of favoring native-born people over immigrants. <span class="sp">Spanish: nativismo</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Demagogue</span> A leader who wins support by appealing to fear and prejudice. <span class="sp">Spanish: demagogo</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Scapegoat</span> A person or group blamed for problems they did not cause. <span class="sp">Spanish: chivo expiatorio</span></div>
+              <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>Yick Wo v. Hopkins struck down a San Francisco rule that looked neutral but was enforced almost only against Chinese laundry owners. A fair law can still be applied unfairly.</div>
+      </div>
+    </div>
+
+<figure class="photo "><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Angel%20Island%20detention%20barracks.JPG?width=1400" alt="A long wooden building, the former detention barracks, standing on Angel Island in San Francisco Bay." loading="lazy" style="height:auto"><figcaption><span class="phlabel">Angel Island, today</span>The detention barracks of the U.S. immigration station on Angel Island in San Francisco Bay, photographed in 2015. The station opened in 1910, after the Chinese Exclusion Act. This is a modern photograph.<span class="credit">Photo: Hispalois / <a href="https://commons.wikimedia.org/wiki/File:Angel_Island_detention_barracks.JPG">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span></figcaption></figure>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">Dispossession in the Southwest</h3>
+    <div class="pair">
+      <div class="body">
+        <p>While the Chinese fought for the right to remain, Mexican Americans struggled to hold onto land they had possessed for generations. When the United States acquired the Southwest after the Mexican-American War, the <b>Treaty of Guadalupe Hidalgo</b> (1848) formally guaranteed that Mexican citizens in the ceded territories would enjoy the full rights of U.S. citizens and that their property would be “inviolably respected.” However, as Anglo-American settlers flooded the region, these promises were routinely ignored by both the government and the courts.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Treaty of Guadalupe Hidalgo</span> The 1848 treaty that ended the Mexican-American War and ceded the Southwest to the United States. <span class="sp">Spanish: Tratado de Guadalupe Hidalgo</span></div>
+        <div class="connect"><span class="tag">CONNECT TO CIVICS</span>Treaties are the supreme law of the land. What happens when a government does not keep one?</div>
+      </div>
+    </div>
+
+
+    <div class="pair">
+      <div class="body">
+        <p>The elite landowning class of California, known as the <dfn id="t-californios"><strong>Californios</strong></dfn>, faced an onslaught of legal and economic challenges. American squatters often refused to recognize the validity of Spanish and Mexican land grants. To settle these disputes, Congress passed the Land Act of 1851, which placed the burden of proof on the landowners. To defend their titles, families had to hire expensive lawyers and navigate a foreign legal system in cases that often lasted decades. It is estimated that nearly two-thirds of the land once held by these families was lost during this period, transforming a landed aristocracy into a marginalized working class.</p>
+        <p>Resistance to this dispossession took many forms, ranging from legal challenges to direct action. In New Mexico, a secret organization of night riders known as <dfn id="t-las-gorras-blancas"><strong>Las Gorras Blancas</strong></dfn> (The White Caps) emerged to protect communal grazing lands from the encroachment of Anglo ranchers and railroads. They masked their identities and rode at night to cut fences and burn railroad bridges, acting as a community defense force for the “helpless classes.” Their manifesto made it clear that they were not merely bandits, but protectors of a traditional way of life against corporate and Anglo land grabbers who sought to fence off the common range.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Californios</span> The landowning class of Spanish and Mexican California. <span class="sp">Spanish: californios</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Squatter</span> A person who settles on land without legal title. <span class="sp">Spanish: ocupante ilegal</span></div>
+        <div class="fact"><span class="tag">FAST FACT</span><span class="big">Land Act of 1851</span>Law that put the burden of proof on landowners.</div>
+      </div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.8</span>Exclusion and Resistance in the West</p>
+      <p class="figsub">Three groups, according to Section 6.3.</p>
+      <table class="cmp"><thead><tr><th>Question</th><th>Chinese immigrants</th><th>Californios</th><th>Hispanic New Mexicans</th></tr></thead><tbody><tr><td>Where</td><td>Sierra Nevada and the Central Pacific</td><td>Southwest and California</td><td>New Mexico</td></tr><tr><td>Contribution</td><td>Blasted tunnels and laid track</td><td>Held land and ranching traditions from before U.S. rule</td><td>Held communal grazing lands</td></tr><tr><td>Obstacle</td><td>Nativism and the Exclusion Act</td><td>The Land Act of 1851 and squatters</td><td>Anglo ranchers and railroads fencing the range</td></tr><tr><td>Response</td><td>Chinatowns and lawsuits such as Yick Wo</td><td>Lawyers and courts, usually in cases lasting decades</td><td>Las Gorras Blancas cut fences and burned railroad bridges</td></tr></tbody></table>
+      <p class="source">Source: Summary of this section’s text. Table created for this textbook.</p>
+      <div class="analyze"><b>ANALYZE TABLES</b>
+        <ol><li>How were the obstacles in each column similar? How were they different?</li><li>Which response used the courts, and which used direct action?</li><li>Why does the table suggest that the West was a “borderland” and not an empty frontier?</li></ol>
+      </div>
+    </figure>
+
+    <div class="act"><span>SECTION 6.3 · PART 3</span><b>The Closing of the Frontier?</b></div>
+    <div class="pair">
+      <div class="body">
+        <p class="lead">By the end of the nineteenth century, the physical expansion of the United States reached a point where the government believed the era of “free land” had ended. This conclusion led to a major re-evaluation of American identity and history, as scholars attempted to explain what the western experience had meant for the nation. This section examines the official declaration of the frontier’s end and the famous historical thesis that attempted to define the American character through the lens of the West.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Frontier</span> The edge of settled land. In this chapter, also a story Americans told about themselves. <span class="sp">Spanish: frontera</span></div>
+        <div class="connect"><span class="tag">LOOK AHEAD</span>Turner’s thesis, explained next, was built on the census announcement.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">The Census of 1890</h3>
+    <div class="pair">
+      <div class="body">
+        <p>By 1890, the Superintendent of the Census issued a startling declaration: a distinct frontier line could no longer be drawn on the American map. For over a century, the census had tracked a clear line where settlement ended and “unsettled” land began. However, by 1890, isolated pockets of settlement had grown and merged to such a degree that the map was now a patchwork of development. The “unsettled” spaces had been pierced by railroads, claimed by massive mining operations, and enclosed by the barbed wire of corporate ranching interests.</p>
+
+<figure class="photo sidefig"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Treaty%20of%20Guadalupe%20Hidalgo.jpg?width=1400" alt="A page of the 1848 Treaty of Guadalupe Hidalgo showing lines of formal handwriting." loading="lazy" style="height:auto;max-height:560px;object-fit:contain"><figcaption><span class="phlabel">The Treaty of Guadalupe Hidalgo, 1848</span>The original Treaty of Guadalupe Hidalgo, signed February 2, 1848, as held by the Library of Congress. The text promised that property of Mexicans in the ceded lands would be “inviolably respected.”<span class="credit">Image: Government of the United States / <a href="https://commons.wikimedia.org/wiki/File:Treaty_of_Guadalupe_Hidalgo.jpg">Wikimedia Commons</a>, Public domain</span></figcaption></figure>
+
+        <p>This announcement carried profound psychological weight for the American public. The idea that there was always “more room” to the west had been a safety valve for social and economic pressures in the East. If the frontier was gone, many wondered if the opportunity for individual advancement and the uniquely American sense of freedom might also be at risk. The bureaucratic statement from the census office served as a signal that the era of conquest and expansion was transitioning into an era of industrialization and urban growth.</p>
+        <p>However, the declaration that the West was “settled” was itself a matter of perspective. It ignored the fact that millions of indigenous people and Hispanic residents still lived in these “settled” areas, often under conditions of extreme duress. The closing of the frontier did not mean that the struggles for the region had ended; rather, it meant that the federal government had successfully imposed its administrative and economic systems across the continent. The frontier was not “closed” in a physical sense, but it was being brought under the permanent control of the American state.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Census</span> The official count of a country’s population, taken every ten years. <span class="sp">Spanish: censo</span></div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">1890</span>Year the Superintendent of the Census said a distinct frontier line could no longer be drawn.</div>
+        <div class="connect" data-q2="1"><span class="tag">CONNECT TO CIVICS</span>Article I, Section 2 requires a census every ten years. It was written to count people for seats in the House, and here it also announced the end of the frontier.</div>
+      </div>
+    </div>
+
+    <h3 class="kc">Key Concepts</h3>
+    <h3 class="head">Turner’s Frontier Thesis</h3>
+    <div class="pair">
+      <div class="body">
+        <p>The 1890 census announcement inspired a young historian named <b>Frederick Jackson Turner</b> to deliver a paper at the 1893 World’s Columbian Exposition in Chicago. Titled “The Significance of the Frontier in American History,” his work articulated what became known as the <dfn id="t-frontier-thesis">Frontier Thesis</dfn>. Turner argued that the existence of an area of free land and the advance of American settlement westward were the central factors in American development. He claimed that the frontier was a “crucible” where the European immigrant was stripped of old-world habits and forged into a new, distinctly American character.</p>
+        <p>According to Turner, the frontier experience promoted individualism, democracy, and a practical, inventive mindset. He believed that the constant need to rebuild society on the edge of the wilderness forced Americans to rely on themselves and fostered a spirit of egalitarianism. For decades, this thesis became the dominant interpretation of American history, taught in schools and embraced by politicians as the definitive explanation for why the United States was different from the nations of Europe.</p>
+        <p>Despite its popularity, modern historians have largely rejected the <b>Frontier Thesis</b> because of its narrow and exclusionary focus. Turner’s vision of the West was an empty stage waiting for white actors, and he completely ignored the complex reality of the region as a place of multiracial conflict. He marginalized Native Americans as part of the “wilderness” to be tamed rather than as people with their own history. Today, the West is viewed not as a closing frontier, but as a permanent zone of <b>Borderlands</b> where the struggles over immigration, land rights, and identity that began in the 19th century continue to define the American experiment.</p>
+      </div>
+      <div class="side">
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Thesis</span> The central claim of a work of history. <span class="sp">Spanish: tesis</span></div>
+        <div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Crucible</span> A place where different things are melted together and changed. <span class="sp">Spanish: crisol</span></div>
+      <div class="fact"><span class="tag">FAST FACT</span><span class="big">1893</span>Year Turner delivered his Frontier Thesis at the World’s Columbian Exposition in Chicago.</div>
+        <div class="connect" data-q2="1"><span class="tag">CONNECT TO HISTORY</span>Historian Patricia Limerick challenged Turner in The Legacy of Conquest (1987), arguing that the West was a place of conquest and many peoples, not an empty frontier.</div>
+      </div>
+    </div>
+
+    <figure class="chart">
+      <p class="figlabel"><span>FIGURE 6.9</span>The Fractured Frontier, 1848–1893</p>
+      <p class="figsub">Events from this section, in order. Dates are the ones given in the text.</p>
+      <svg viewBox="0 0 860 270" role="img" aria-label="Timeline: 1848 Treaty of Guadalupe Hidalgo; 1851 Land Act; May 1869 Golden Spike at Promontory; 1882 Chinese Exclusion Act; 1886 Yick Wo v. Hopkins; 1890 census declares the frontier closed; 1893 Turner’s Frontier Thesis"><line x1="40" y1="135" x2="820" y2="135" stroke="#546B7E" stroke-width="4" stroke-linecap="round"/><line x1="95.7" y1="135" x2="95.7" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1848: Treaty of Guadalupe Hidalgo</title><circle cx="95.7" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="95.7" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="start" font-weight="800">1848</text><text x="95.7" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Treaty of</text><text x="95.7" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="400">Guadalupe Hidalgo</text><line x1="207.1" y1="135" x2="207.1" y2="145" stroke="#546B7E" stroke-width="2"/><g><title>1851: Land Act of 1851</title><circle cx="207.1" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="207.1" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1851</text><text x="207.1" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Land Act</text><text x="207.1" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">of 1851</text><line x1="318.6" y1="135" x2="318.6" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>May 1869: Golden Spike at Promontory</title><circle cx="318.6" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="318.6" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">May 1869</text><text x="318.6" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Golden Spike</text><text x="318.6" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">at Promontory</text><line x1="430.0" y1="135" x2="430.0" y2="145" stroke="#737B62" stroke-width="2"/><g><title>1882: Chinese Exclusion Act</title><circle cx="430.0" cy="135" r="8" fill="#737B62" stroke="#fff" stroke-width="2.5"/></g><text x="430.0" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#856316" text-anchor="middle" font-weight="800">1882</text><text x="430.0" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Chinese</text><text x="430.0" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">Exclusion Act</text><line x1="541.4" y1="135" x2="541.4" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1886: Yick Wo v. Hopkins</title><circle cx="541.4" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="541.4" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1886</text><text x="541.4" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Yick Wo</text><text x="541.4" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">v. Hopkins</text><line x1="652.9" y1="135" x2="652.9" y2="145" stroke="#546B7E" stroke-width="2"/><g><title>1890: Census declares frontier closed</title><circle cx="652.9" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="652.9" y="171" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="middle" font-weight="800">1890</text><text x="652.9" y="187" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Census declares</text><text x="652.9" y="202" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="400">frontier closed</text><line x1="764.3" y1="135" x2="764.3" y2="116" stroke="#546B7E" stroke-width="2"/><g><title>1893: Turner’s Frontier Thesis</title><circle cx="764.3" cy="135" r="8" fill="#546B7E" stroke="#fff" stroke-width="2.5"/></g><text x="764.3" y="77" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" fill="#523342" text-anchor="end" font-weight="800">1893</text><text x="764.3" y="93" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#1c2230" text-anchor="end" font-weight="700">Turner’s</text><text x="764.3" y="108" font-family="Inter, Arial, sans-serif" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="400">Frontier Thesis</text></svg>
+      <p class="source">Source: Dates as stated in this section’s text. Timeline created for this textbook. Events are evenly spaced for readability, not to scale.</p>
+      <details class="dt"><summary>View data table</summary><table class="data"><thead><tr><th>When</th><th>Event</th></tr></thead><tbody><tr><td>1848</td><td>Treaty of Guadalupe Hidalgo</td></tr><tr><td>1851</td><td>Land Act of 1851</td></tr><tr><td>May 10, 1869</td><td>Golden Spike at Promontory Point</td></tr><tr><td>1882</td><td>Chinese Exclusion Act</td></tr><tr><td>1886</td><td>Yick Wo v. Hopkins</td></tr><tr><td>1890</td><td>Census says no frontier line can be drawn</td></tr><tr><td>1893</td><td>Turner presents the Frontier Thesis</td></tr></tbody></table></details>
+      <div class="analyze"><b>ANALYZE GRAPHS</b>
+        <ol><li>How many years passed between the Treaty of Guadalupe Hidalgo and the Chinese Exclusion Act?</li><li>Which events were laws or court decisions?</li><li>Which event do you think did the most to shape how Americans saw the West? Use the text to explain.</li></ol>
+      </div>
+    </figure>
+
+    <aside class="feature ">
+      <div class="ft-h"><span class="em" aria-hidden="true">⚖️</span><div><small>COMPETING VISIONS</small><b>The “Chinese Question”</b></div></div>
+      <div class="ft-b">
+<h5>The Issue</h5><p>In the mid-19th century, California was the epicenter of a fierce debate over immigration, labor, and national identity. As thousands of Chinese immigrants arrived to work in the gold fields and on railroads, nativist politicians argued they were a threat to white society.</p><h5>Vision A: The Defense of Equality</h5><p>Norman Asing, a naturalized U.S. citizen and leader in the Chinese community, wrote an open letter to the Governor of California, who had proposed restricting Chinese immigration. Asing appeals to the foundational principles of the United States.</p><blockquote class="src-quote">“Sir: I am a Chinaman, a republican, and a lover of free institutions... The declaration of your independence, and all the acts of your government, your people, and your history are all against you. It is the effect of your republicanism that free labor has no advantages over any other... We are not the degraded race you would make us. We came amongst you as mechanics or traders, and following every honorable business of life. You go out of your way to find an excuse for the evils that are afflicting you, and you find it in the Chinese.”<cite>Norman Asing, Letter to Governor John Bigler, 1852</cite></blockquote><h5>Vision B: The Nativist Argument</h5><p>The Workingmen’s Party, led by Dennis Kearney, represented white laborers who felt threatened by the economic depression of the 1870s. Their platform framed the Chinese not as fellow immigrants, but as tools of corporate monopolists.</p><blockquote class="src-quote">“We declare that the Chinese must go! They are a distinct people... whose presence in our midst is a standing menace to our civilization... The wealthy capitalists and the railroad magnates have imported these coolies to lower the wages of the white workingman and to degrade his family. The Chinese laborer is a slave to his master, he works for rice and sleeps in a sty. He cannot be assimilated. He has no wife, no children, no stake in the country. To compete with him, the American laborer must come down to his level of brute existence. We demand the abrogation of the treaty with China and the prohibition of this accursed traffic in human flesh.”<cite>Workingmen’s Party of California, Platform, late 1870s</cite></blockquote><h5 class="qh">Analyzing the Debate</h5><ol class="qs"><li><b>Rhetorical Strategy.</b> How does Norman Asing use the language of American republicanism and the Declaration of Independence to challenge the Governor’s position?</li><li><b>Economic Anxiety.</b> How does the Workingmen’s Party platform connect the presence of Chinese laborers to the actions of “wealthy capitalists” and “railroad magnates”?</li><li><b>Definitions of Belonging.</b> Contrast how Asing defines a worthy citizen (based on behavior and belief) with how the Workingmen’s Party defines belonging (based on race and standard of living).</li></ol>
+      </div>
+    </aside>
+<aside class="chron-card">
+      <div class="ft-h"><span class="em" aria-hidden="true">🦴</span><div><small>AMERICAN CHRONICLES</small><b>The Bone Wars: Science and Sabotage in the Wild West</b></div></div>
+      <div class="ft-b">
+<p class="chron-sub">The Fossil Fields of Wyoming, Colorado, and Nebraska, 1868–1899</p>
+<p class="dek">The American West is often remembered for its gold rushes, cattle drives, and gunfights. But in the late 19th century, the dusty badlands of Wyoming, Colorado, and Nebraska became the battleground for a different kind of treasure hunt—one fought not for yellow metal, but for ancient bones.</p>
+<a class="readmore" href="american-chronicles-the-bone-wars.html">READ THE FULL STORY →</a>
+      </div>
+    </aside>
+
+  </div>
+  <div class="runfoot">E PLURIBUS UNUM | UNIT 2 · EXPANSION & EXCLUSION | CHAPTER 6 · THE CONTESTED WEST</div>
+</section>
+
+
+<section class="case section" id="case">
+  <div class="case-banner">
+    <p class="kicker">CASE STUDY · PRIMARY SOURCE ANALYSIS</p>
+    <h2>Who Was the West For?</h2>
+    <p>The West, 1862–1893. Read three primary sources, then explain how the West was transformed and at what human cost.</p>
+  </div>
+  <div class="content">
+    <div class="pair"><div class="body">
+      <h3 class="kc">Background</h3><h3 class="head">Reading the West’s Promise and Its Price</h3>
+      <p>Chapter 6 follows the West from the railroad land grants of 1862 to the declaration in 1890 that the frontier had closed. The three documents below come from different corners of that story. A reformer explains why Native children should be sent to boarding schools. Congress writes a law that bars Chinese laborers. A historian explains the whole era as the story of free land. Each document speaks for someone who held power, so part of your task is to ask who is missing.</p>
+      <p>Read the three primary source documents. As you read, consider how each document connects to the themes and objectives of Chapter 6. Answer the analysis questions that follow each document, and then complete the culminating Synthesis Task.</p></div>
+      <div class="side"><div class="qr"><span class="tag">QUICK REFERENCE</span><span class="term">Primary source</span> A document created at the time being studied by someone who was there. <span class="sp">Spanish: fuente primaria</span></div></div></div>
+
+    <div class="doc">
+      <div class="doc-h"><div class="letter">A</div><div><small>DOCUMENT A · SPEECH</small><b>A Reformer on Assimilation</b></div></div>
+      <div class="doc-b">
+<blockquote class="src-quote">“Kill the Indian in him, and save the man.”<cite>Richard Henry Pratt, speech on the education of Native Americans, 1892.</cite></blockquote>
+<p class="ctx"><b>Context:</b> <i>Richard Henry Pratt was an army officer who founded the Carlisle Indian School in Pennsylvania in 1879. He gave this speech in 1892, after more than a decade of running the school. Many reformers of his time thought that Native Americans could survive only by giving up their cultures. The line is one of the best-known statements of assimilation.</i></p>
+      </div>
+      <div class="think"><b>Analyze:</b> <ol class='qs'><li><b>Close Reading.</b> What does Pratt say should be destroyed, and what does he say should be saved?</li><li><b>Contextualization.</b> According to Section 6.2, what practices at Carlisle put this idea into action, and what did students experience?</li><li><b>Connecting to Chapter 6.</b> How did the Dawes Act and boarding schools work together toward the same goal?</li></ol></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-h"><div class="letter">B</div><div><small>DOCUMENT B · LAW</small><b>A Law Bars Chinese Laborers</b></div></div>
+      <div class="doc-b">
+<blockquote class="src-quote">“…the coming of Chinese laborers to this country endangers the good order of certain localities…”<cite>Chinese Exclusion Act, preamble, approved May 6, 1882.</cite></blockquote>
+<p class="ctx"><b>Context:</b> <i>Congress approved the Chinese Exclusion Act on May 6, 1882. It suspended the immigration of Chinese laborers for ten years, and the ban was later extended. The quotation is from the law’s opening clause, which explains Congress’s reason for passing it.</i></p>
+      </div>
+      <div class="think"><b>Analyze:</b> <ol class='qs'><li><b>Close Reading.</b> What reason does the law give for its ban, and whom does it name?</li><li><b>Contextualization.</b> According to Section 6.3, what economic conditions and political movement helped lead to this law?</li><li><b>Connecting to Chapter 6.</b> How does the law’s claim about “good order” compare with what the section says Chinese laborers actually contributed to the West?</li></ol></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-h"><div class="letter">C</div><div><small>DOCUMENT C · HISTORIAN’S ESSAY</small><b>The Frontier Has Gone</b></div></div>
+      <div class="doc-b">
+<blockquote class="src-quote">“The existence of an area of free land, its continuous recession, and the advance of American settlement westward, explain American development.”<cite>Frederick Jackson Turner, “The Significance of the Frontier in American History,” 1893.</cite></blockquote><blockquote class="src-quote">“…the frontier has gone, and with its going has closed the first period of American history.”<cite>Same essay, concluding passage.</cite></blockquote>
+<p class="ctx"><b>Context:</b> <i>Frederick Jackson Turner was a young historian when he read this paper in 1893 at the World’s Columbian Exposition in Chicago. His idea, the Frontier Thesis, shaped how Americans taught their history for decades. Modern historians have criticized it for ignoring the people who already lived in the West.</i></p>
+      </div>
+      <div class="think"><b>Analyze:</b> <ol class='qs'><li><b>Close Reading.</b> What does Turner say explains American development?</li><li><b>Contextualization.</b> According to Section 6.3, what announcement from the census inspired Turner, and what groups of people does his picture of the West leave out?</li><li><b>Connecting to Chapter 6.</b> How would the experiences of the Plains nations, Chinese laborers, and Californios change Turner’s story of “free land”?</li></ol></div>
+    </div>
+
+    <div class="thinking" style="font-size:15.5px"><b class="t">SYNTHESIS TASK</b>
+      <p style="margin:6px 0">Using the primary sources provided above and your knowledge from Chapter 6, write a well-developed paragraph responding to the following question: <b>How was the American West transformed from a diverse borderland into a consolidated part of the national economy, and at what human cost?</b></p>
+      <p style="margin:6px 0 2px">Your response should:</p><ul style="margin:0;padding-left:22px"><li>Include a clear thesis statement.</li><li>Reference at least two of the primary source documents (A, B, or C).</li><li>Include at least two specific historical details from Chapter 6.</li></ul>
+    </div>
+  </div>
+  <div class="runfoot">E PLURIBUS UNUM | UNIT 2 · EXPANSION & EXCLUSION | CHAPTER 6 · THE CONTESTED WEST</div>
+</section>
+
+
+<section class="section chap-assess" id="assess">
+  <div class="sec-banner"><div class="num"><small>CHAPTER</small><b>6</b></div><h2>Chapter 6 Review</h2>
+    <div class="icon"><svg viewBox="0 0 160 120" width="150" aria-hidden="true"><rect x="40" y="14" width="80" height="96" rx="8" fill="none" stroke="#CAA44F" stroke-width="5"/><path d="M56 40 l8 8 l14 -16 M56 70 l8 8 l14 -16" stroke="#F5EADA" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M88 44 h20 M88 74 h20" stroke="#F5EADA" stroke-width="5" stroke-linecap="round"/></svg></div></div>
+  <div class="content">
+    <div class="reviewbox"><p class="kicker">Essential Question</p>How was the American West transformed from a diverse borderland into a consolidated part of the national economy, and at what human cost?</div>
+    <h3 class="kc">Chapter Summary</h3>
+    <div class="summary-grid"><div><h5>6.1 Steel, Steam, and the Closing of the Range</h5>The federal government and the railroads built the Transcontinental Railroad with land grants. The Homestead Act promised small farms, but the Plains favored large operations. The Cattle Kingdom rose and then closed as barbed wire, overgrazing, and hard winters fenced in the range.</div><div><h5>6.2 The Wars for the Plains</h5>The Army used total war, including the slaughter of the buffalo, to defeat the Plains nations. After Little Bighorn came surrender, the Dawes Act, boarding schools, and the killings at Wounded Knee.</div><div><h5>6.3 The Fractured Frontier</h5>The West was a multiracial borderland. Chinese laborers faced nativism and the Chinese Exclusion Act, Californios lost land, and Turner’s Frontier Thesis ignored all of them.</div></div>
+  </div>
+  <div class="credits"><h4>SOURCES AND ATTRIBUTION</h4>
+    <p style="margin:0 0 8px">Chapter text by Daniel Garza, M.A. Figures, tables, margin notes, the Case Study, and Application questions were created for this textbook. Primary-source excerpts are in the public domain.</p>
+    <p style="margin:0 0 6px"><b>Sources:</b></p><ul style="margin:0;padding-left:18px"><li>California Department of Education, History–Social Science Content Standards, Grade 11 (HSS-11.1.4, 11.2.3, 11.2.6, 11.2.8).</li><li>Richard Henry Pratt, “The Advantages of Mingling Indians with Whites,” 1892 (the line “Kill the Indian in him, and save the man”).</li><li>An Act to Execute Certain Treaty Stipulations Relating to Chinese (Chinese Exclusion Act), approved May 6, 1882.</li><li>Frederick Jackson Turner, “The Significance of the Frontier in American History,” 1893.</li><li>Dawes Severalty Act (1887), as excerpted in the Chapter 6 Assessment.</li></ul>
+    <p style="margin:10px 0 6px"><b>Photo and image credits:</b> All images are from Wikimedia Commons and are used under the license named in each caption. They appear only when you are online.</p>
+  </div>
+  <div class="runfoot">E PLURIBUS UNUM | UNIT 2 · EXPANSION & EXCLUSION | CHAPTER 6 · THE CONTESTED WEST</div>
+</section>
+
+</div>
+<script>
+(function(){var b=document.getElementById('bar');function u(){var h=document.documentElement;var m=h.scrollHeight-h.clientHeight;b.style.width=(m>0?(h.scrollTop/m*100):0)+'%';}window.addEventListener('scroll',u,{passive:true});u();})();
+</script>
+</body>
+</html>
