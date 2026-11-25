@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Building a New Order: Veterans, Nations, and Human Rights, 1944–1948 · Case File 16.4</title>
+<style>
+:root{--navy:#31261C;--parch:#F4EDE1;--blue:#457050;--slate:#696C6D;--gold:#DBA61A;--paper:#FFFEFA;--ok:#2E6B3E;--bad:#9B2C2C}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--parch);color:var(--navy);font:16px/1.55 Georgia,'Times New Roman',serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 40px}
+.hero{background:var(--navy);color:var(--parch);padding:22px 18px 18px;border-bottom:5px solid var(--gold)}
+.hero .in{max-width:860px;margin:0 auto}
+.eyebrow{font:700 12px Arial,Helvetica,sans-serif;letter-spacing:2px;color:var(--gold)}
+.hero h1{margin:6px 0 2px;font-size:30px;line-height:1.15}
+.hero .sub{font-style:italic;color:#D9D3C0}
+.box{background:var(--paper);border:1px solid var(--slate);border-left:6px solid var(--gold);border-radius:6px;padding:12px 16px;margin:16px 0}
+.box h2,.box h3{margin:0 0 4px;font:700 13px Arial,Helvetica,sans-serif;letter-spacing:1.5px;color:var(--blue)}
+.box p{margin:4px 0}
+.eq{font-style:italic}
+.namerow{display:grid;grid-template-columns:1fr 1fr 110px 130px;gap:10px;margin:14px 0}
+label.nm{display:block;font:700 12px Arial,Helvetica,sans-serif;letter-spacing:1px;color:var(--blue);margin-bottom:3px}
+input[type=text],textarea,select{width:100%;font:16px/1.4 Georgia,serif;color:var(--navy);background:#fff;border:2px solid var(--slate);border-radius:6px;padding:8px 10px}
+input[readonly]{background:#ECE7D6}
+textarea{min-height:84px;resize:vertical}
+input.bad,textarea.bad,select.bad{border-color:var(--bad);background:#FFF3F0}
+.meter{margin:14px 0 4px;font:700 13px Arial,Helvetica,sans-serif;color:var(--blue)}
+.bar{height:10px;background:#DDD6BF;border-radius:6px;overflow:hidden;margin-top:4px}
+.bar>i{display:block;height:100%;width:0;background:var(--blue);transition:width .25s}
+.card{background:var(--paper);border:1px solid var(--slate);border-top:5px solid var(--blue);border-radius:8px;padding:14px 16px;margin:18px 0}
+.card.done{border-top-color:var(--ok)}
+.chip{display:inline-block;font:700 12px Arial,Helvetica,sans-serif;letter-spacing:1px;background:var(--blue);color:var(--parch);padding:3px 9px;border-radius:12px;margin-right:6px}
+.card h2{margin:6px 0 4px;font-size:20px}
+.who{font:14px Arial,Helvetica,sans-serif;color:var(--slate)}
+blockquote{margin:10px 0;padding:10px 14px;background:var(--parch);border-left:5px solid var(--gold);font-style:italic}
+.cite{font:13px/1.4 Arial,Helvetica,sans-serif;color:#44505E;direction:ltr}
+.help{font:14px/1.45 Arial,Helvetica,sans-serif;background:#EDE8D6;border-radius:6px;padding:7px 10px;margin:8px 0}
+.q{font-weight:700;margin:14px 0 6px}
+.q small{font:13px Arial,Helvetica,sans-serif;font-weight:400;color:var(--slate)}
+.stances{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st{font:700 15px Arial,Helvetica,sans-serif;text-align:left;background:#fff;color:var(--navy);border:2px solid var(--blue);border-radius:8px;padding:10px;cursor:pointer;min-height:64px}
+.st small{display:block;font-weight:400;font-size:12px;color:#44505E;margin-top:3px}
+.st[aria-pressed=true]{background:var(--blue);color:#fff}
+.st[aria-pressed=true] small{color:#E7E2D0}
+.st:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two .card{margin:12px 0}
+.pick{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0}
+.pick label{flex:1 1 220px;border:2px solid var(--blue);border-radius:8px;padding:9px 12px;background:#fff;cursor:pointer;font:15px/1.35 Arial,Helvetica,sans-serif}
+.pick input{margin-right:8px}
+.pick label:has(input:checked){background:var(--blue);color:#fff}
+.checks label{display:block;margin:6px 0;font:15px/1.4 Arial,Helvetica,sans-serif}
+.checks input{margin-right:8px;transform:scale(1.25)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+.btn{font:700 15px Arial,Helvetica,sans-serif;border:2px solid var(--blue);background:#fff;color:var(--blue);border-radius:8px;padding:11px 16px;cursor:pointer}
+.btn.pri{background:var(--blue);color:#fff}
+.btn:disabled{background:#CFCABA;border-color:#B7B29F;color:#6A6A60;cursor:not-allowed}
+.msg{font:14px/1.45 Arial,Helvetica,sans-serif;min-height:20px;margin:6px 0}
+.msg.err{color:var(--bad);font-weight:700}.msg.ok{color:var(--ok);font-weight:700}
+.todo{font:14px/1.45 Arial,Helvetica,sans-serif;color:#44505E}
+figure{margin:10px 0}figure img{width:100%;height:auto;border:1px solid var(--slate);border-radius:6px;background:#fff}
+figcaption{font:13px/1.4 Arial,Helvetica,sans-serif;color:#44505E;margin-top:4px}
+.ev{display:block;width:100%;text-align:left;font:15px/1.4 Arial,Helvetica,sans-serif;background:#fff;color:var(--navy);border:2px solid var(--blue);border-radius:8px;padding:10px 12px;margin:7px 0;cursor:pointer;position:relative;padding-left:52px;min-height:58px}
+.ev b{display:block}
+.ev .n{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:2px solid var(--slate);color:var(--slate);font:700 14px/26px Arial,sans-serif;text-align:center}
+.ev.on{background:#E3EAF3}.ev.on .n{background:var(--blue);border-color:var(--blue);color:#fff}
+.ev.right{border-color:var(--ok)}.ev.wrong{border-color:var(--bad);background:#FFF3F0}
+.ev .yr{display:none;font-weight:700;color:var(--ok)}
+.ev.show .yr{display:inline}
+footer{margin-top:30px;border-top:2px solid var(--gold);padding-top:8px;font:11px Arial,Helvetica,sans-serif;letter-spacing:1px}
+@media(max-width:640px){.stances,.two{grid-template-columns:1fr}.namerow{grid-template-columns:1fr 1fr}.hero h1{font-size:25px}}
+</style></head>
+<body>
+<header class="hero"><div class="in">
+<div class="eyebrow">SECTION 16.4 · CASE FILE</div>
+<h1>Building a New Order: Veterans, Nations, and Human Rights, 1944–1948</h1>
+<div class="sub">Section 16.4 · The World America Made</div></div></header>
+<main class="wrap">
+<div class="box"><h2>ESSENTIAL QUESTION</h2><p class="eq">How did the United States use its power at the end of World War II to build rules for the world and for its own veterans?</p></div>
+<div class="box"><h2>HOW TO DO THIS</h2><p>1. Read each of the four case files. Use <b>Word help</b> for hard words.</p><p>2. For each one, tap what the author wants: <b>AUTHORITY</b>, <b>LIBERTY</b>, or <b>LEFT OUT</b>.</p><p>3. Add one fact from Chapter 16 and copy the clue words that prove your choice.</p><p>4. Close the case: pick the best source and defend it. When every step is done, press <b>Finished</b>.</p></div>
+<div class="box"><h2>IN THE CHAPTER</h2><p>Use <a href="https://www.thegarzaarchive.org/E-Pluribus-Unum/unit-5/chapter-16/chapter-16-world-war-ii-at-home.html" target="_blank" rel="noopener">Chapter 16: World War II at Home</a> when you need a fact. Look in Section 16.4, “The G.I. Bill of Rights”, “The Architecture of International Peace”, “Individual Responsibility and the Nuremberg Trials”, and “The Security Council and Human Rights”.</p></div>
+<div class="namerow"><div><label class="nm" for="fn">FIRST NAME</label><input type="text" id="fn" autocomplete="given-name"></div><div><label class="nm" for="ln">LAST NAME</label><input type="text" id="ln" autocomplete="family-name"></div><div><label class="nm" for="pd">PERIOD</label><input type="text" id="pd" inputmode="numeric"></div><div><label class="nm" for="dt">DATE</label><input type="text" id="dt" readonly></div></div>
+<div class="meter"><span id="prog">0 steps done</span><div class="bar"><i id="barfill"></i></div></div>
+
+<section class="card" data-case="c1">
+  <div><span class="chip">1944</span><span class="who">A signing statement</span></div>
+  <h2>President Franklin D. Roosevelt</h2>
+  <p>Roosevelt signed the G.I. Bill two weeks after D-Day. He listed what the law would give to men and women leaving the military.</p>
+  <blockquote>“. . . 1. It gives servicemen and women the opportunity of resuming their education or technical training after discharge, or of taking a refresher or retrainer course, not only without tuition charge up to $500 per school year, but with the right to receive a monthly living allowance while pursuing their studies. 2. It makes provision for the guarantee by the Federal Government of not to exceed 50 percent of certain loans made to veterans for the purchase or construction of homes, farms, and business properties.”</blockquote>
+  <div class="cite">Franklin D. Roosevelt, statement on signing the G.I. Bill, June 22, 1944; The American Presidency Project, UC Santa Barbara. Ellipses show omitted text; the list numbers were kept. The third item of the list is omitted.</div>
+  <div class="help"><b>Word help:</b> discharge = leaving the military · tuition = the price of school · allowance = money paid regularly · guarantee = promise to pay if someone cannot · loans = borrowed money · unemployment = having no job</div>
+  
+  <div class="q">What does the author want?</div><div class="stances" data-group="g1" role="group" aria-label="What does the author want?"><button type="button" class="st" data-v="A" aria-pressed="false">★ AUTHORITY<small>wants order, obedience, or control</small></button><button type="button" class="st" data-v="L" aria-pressed="false">◆ LIBERTY<small>wants people to have a say or freedom</small></button><button type="button" class="st" data-v="X" aria-pressed="false">● LEFT OUT<small>has no power to decide; wants to be heard or free</small></button></div>
+  <div class="q">Which fact from “The G.I. Bill of Rights” in the chapter shows how many people the law reached?</div><textarea data-f="ctx1" data-need="1" rows="3" placeholder="Write one fact from the chapter."></textarea>
+  <div class="q">Copy the clue words that prove your choice <small>(use quotation marks)</small></div>
+  <textarea data-f="note1" data-need="1" rows="3" placeholder="“clue words” — The author wants…"></textarea>
+</section>
+<section class="card" data-case="c2">
+  <div><span class="chip">1945</span><span class="who">A founding document</span></div>
+  <h2>The United Nations</h2>
+  <p>Delegates from many nations met in San Francisco in 1945 and wrote the Charter of a new organization. The Preamble is its opening.</p>
+  <blockquote>“We the peoples of the United Nations determined to save succeeding generations from the scourge of war, which twice in our lifetime has brought untold sorrow to mankind, and to reaffirm faith in fundamental human rights, in the dignity and worth of the human person, in the equal rights of men and women and of nations large and small, and to establish conditions under which justice and respect for the obligations arising from treaties and other sources of international law can be maintained, . . .”</blockquote>
+  <div class="cite">Charter of the United Nations, Preamble, signed June 26, 1945; United Nations (un.org). Ellipsis shows the end of the sentence, which continues.</div>
+  <div class="help"><b>Word help:</b> scourge = a cause of great suffering · succeeding = coming after · reaffirm = say again · dignity = worth · obligations = duties · treaties = written agreements between nations</div>
+  
+  <div class="q">What does the author want?</div><div class="stances" data-group="g2" role="group" aria-label="What does the author want?"><button type="button" class="st" data-v="A" aria-pressed="false">★ AUTHORITY<small>wants order, obedience, or control</small></button><button type="button" class="st" data-v="L" aria-pressed="false">◆ LIBERTY<small>wants people to have a say or freedom</small></button><button type="button" class="st" data-v="X" aria-pressed="false">● LEFT OUT<small>has no power to decide; wants to be heard or free</small></button></div>
+  <div class="q">Which fact from “The Architecture of International Peace” in the chapter shows who gets power inside the UN?</div><textarea data-f="ctx2" data-need="1" rows="3" placeholder="Write one fact from the chapter."></textarea>
+  <div class="q">Copy the clue words that prove your choice <small>(use quotation marks)</small></div>
+  <textarea data-f="note2" data-need="1" rows="3" placeholder="“clue words” — The author wants…"></textarea>
+</section>
+<section class="card" data-case="c3">
+  <div><span class="chip">1945</span><span class="who">A courtroom speech</span></div>
+  <h2>Robert H. Jackson, U.S. chief prosecutor</h2>
+  <p>Jackson was a Supreme Court justice who took leave to lead the American prosecutors. He opened the trial of top Nazi leaders with these words.</p>
+  <blockquote>“The privilege of opening the first trial in history for crimes against the peace of the world imposes a grave responsibility. The wrongs which we seek to condemn and punish have been so calculated, so malignant, and so devastating, that civilization cannot tolerate their being ignored, because it cannot survive their being repeated. That four great nations, flushed with victory and stung with injury stay the hand of vengeance and voluntarily submit their captive enemies to the judgment of the law is one of the most significant tributes that Power has ever paid to reason.”</blockquote>
+  <div class="cite">Robert H. Jackson, opening statement, International Military Tribunal, Nuremberg, November 21, 1945; The Avalon Project, Yale Law School.</div>
+  <div class="help"><b>Word help:</b> malignant = evil · devastating = destroying · civilization = organized human society · vengeance = revenge · captive = held prisoner · tribute = a sign of respect</div>
+  
+  <div class="q">What does the author want?</div><div class="stances" data-group="g3" role="group" aria-label="What does the author want?"><button type="button" class="st" data-v="A" aria-pressed="false">★ AUTHORITY<small>wants order, obedience, or control</small></button><button type="button" class="st" data-v="L" aria-pressed="false">◆ LIBERTY<small>wants people to have a say or freedom</small></button><button type="button" class="st" data-v="X" aria-pressed="false">● LEFT OUT<small>has no power to decide; wants to be heard or free</small></button></div>
+  <div class="q">Which fact from “The Proceedings” in the chapter shows how the trial was run?</div><textarea data-f="ctx3" data-need="1" rows="3" placeholder="Write one fact from the chapter."></textarea>
+  <div class="q">Copy the clue words that prove your choice <small>(use quotation marks)</small></div>
+  <textarea data-f="note3" data-need="1" rows="3" placeholder="“clue words” — The author wants…"></textarea>
+</section>
+<section class="card" data-case="c4">
+  <div><span class="chip">1948</span><span class="who">A declaration</span></div>
+  <h2>The United Nations General Assembly</h2>
+  <p>Eleanor Roosevelt led the UN commission that drafted this Declaration. The General Assembly adopted it in 1948.</p>
+  <blockquote>“Article 1. All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood. Article 2. Everyone is entitled to all the rights and freedoms set forth in this Declaration, without distinction of any kind, such as race, colour, sex, language, religion, political or other opinion, national or social origin, property, birth or other status. . . . Article 3. Everyone has the right to life, liberty and security of person.”</blockquote>
+  <div class="cite">Universal Declaration of Human Rights, Articles 1 to 3, adopted December 10, 1948; United Nations (un.org). Ellipsis shows omitted text. Article 2 is shortened.</div>
+  <div class="help"><b>Word help:</b> endowed = given · conscience = sense of right and wrong · brotherhood = friendly feeling · distinction = difference in treatment · status = position in society · security = safety</div>
+  
+  <div class="q">What does the author want?</div><div class="stances" data-group="g4" role="group" aria-label="What does the author want?"><button type="button" class="st" data-v="A" aria-pressed="false">★ AUTHORITY<small>wants order, obedience, or control</small></button><button type="button" class="st" data-v="L" aria-pressed="false">◆ LIBERTY<small>wants people to have a say or freedom</small></button><button type="button" class="st" data-v="X" aria-pressed="false">● LEFT OUT<small>has no power to decide; wants to be heard or free</small></button></div>
+  <div class="q">Which fact from “The Security Council and Human Rights” in the chapter tells who led the commission that wrote this?</div><textarea data-f="ctx4" data-need="1" rows="3" placeholder="Write one fact from the chapter."></textarea>
+  <div class="q">Copy the clue words that prove your choice <small>(use quotation marks)</small></div>
+  <textarea data-f="note4" data-need="1" rows="3" placeholder="“clue words” — The author wants…"></textarea>
+</section>
+<section class="card"><h2>Case Closed</h2>
+ <div class="box" style="margin:8px 0"><h3>ESSENTIAL QUESTION</h3><p class="eq">How did the United States use its power at the end of World War II to build rules for the world and for its own veterans?</p></div>
+ <div class="q">Which case file best answers the essential question?</div>
+ <select data-f="best" data-need="1" aria-label="Best case file"><option value="">Choose a case file</option><option value="c1">1944 · G.I. Bill signing statement</option><option value="c2">1945 · UN Charter Preamble</option><option value="c3">1945 · Jackson at Nuremberg</option><option value="c4">1948 · Universal Declaration</option></select>
+ <div class="q">Why is it the best? <small>(Use one clue from the source and one fact from Chapter 16.)</small></div><textarea data-f="why" data-need="1" rows="4" placeholder="I chose this case file because …"></textarea>
+ <div class="q">Counter-Argument <small>(Which other case file would someone on the other side choose? What would they say? Then answer them.)</small></div><textarea data-f="counter" data-need="1" rows="4" placeholder="Someone could choose … because … but …"></textarea>
+ <div class="checks"><label><input type="checkbox" data-chk="chk1"> I copied clue words from every case file in quotation marks.</label><label><input type="checkbox" data-chk="chk2"> I used a fact from Chapter 16 in every context box.</label><label><input type="checkbox" data-chk="chk3"> I answered the Counter-Argument.</label></div>
+</section>
+<div class="btns">
+<button type="button" class="btn" id="savep">Save Progress</button>
+<button type="button" class="btn" id="loadp">Load Progress</button>
+<input type="file" id="loadf" accept=".json,application/json" hidden>
+<button type="button" class="btn pri" id="finish" disabled>Finished — Download File to Submit</button>
+</div>
+<div class="msg" id="msg" role="status" aria-live="polite"></div>
+<div class="todo" id="todo"></div>
+<footer>E PLURIBUS UNUM | UNIT 5 · BOOM, BUST, AND WAR | CHAPTER 16 · WORLD WAR II AT HOME</footer>
+</main>
+<script>
+(function(){
+const CFG={"packet": "EPU_16_4_CASE_FILE", "store": "epu_16_4_case_file", "course": "E PLURIBUS UNUM · UNIT 5 · CHAPTER 16 · SECTION 16.4", "req": [{"t": "side", "id": "g1", "label": "tap what the author wants in case file 1"}, {"t": "f", "id": "ctx1", "min": 3, "label": "write a chapter fact in the context box of case file 1"}, {"t": "f", "id": "note1", "min": 3, "label": "copy clue words for case file 1"}, {"t": "side", "id": "g2", "label": "tap what the author wants in case file 2"}, {"t": "f", "id": "ctx2", "min": 3, "label": "write a chapter fact in the context box of case file 2"}, {"t": "f", "id": "note2", "min": 3, "label": "copy clue words for case file 2"}, {"t": "side", "id": "g3", "label": "tap what the author wants in case file 3"}, {"t": "f", "id": "ctx3", "min": 3, "label": "write a chapter fact in the context box of case file 3"}, {"t": "f", "id": "note3", "min": 3, "label": "copy clue words for case file 3"}, {"t": "side", "id": "g4", "label": "tap what the author wants in case file 4"}, {"t": "f", "id": "ctx4", "min": 3, "label": "write a chapter fact in the context box of case file 4"}, {"t": "f", "id": "note4", "min": 3, "label": "copy clue words for case file 4"}, {"t": "f", "id": "best", "min": 1, "label": "pick the best case file"}, {"t": "f", "id": "why", "min": 15, "label": "explain why it is best (at least 15 words)"}, {"t": "f", "id": "counter", "min": 15, "label": "write the Counter-Argument (at least 15 words)"}, {"t": "chk", "id": "chk1", "label": "check the clue-words box"}, {"t": "chk", "id": "chk2", "label": "check the chapter-fact box"}, {"t": "chk", "id": "chk3", "label": "check the Counter-Argument box"}]};
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+let state={sides:{},order:[],attempts:0,solved:false};
+const words=s=>(s.trim().match(/\S+/g)||[]).length;
+function nm(){return{first:$('#fn').value.trim(),last:$('#ln').value.trim(),period:$('#pd').value.trim()}}
+function collect(){
+  const answers={};
+  $$('[data-f]').forEach(el=>{
+    if(el.type==='radio'){ if(el.checked) answers[el.dataset.f]=el.value; else if(!(el.dataset.f in answers)) answers[el.dataset.f]=''; }
+    else answers[el.dataset.f]=el.value;
+  });
+  const checks={}; $$('[data-chk]').forEach(el=>checks[el.dataset.chk]=el.checked);
+  return{answers,checks};
+}
+function status(){
+  const c=collect(),n=nm(),miss=[];let total=1,done=0;
+  if(n.first&&n.last&&n.period)done++;else miss.push('type your first name, last name, and period');
+  CFG.req.forEach(r=>{
+    total++;let ok=false;
+    if(r.t==='side')ok=!!state.sides[r.id];
+    else if(r.t==='f')ok=words(c.answers[r.id]||'')>=(r.min||1);
+    else if(r.t==='word')ok=new RegExp('\\b'+r.word+'\\b','i').test(c.answers[r.id]||'')&&words(c.answers[r.id]||'')>=(r.min||1);
+    else if(r.t==='diff')ok=!!c.answers[r.a]&&!!c.answers[r.b]&&c.answers[r.a]!==c.answers[r.b];
+    else if(r.t==='chk')ok=!!c.checks[r.id];
+    else if(r.t==='order')ok=state.solved&&JSON.stringify(state.order)===JSON.stringify(CFG.correct);
+    if(ok)done++;else miss.push(r.label);
+  });
+  return{c,n,miss,total,done};
+}
+function render(){
+  const s=status();
+  $$('.card[data-case]').forEach(card=>{
+    const id=card.dataset.case,g=card.querySelector('[data-group]');
+    const fields=card.querySelectorAll('[data-f][data-need]');
+    let ok=!!state.sides[g&&g.dataset.group];
+    fields.forEach(f=>{if(!f.value.trim())ok=false});
+    card.classList.toggle('done',ok);
+  });
+  const p=$('#prog');if(p){p.textContent=s.done+' of '+s.total+' steps done';$('#barfill').style.width=Math.round(100*s.done/s.total)+'%';}
+  const fin=$('#finish');fin.disabled=s.miss.length>0;
+  $('#todo').textContent=s.miss.length?('Still to do: '+s.miss.join('; ')+'.'):'Everything is done. Press Finished to download your file.';
+  $$('.st').forEach(b=>b.setAttribute('aria-pressed',state.sides[b.closest('[data-group]').dataset.group]===b.dataset.v?'true':'false'));
+  const wcEls=$$('[data-wc]');wcEls.forEach(w=>{const t=document.querySelector('[data-f="'+w.dataset.wc+'"]');w.textContent=words(t.value)+' words'});
+}
+function key(){return(CFG.store)}
+function save(){try{localStorage.setItem(key(),JSON.stringify(payload(false)))}catch(e){}}
+function payload(done){
+  const s=status(),n=s.n;
+  return{packet:CFG.packet,course:CFG.course,version:1,saved:new Date().toISOString(),completed:!!done,
+    student:{first:n.first,last:n.last,period:n.period,date:done?$('#dt').value:''},
+    sides:state.sides,answers:s.c.answers,checks:s.c.checks,
+    order:CFG.correct?{chosen:state.order,solved:state.solved,attempts:state.attempts}:undefined};
+}
+function fname(n,suffix){
+  const base=(n.last+'_'+n.first).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9_\-]+/g,'_');
+  return base+'-'+CFG.packet+suffix+'.json';
+}
+function dl(obj,name){const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function say(t,c){const m=$('#msg');m.textContent=t;m.className='msg '+(c||'')}
+function apply(d){
+  state.sides=d.sides||{};
+  if(d.order){state.order=d.order.chosen||[];state.attempts=d.order.attempts||0;state.solved=!!d.order.solved&&JSON.stringify(state.order)===JSON.stringify(CFG.correct)}
+  const a=d.answers||{};
+  $$('[data-f]').forEach(el=>{ if(el.type==='radio')el.checked=(a[el.dataset.f]===el.value); else if(a[el.dataset.f]!=null)el.value=a[el.dataset.f]; });
+  const ch=d.checks||{};$$('[data-chk]').forEach(el=>el.checked=!!ch[el.dataset.chk]);
+  const s=d.student||{};$('#fn').value=s.first||'';$('#ln').value=s.last||'';$('#pd').value=s.period||'';
+  drawOrder();render();
+}
+/* ordering widget */
+function drawOrder(){
+  if(!CFG.correct)return;
+  $$('.ev').forEach(b=>{
+    const i=state.order.indexOf(b.dataset.id);
+    b.classList.toggle('on',i>=0);b.querySelector('.n').textContent=i>=0?String(i+1):'';
+    b.classList.remove('right','wrong','show');
+    b.setAttribute('aria-pressed',i>=0?'true':'false');
+    if(state.solved){b.classList.add('right','show')}
+  });
+  $('#chk').disabled=state.order.length!==CFG.correct.length||state.solved;
+}
+document.addEventListener('click',e=>{
+  const st=e.target.closest('.st');
+  if(st){const g=st.closest('[data-group]').dataset.group;state.sides[g]=st.dataset.v;render();save();return}
+  const ev=e.target.closest('.ev');
+  if(ev&&CFG.correct){
+    if(state.solved)return;
+    const id=ev.dataset.id,i=state.order.indexOf(id);
+    if(i>=0)state.order.splice(i,1);else state.order.push(id);
+    $('#ordmsg').textContent='';drawOrder();render();save();return;
+  }
+});
+if(CFG.correct){
+  $('#chk').addEventListener('click',()=>{
+    state.attempts++;let right=0;
+    $$('.ev').forEach(b=>{const i=state.order.indexOf(b.dataset.id);const ok=i>=0&&CFG.correct[i]===b.dataset.id;if(ok)right++;b.classList.remove('right','wrong');b.classList.add(ok?'right':'wrong')});
+    if(right===CFG.correct.length){state.solved=true;$$('.ev').forEach(b=>b.classList.add('show'));$('#ordmsg').textContent='All six are in the right order. The years are now showing.';$('#ordmsg').className='msg ok';$('#chk').disabled=true}
+    else{$('#ordmsg').textContent=right+' of 6 are in the right place. Tap a red card to take it out, then tap the cards again in the order you think they happened.';$('#ordmsg').className='msg err'}
+    render();save();
+  });
+  $('#clr').addEventListener('click',()=>{if(state.solved)return;state.order=[];$('#ordmsg').textContent='';drawOrder();render();save()});
+}
+document.addEventListener('input',()=>{render();save()});
+document.addEventListener('change',()=>{render();save()});
+$('#dt').value=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+$('#savep').addEventListener('click',()=>{
+  const n=nm();
+  if(!n.first||!n.last){say('Type your first and last name first, then save.','err');[$('#fn'),$('#ln')].forEach(i=>{if(!i.value.trim())i.classList.add('bad')});return}
+  dl(payload(false),fname(n,'-PROGRESS'));say('Saved. Keep that file. Use Load Progress later. Do not upload it to Canvas until you are finished.','ok');
+});
+$('#loadp').addEventListener('click',()=>$('#loadf').click());
+$('#loadf').addEventListener('change',ev=>{
+  const f=ev.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(d.packet!==CFG.packet)throw 0;apply(d);say('Progress loaded.','ok');save()}catch(x){say('That file does not match this assignment. Choose the -PROGRESS file you saved from this page.','err')}};
+  r.readAsText(f);ev.target.value='';
+});
+$('#finish').addEventListener('click',()=>{
+  const s=status();
+  if(s.miss.length){say('Not finished yet. '+$('#todo').textContent,'err');return}
+  $('#dt').value=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const name=fname(s.n,'');dl(payload(true),name);say('Done. Your file '+name+' was downloaded. Upload that file to Canvas.','ok');save();
+});
+['#fn','#ln','#pd'].forEach(i=>$(i).addEventListener('input',e=>e.target.classList.remove('bad')));
+try{const raw=localStorage.getItem(key());if(raw){const d=JSON.parse(raw);if(d.packet===CFG.packet)apply(d)}}catch(e){}
+drawOrder();render();
+})();
+</script>
+</body></html>
